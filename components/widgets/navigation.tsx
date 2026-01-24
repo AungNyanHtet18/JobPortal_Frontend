@@ -27,9 +27,8 @@ export  function Navigation() {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
-
                   {nav.map(a => 
-                    <NavigationMenuItem>
+                    <NavigationMenuItem key={a.id}>
                       <NavigationMenuLink asChild>
                         <Link href={a.url}>{a.name}</Link>
                       </NavigationMenuLink>

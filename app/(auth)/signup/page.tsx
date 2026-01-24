@@ -1,4 +1,4 @@
-import { AuthInput } from "@/components/widgets/authinput";
+import { AuthInput } from "@/app/(auth)/_client/authinput";
 import { Key, Lock, User } from "lucide-react";
 
 export default function Page() {
