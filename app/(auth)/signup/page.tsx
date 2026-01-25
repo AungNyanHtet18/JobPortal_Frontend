@@ -1,14 +1,19 @@
-import { AuthInput } from "@/app/(auth)/_client/authinput";
-import { Key, Lock, User } from "lucide-react";
+import { Metadata } from "next"
+import SignUpFormComponent from "./_client/signup-form"
+import PageTitle from "@/components/widgets/page-title"
 
-export default function Page() {
+export const metadata: Metadata =   {
+     title: "Job Portal | Sign Up",
+     description: "Home Page of Job Portal"
+}
+
+export default function SignUpPage() {
+
      return (
        <div className="w-1/3 flex justify-center items-center">
-         <div className="flex flex-col gap-3">
-          <h3 className="text-[25px] text-indigo-600 font-medium">USER SIGNUP</h3>
-            <AuthInput icon={<Key/>} label="Enter your name"></AuthInput>
-            <AuthInput icon={<Key/>} label="Enter your email" type="email"></AuthInput>
-            <AuthInput icon={<Key/>} label="Enter your password" type="password"></AuthInput>
+         <div className="flex flex-col gap-3 w-2/3">
+            <PageTitle icon="UserPlus" title="User SIGNUP" /> 
+            <SignUpFormComponent />
           </div>
        </div>
      )
