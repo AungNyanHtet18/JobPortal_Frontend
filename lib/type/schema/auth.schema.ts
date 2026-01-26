@@ -15,3 +15,18 @@ export const SignInSchema = z.object({
 })
 
 export type SignInForm = z.infer<typeof SignInSchema>
+
+
+type Role = 'Admin' | 'Applicant' | 'CompanyAccount'
+
+
+export type LoginUser = {
+      name: string
+      email: string
+      role: Role
+}
+
+export type AuthResult = LoginUser & {
+     accessToken: string
+     refreshToken: string
+}

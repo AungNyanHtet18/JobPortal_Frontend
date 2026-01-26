@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/widgets/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 const roboto = Roboto({
   weight: '400',
@@ -34,9 +34,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navigation/>
+
         <main className="w-full">
           {children}
+          <Toaster position="top-right" />
         </main>
       </body>
     </html>

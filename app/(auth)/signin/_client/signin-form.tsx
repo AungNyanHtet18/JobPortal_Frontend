@@ -3,7 +3,9 @@
 import FormsInput from "@/components/fields/form-input"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { SignInForm, SignInSchema } from "@/lib/type/shema/auth.schema"
+import { signInAction } from "@/lib/actions/auth.action"
+import { SignInForm, SignInSchema } from "@/lib/type/schema/auth.schema"
+import { safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LogIn, UserPlus } from "lucide-react"
 import Link from "next/link"
@@ -22,13 +24,13 @@ export default function SignInFormComponent() {
         }
     })
 
-    async function save(form: SignInForm) {
-         
+    async function save(form: SignInForm) { //test by removing async
+         safeCall(async () => await signInAction(form))
     }
 
     return (
         <Form {...form}>
-            <form action="#" onSubmit={form.handleSubmit(save)}>
+            <form  onSubmit={form.handleSubmit(save)}>
                 <FormsInput control={form.control} type="email" path="email" label="Email" placeHolder="Enter your email"  className="mb-4" />
                 <FormsInput control={form.control} type="password" path="password" label="Password" placeHolder="Enter your password"  className="mb-4" />
 
