@@ -1,5 +1,7 @@
 export default function Page() {
    return (
-     <h1>Hello</h1>
+     <main className="px-4 py-4">
+        <h1>Hello</h1>
+     </main>
    )
 }

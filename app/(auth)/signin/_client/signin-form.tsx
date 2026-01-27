@@ -9,14 +9,11 @@ import { safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LogIn, UserPlus } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-
 import { useForm } from "react-hook-form"
 
 export default function SignInFormComponent() {
-    const router = useRouter()
 
-    const form = useForm({
+    const form = useForm<SignInForm>({
         resolver: zodResolver(SignInSchema),
         defaultValues: {
              email: "",

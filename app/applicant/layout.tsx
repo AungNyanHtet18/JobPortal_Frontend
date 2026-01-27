@@ -1,12 +1,19 @@
 import Navigation from "@/components/widgets/navigation";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: "Job Portal | Applicant Page",
+    description: "Appliant Info  of Job Portal Page"
+};
 
 export default async function ApplicantLayout({children} : {children: React.ReactNode}) {
      
     return (
-        <div>
+        <>
             <Navigation/>
-            {children}
-        </div>
+            <main className="px-4 py-4">
+                {children}
+            </main>
+        </>
     )
 }

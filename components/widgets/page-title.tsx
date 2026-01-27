@@ -22,10 +22,10 @@ export default function PageTitle({
         return (
         <header className="flex items-center gap-2 mb-2">
                 <div>
-                    <IconComponent icon={icon} className="size-7"/>
+                    <IconComponent icon={icon} className="size-7 text-gray-700"/>
                 </div>
                 <div>   
-                    <div className="text-xl font-medium  text-indigo-600">{title}</div>
+                    <div className="text-xl font-medium">{title}</div>
                     {subTitle.length > 0 && 
                         <div className="flex gap-2">
                             {subTitle.map((item,index) =>
@@ -54,10 +54,10 @@ export default function PageTitle({
     return (
         <header className="flex items-center gap-2 mb-2">
                 <div>
-                    <IconComponent icon={icon} className="size-7"/>
+                    <IconComponent icon={icon} className="size-7 text-gray-700"/>
                 </div>
                 <div>   
-                    <div className="text-xl font-medium  text-indigo-600">{title}</div>
+                    <div className="text-xl font-medium">{title}</div>
                     {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
                 </div>
 

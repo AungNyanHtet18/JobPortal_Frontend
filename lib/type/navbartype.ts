@@ -5,7 +5,7 @@ export type NavbarType = {
 }
 
 export const nav: NavbarType[] = [
-    {id: 1, name: "user", url: "/user"},
-    {id: 2, name: "about", url: "/about"},
-    {id: 3, name: "contact", url: "/contact"}]
+    {id: 1, name: "applicant", url: "/applicant"},
+    {id: 2, name: "edit", url: "/applicant/edit"},
+    {id: 3, name: "joblist", url: "/applicant/joblist"}]
     
