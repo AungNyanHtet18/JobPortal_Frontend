@@ -27,3 +27,8 @@ export const JobType: OptionItem[] = [
      {key: "Hybrid", value: "Hybrid"},
      {key: "Onsite", value: "Onsite"}
 ]
+
+export const Status: OptionItem[] = [
+     {key: "true", value: "true"},
+     {key: "false", value: "false"}
+]

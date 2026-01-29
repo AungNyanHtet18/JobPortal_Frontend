@@ -7,7 +7,7 @@ export type Pager = {
 }
 
 export type PageResult<T> = {
-     contents: T[]
+     list: T[]
 } & Pager
 
 
@@ -21,7 +21,7 @@ export type PageSearch = {
 }
 
 export const DEFAULT_PAGE_RESULT: PageResult<any> = {
-    contents: [],
+    list: [],
     page: 0,
     size: 0,
     totalCount: 0,
