@@ -7,13 +7,15 @@ import { Form } from "@/components/ui/form"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import { safeCall } from "@/lib/utils"
+import { cn, safeCall } from "@/lib/utils"
 import { Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
 import JobSearchResult from "./job-search-result"
+import PagerWidget from "@/components/widgets/pager-widgert"
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+
 
 export default function JobSearchComponent() {
     
@@ -24,8 +26,8 @@ export default function JobSearchComponent() {
        }
     })
 
-    const [result, setResult] = useState<PageResult<JobListItem> | undefined >()
-    const {list, ...pageInfo}  = result ? result : DEFAULT_PAGE_RESULT
+    const [result, setResult] = useState<PageResult<JobListItem>>(DEFAULT_PAGE_RESULT)
+    const {list, pageInfo}  = result 
 
     const jobLevel = form.watch("jobLevel")
     const jobType = form.watch("jobType")
@@ -41,6 +43,18 @@ export default function JobSearchComponent() {
    useEffect(() => {
        form.handleSubmit(search) ()
    }, [form.handleSubmit])
+
+
+   const onPageChange = (page: number) => { 
+      form.setValue("page", page)
+      form.handleSubmit(search)()
+   }
+
+   const onSizeChange = (size: number) => { 
+      form.setValue("page", 0)
+      form.setValue("size", size)
+      form.handleSubmit(search) ()
+   }
 
     async function search(form: JobSearch) {
       
@@ -74,10 +88,24 @@ export default function JobSearchComponent() {
               </form>
            </Form>
 
-          <JobSearchResult list={list}/>
-           
+          {/* <JobSearchResult list={list}/>  */}
 
-        </div>
-    )
 
+          <div className="grid grid-cols-4 gap-3">
+            {list.map(job => 
+             <Card>
+                <img className="object-cover w-75 mx-auto mb-2" src="/images/signin.jpg"></img>
+                <CardHeader >
+                    <CardTitle>{job.positionName} <span className="text-gray-600 text-sm">({job.jobType})</span></CardTitle>
+                    <CardDescription className="font-semibold text-black">Position - {job.jobLevel}</CardDescription>
+                    <CardDescription className="font-normal text-black overflow-hidden whitespace-nowrap truncate">Location - {job.location} Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae magnam, ut, ipsa nulla recusandae beatae dignissimos, porro quaerat eveniet in iste nostrum nihil aliquam harum sapiente repudiandae illo totam. Iste.</CardDescription>
+                </CardHeader>
+                <CardFooter>
+                    <Button className="w-full">Save Job</Button>
+                </CardFooter>
+            </Card>)}
+          </div>
+
+          <PagerWidget pager={pageInfo} onPageChange={onPageChange} onSizeChange={onSizeChange}/> 
+        </div>)
 }
