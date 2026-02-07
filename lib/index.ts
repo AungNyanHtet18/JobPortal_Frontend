@@ -1,6 +1,5 @@
 'server only'
 
-
 import { redirect } from "next/navigation"
 import setAuthResult, { clearAuthResult, getAccessToken, getRefreshToken } from "./login-users"
 import { AuthResult } from "./type/schema/auth.schema"

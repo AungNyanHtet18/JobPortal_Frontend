@@ -1,4 +1,34 @@
+import z from "zod"
 import { PageSearch } from "../.."
+
+export const SkillSchema = z.object({
+    skill: z.string().min(1,"Please enter your skill")
+})
+
+
+export const ExperienceSchema = z.object({
+    companyName: z.string().nonempty("Please fill your previous company name"),
+    position: z.string().nonempty("Please fill your previous position"),
+    year: z.string().nonempty("lease fill your experience year")
+})
+
+
+export  const ApplicantSchema = z.object({
+    applicantName: z.string(),
+    gender: z.string().nonempty("Please select gender."),
+    highestEducationalAttainment: z.string().optional(),
+    resume: z.string().optional(),
+    skills: z.array(SkillSchema).nonempty("Please enter your skills."),
+    professionalSummary: z.string().optional(),
+    contactDetail: z.string().nonempty("Please fill your contact detail."),
+    address: z.string().nonempty("Please fill your address."),
+    experiences: z.array(ExperienceSchema)
+})
+
+
+
+
+
 
 export type JobSearch = {
    jobLevel?: string,

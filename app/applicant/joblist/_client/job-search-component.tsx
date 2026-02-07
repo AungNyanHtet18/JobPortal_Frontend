@@ -72,7 +72,6 @@ export default function JobSearchComponent() {
          })
     }
 
-
     return (
         <div className="space-y-4">
            <Form {...form}>
@@ -98,7 +97,7 @@ export default function JobSearchComponent() {
                 <CardHeader >
                     <CardTitle>{job.positionName} <span className="text-gray-600 text-sm">({job.jobType})</span></CardTitle>
                     <CardDescription className="font-semibold text-black">Position - {job.jobLevel}</CardDescription>
-                    <CardDescription className="font-normal text-black overflow-hidden whitespace-nowrap truncate">Location - {job.location} Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae magnam, ut, ipsa nulla recusandae beatae dignissimos, porro quaerat eveniet in iste nostrum nihil aliquam harum sapiente repudiandae illo totam. Iste.</CardDescription>
+                    <CardDescription className="font-normal text-black overflow-hidden whitespace-nowrap truncate">Location - {job.location} </CardDescription>
                 </CardHeader>
                 <CardFooter>
                     <Button className="w-full">Save Job</Button>

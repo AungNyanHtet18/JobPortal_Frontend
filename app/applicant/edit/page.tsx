@@ -1,10 +1,22 @@
-import CardComponent from "./_client/card-component";
+'use client'
+
+import { useSearchParams } from "next/navigation"
+import ApplicantCreateComponent from "./_client/applicant-create-form"
+import ApplicantEditComponent from "./_client/applicant-edit-form"
 
 export default function ApplicantEditPage() {
+
+    const searchParam = useSearchParams()
+    const id = searchParam.get("id")
+
+    if(id) {
+         return (
+             <ApplicantEditComponent id={id} />
+         )
+    }
+
+
      return (
-        <div className="mx-2 space-y-4">
-            <h1>Applicant Edit Page</h1>
-            <CardComponent />
-        </div>
+        <ApplicantCreateComponent />
      )
 }
