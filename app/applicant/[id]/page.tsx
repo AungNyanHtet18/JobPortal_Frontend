@@ -1,3 +1,3 @@
-export default function EditPage() {
+export default function ApplicantDetailPage() {
      return <h1>Hello</h1>
 }

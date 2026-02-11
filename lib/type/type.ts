@@ -1,5 +1,4 @@
 import * as lucideIcons from 'lucide-react'
-import z from 'zod'
 
 export type IconType =  keyof typeof lucideIcons
 

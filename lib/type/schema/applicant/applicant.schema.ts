@@ -5,19 +5,16 @@ export const SkillSchema = z.object({
     skill: z.string().min(1,"Please enter your skill")
 })
 
-
 export const ExperienceSchema = z.object({
     companyName: z.string().nonempty("Please fill your previous company name"),
     position: z.string().nonempty("Please fill your previous position"),
     year: z.string().nonempty("lease fill your experience year")
 })
 
-
 export  const ApplicantSchema = z.object({
-    applicantName: z.string(),
+    applicantName: z.string().nonempty("Please enter your applicant name."),
     gender: z.string().nonempty("Please select gender."),
     highestEducationalAttainment: z.string().optional(),
-    resume: z.string().optional(),
     skills: z.array(SkillSchema).nonempty("Please enter your skills."),
     professionalSummary: z.string().optional(),
     contactDetail: z.string().nonempty("Please fill your contact detail."),
@@ -25,10 +22,7 @@ export  const ApplicantSchema = z.object({
     experiences: z.array(ExperienceSchema)
 })
 
-
-
-
-
+export type ApplicantForm = z.infer<typeof ApplicantSchema>
 
 export type JobSearch = {
    jobLevel?: string,
@@ -47,4 +41,3 @@ export type JobListItem = {
    location: string
    createAt: string
 }
-

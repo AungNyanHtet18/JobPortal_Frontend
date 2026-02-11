@@ -1,7 +1,6 @@
 import { HTMLInputTypeAttribute } from "react"
 import { Control, FieldValues, Path } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 
 type FormsInputProps<T extends FieldValues> = {
@@ -10,16 +9,17 @@ type FormsInputProps<T extends FieldValues> = {
      label?: string
      className?: string
      placeHolder?: string
+     rowHeight?: string
 }
 
-export default function FormsTextAreaInput<T extends FieldValues>({control, path, label, className, placeHolder}: FormsInputProps<T>) {
+export default function FormsTextAreaInput<T extends FieldValues>({control, path, label, className, placeHolder, rowHeight}: FormsInputProps<T>) {
      return (
         <FormField control={control} name={path} render={({field}) =>
             <FormItem className={className}>
                {label && <FormLabel>{label}</FormLabel>}
 
                 <FormControl>
-                    <Textarea {...field}  placeholder={placeHolder || `Enter ${label}`} />
+                    <Textarea {...field} placeholder={placeHolder || `Enter ${label}`}  className={rowHeight} />
                 </FormControl>
 
                 <FormMessage/>

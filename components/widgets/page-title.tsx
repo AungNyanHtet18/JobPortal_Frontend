@@ -52,7 +52,7 @@ export default function PageTitle({
 
 
     return (
-        <header className="flex items-center gap-2 mb-2">
+        <header className="flex items-center gap-2 mb-4">
                 <div>
                     <IconComponent icon={icon} className="size-7 text-gray-700"/>
                 </div>
