@@ -14,7 +14,17 @@ export async function safeCall(action: () => Promise<void>) {
        return 
      }
      toast("Message", {
-       description: JSON.parse(e.message)
+  description: (() => {
+    if (e instanceof Error) {
+      try { 
+        return JSON.parse(e.message); 
+       } 
+      catch { 
+        return e.message; 
+      }
+    }
+      return e?.message || String(e);
+      })()
      })
    }
 }

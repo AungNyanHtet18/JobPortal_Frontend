@@ -17,8 +17,8 @@ export  const ApplicantSchema = z.object({
     highestEducationalAttainment: z.string().optional(),
     skills: z.array(SkillSchema).nonempty("Please enter your skills."),
     professionalSummary: z.string().optional(),
-    contactDetail: z.string().nonempty("Please fill your contact detail."),
-    address: z.string().nonempty("Please fill your address."),
+    contactDetail: z.string().nonempty("Please fill your contact detail.").min(10).max(200),
+    address: z.string().nonempty("Please fill your address.").min(10).max(200),
     experiences: z.array(ExperienceSchema)
 })
 
@@ -40,4 +40,24 @@ export type JobListItem = {
    companyName: string
    location: string
    createAt: string
+}
+
+export type ApplicantDetails = {
+     name: string
+     email: string
+     gender: 'Male' | 'Female'
+     skills: string[]
+     experience: Experience[],
+     highestEducationalAttainment: string
+     professionalSummary: string,
+     contactDetail: string
+     address: string
+}
+
+
+export type Experience = {
+     id: number,
+     companyName: string,
+     position: string,
+     years: number
 }

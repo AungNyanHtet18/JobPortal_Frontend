@@ -24,11 +24,11 @@ export default async function Navigation() {
 
                    <NavigationMenuContent>
                         <NavigationMenuLink asChild>
-                          <Link href="/products/laptop">Laptop</Link>
+                          <Link href="/applicant/detail">Detail</Link>
                         </NavigationMenuLink>
 
                         <NavigationMenuLink asChild>
-                          <Link href="/products/phone">Phone</Link>
+                          <Link href="/apply">Apply</Link>
                         </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>

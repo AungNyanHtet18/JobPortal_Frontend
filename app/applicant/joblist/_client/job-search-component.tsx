@@ -92,7 +92,7 @@ export default function JobSearchComponent() {
 
           <div className="grid grid-cols-4 gap-3">
             {list.map(job => 
-             <Card>
+             <Card key={job.jobId}>
                 <img className="object-cover w-75 mx-auto mb-2" src="/images/signin.jpg"></img>
                 <CardHeader >
                     <CardTitle>{job.positionName} <span className="text-gray-600 text-sm">({job.jobType})</span></CardTitle>

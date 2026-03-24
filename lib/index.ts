@@ -38,7 +38,7 @@ export async function secureRequest(path: string, options: RequestInit = {}, sea
 
     response = await fetchWithToken(accessToken)
 
-    if(response.status ===410) { 
+    if(response.status ===410 ) { //Token missing / invalid / expired
          const refreshToken = await getRefreshToken()
 
          console.log(`Refresh Token : ${refreshToken}`);
@@ -47,7 +47,6 @@ export async function secureRequest(path: string, options: RequestInit = {}, sea
              await clearAuthResult()
              redirect('/signin')
          }
-
 
          const refreshResponse = await publicRequest("token/refresh", {
              ...POST_CONFIG,
@@ -67,25 +66,21 @@ export async function secureRequest(path: string, options: RequestInit = {}, sea
          response = await fetchWithToken(authResult.accessToken)
     }
 
-
     if(!response 
         || response.status === 403 
         || response.status === 401
-    ) { // 403  = the request has not been authenticated || 401 = the user is authenticated, but does not have permission to access the requested
+    ) { // 401  = the request has not been authenticated || 403 = the user is authenticated, but does not have permission to access the requested
          await clearAuthResult()
          redirect('/signin')
     }
 
-    if(response.status === 400 || response.status === 500
-    ) {
+    if(response.status === 400 || response.status === 500) {
          const message = await response.json()
          throw JSON.stringify(message)
     }
 
     return response
 }
-
-
 
 export async function secureSearch(path: string, search? : {[key:string] : any}) {
         return secureRequest(path, {}, search)

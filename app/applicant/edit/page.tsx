@@ -1,6 +1,6 @@
 'use client'
 
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
@@ -15,6 +15,8 @@ import { safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action" 
 
 export default function ApplicantEditPage() {
+
+    const router = useRouter()
 
     const form = useForm<ApplicantForm>({
         resolver: zodResolver(ApplicantSchema),
@@ -76,12 +78,9 @@ export default function ApplicantEditPage() {
     }
 
      async function save(form: ApplicantForm) {
-
-         console.log(form);
-
          await safeCall(async () =>  { 
             const result = Applicant.createApplicantAction(form)
-            console.log(result);
+            router.replace(`/applicant/${result}`)
         })
 
      }
@@ -133,14 +132,13 @@ export default function ApplicantEditPage() {
                         )}
                     </div>
                     
-                    <div className="col-span-full" ></div>
-                    <Button type="submit" className="w-30">
-                        <Plus/> Submit
-                    </Button>
+                    <div className="col-span-full" >
+                        <Button type="submit" className="w-30">
+                            <Plus/> Submit
+                        </Button>
+                    </div>
                 </form>
              </Form>
         </section>
     )
-
-
 }
