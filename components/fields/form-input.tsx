@@ -19,7 +19,7 @@ export default function FormsInput<T extends FieldValues>({control, path, label,
                {label && <FormLabel>{label}</FormLabel>}
 
                 <FormControl>
-                    <Input {...field} type={type} placeholder={placeHolder || `Enter ${label || "input"}`} />
+                    <Input {...field} type={type} placeholder={placeHolder || `Enter ${label || "input"}`} className="bg-white"/>
                 </FormControl>
 
                 <FormMessage/>

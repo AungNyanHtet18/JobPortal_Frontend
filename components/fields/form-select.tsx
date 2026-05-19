@@ -21,7 +21,7 @@ export default function FormSelect<T extends FieldValues>({control, path, option
 
                 <Select value={field.value} onValueChange={field.onChange}>
                    <FormControl>
-                     <SelectTrigger className="w-full">
+                     <SelectTrigger className="w-full bg-white">
                         <SelectValue placeholder= {placeHolder || "Select One"} />
                      </SelectTrigger>
                    </FormControl> 

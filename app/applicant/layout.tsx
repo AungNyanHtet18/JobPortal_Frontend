@@ -11,7 +11,7 @@ export default async function ApplicantLayout({children} : {children: React.Reac
     return (
         <>
             <Navigation/>
-            <main className="px-4 py-4">
+            <main className="px-4 py-4 bg-gray-50">
                 {children}
             </main>
         </>

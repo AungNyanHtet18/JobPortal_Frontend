@@ -7,6 +7,7 @@ import { ApplicantDetails, ApplicantForm, JobListItem, JobSearch } from "@/lib/t
 
 export async function createApplicantAction(form: ApplicantForm): Promise<ModificationResult<number>> {
      
+
      const payload = { 
           ...form, 
           skills: form.skills.map(s => s.skill), 

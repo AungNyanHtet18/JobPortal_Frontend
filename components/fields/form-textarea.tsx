@@ -19,7 +19,7 @@ export default function FormsTextAreaInput<T extends FieldValues>({control, path
                {label && <FormLabel>{label}</FormLabel>}
 
                 <FormControl>
-                    <Textarea {...field} placeholder={placeHolder || `Enter ${label}`}  className={rowHeight} />
+                    <Textarea {...field} placeholder={placeHolder || `Enter ${label}`}  className={`${rowHeight} bg-white`} />
                 </FormControl>
 
                 <FormMessage/>
