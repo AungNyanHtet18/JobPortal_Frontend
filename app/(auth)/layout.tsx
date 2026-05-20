@@ -1,3 +1,11 @@
+import { Metadata } from "next"
+
+export const metadata: Metadata = { 
+  title: "Job Portal | Auth Page",
+  description: "Sign In and Sign Up Page for All users"
+}
+
+
 export default function AuthLayout({children} : {children: React.ReactNode}) {
     return (
         <div className="flex h-[100vh] w-full">

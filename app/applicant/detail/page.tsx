@@ -1,4 +1,3 @@
-import PageTitle from "@/components/widgets/page-title";
 import ApplicantDetailsComponent from "../_client/applicant-details-component";
 
 export default function ApplicantDetailPage() {

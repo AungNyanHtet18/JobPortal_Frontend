@@ -1,29 +1,37 @@
 'server only'
 
-import { cookies } from "next/headers";
 import { AuthResult, LoginUser } from "./type/schema/auth.schema";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const COOKIE_OPTIONS: Partial<ResponseCookie> = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60
+}
 
 export default async function setAuthResult(auth: AuthResult) {
     
     const {accessToken, refreshToken, ...loginUser} = auth
     const cookieStore = await cookies()
-    const secure = process.env.NODE_ENV === 'production'
 
-       const options:Partial<ResponseCookie> = {
-         httpOnly: true,
-         secure: secure,
-         sameSite: 'lax',
-         path: "/",
-         maxAge: 60 * 60
-    }
-
-    cookieStore.set("loginUser",JSON.stringify(loginUser), options)
-    cookieStore.set("accessToken", accessToken, options)
-    cookieStore.set("refreshToken", refreshToken, options)
+    cookieStore.set("loginUser",JSON.stringify(loginUser), COOKIE_OPTIONS)
+    cookieStore.set("accessToken", accessToken, COOKIE_OPTIONS)
+    cookieStore.set("refreshToken", refreshToken, COOKIE_OPTIONS)
 } 
+
+export async function setApplicantId(id: string) {
+      const cookieStore = await cookies()
+      cookieStore.set("applicantId",id, COOKIE_OPTIONS)
+}
+
+export async function getApplicantId() {
+     const cookieStore = await cookies()
+     return cookieStore.get("applicantId")?.value
+}
 
 export async function isLogin() :Promise<boolean> {
      const cookieStore = await cookies()

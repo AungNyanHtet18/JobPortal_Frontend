@@ -5,7 +5,7 @@ import { safeCall } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import * as applicant from "@/lib/actions/applicant/applicant.action" 
 import Loading from "@/components/widgets/loading"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Mail, User, MapPin, Phone, Briefcase, Wrench, FileText,Calendar} from "lucide-react"
@@ -17,7 +17,9 @@ export default function ApplicantDetailsComponent() {
         function load() {
             safeCall(async () => {
                 const result = await applicant.findByName()
+                if(result !== null) {
                 setDetails(result) 
+                }
             })
         }
         load()

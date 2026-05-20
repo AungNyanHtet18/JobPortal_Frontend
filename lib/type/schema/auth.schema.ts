@@ -26,7 +26,9 @@ export type LoginUser = {
       role: Role
 }
 
-export type AuthResult = LoginUser & {
+
+export type AuthResult = LoginUser &  {
      accessToken: string
      refreshToken: string
+     applicantId?: number
 }

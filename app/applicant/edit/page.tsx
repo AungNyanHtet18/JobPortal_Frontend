@@ -79,7 +79,7 @@ export default function ApplicantEditPage() {
 
      async function save(form: ApplicantForm) {
          await safeCall(async () =>  { 
-            const result = Applicant.createApplicantAction(form)
+          await Applicant.createApplicantAction(form)
             router.replace(`/applicant/detail`)
         })
 

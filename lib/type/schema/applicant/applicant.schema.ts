@@ -43,6 +43,7 @@ export type JobListItem = {
 }
 
 export type ApplicantDetails = {
+     id: number
      name: string
      email: string
      gender: 'Male' | 'Female'
