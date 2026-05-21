@@ -19,7 +19,8 @@ export  const ApplicantSchema = z.object({
     professionalSummary: z.string().optional(),
     contactDetail: z.string().nonempty("Please fill your contact detail.").min(10).max(200),
     address: z.string().nonempty("Please fill your address.").min(10).max(200),
-    experiences: z.array(ExperienceSchema)
+    experiences: z.array(ExperienceSchema),
+    file: z.instanceof(File).optional()
 })
 
 export type ApplicantForm = z.infer<typeof ApplicantSchema>
