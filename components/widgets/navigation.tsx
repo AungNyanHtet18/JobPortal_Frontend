@@ -62,7 +62,7 @@ export default async function Navigation() {
 
                   { UserisLogin && 
                     <NavigationMenuItem>
-                        <Button onClick={signOutAction} className="flex items-center  gap-2 hover:bg-blue-900">
+                        <Button onClick={signOutAction} className="flex items-center  gap-2 hover:bg-slate-700">
                             <Lock/> Sign Out
                         </Button>
                     </NavigationMenuItem> 
