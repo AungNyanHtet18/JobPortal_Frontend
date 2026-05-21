@@ -2,13 +2,14 @@ import { Briefcase, Lock, ShoppingBag } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "../ui/navigation-menu";
 import { nav } from "@/lib/type/navbartype";
 import Link from "next/link";
-import { isLogin } from "@/lib/login-users";
+import { getApplicantId, isLogin } from "@/lib/login-users";
 import { Button } from "../ui/button";
 import { signOutAction } from "@/lib/actions/auth.action";
 
 export default async function Navigation() {
 
    const UserisLogin: boolean = await isLogin()
+   const applicantId: string | undefined = await getApplicantId() 
 
     return (
       <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">
@@ -39,7 +40,14 @@ export default async function Navigation() {
                         <Link className="text-[14px] font-semibold text-zinc-100" href={a.url}>{a.name}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
-                    
+
+                  {applicantId &&
+                    <NavigationMenuItem>
+                      <NavigationMenuLink asChild>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href='/applicant/detail'>detail</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  }
 
                   { !UserisLogin && 
                      <NavigationMenuItem>

@@ -9,7 +9,6 @@ export default function ApplicantPage() {
 
    const [id, setId] = useState<string>()
 
-
    useEffect(() => {
        function load() {
           safeCall(async () => {

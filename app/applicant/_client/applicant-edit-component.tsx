@@ -31,6 +31,23 @@ function formatFileSize(size: number) {
     return `${(size / 1024 / 1024).toFixed(1)} MB`
 }
 
+function toApplicantPayload(form: ApplicantForm) {
+    return {
+        applicantName: form.applicantName,
+        gender: form.gender,
+        highestEducationalAttainment: form.highestEducationalAttainment,
+        professionalSummary: form.professionalSummary,
+        contactDetail: form.contactDetail,
+        address: form.address,
+        skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
+        experiences: form.experiences.map(item => ({
+            companyName: item.companyName.trim(),
+            position: item.position.trim(),
+            year: Number(item.year)
+        }))
+    }
+}
+
 export default function ApplicantEditComponent({id} : {id: string}) {
 
     const router = useRouter()
@@ -135,10 +152,19 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         experiencesFieldArray.remove(index)
     }
 
-    async function save() {
+    async function save(values: ApplicantForm) {
         setIsSaving(true)
 
+        const payload = new FormData()
+        payload.append("form", JSON.stringify(toApplicantPayload(values)))
+
+        if(profileImage) {
+            payload.append("file", profileImage)
+        }
+
         await safeCall(async () => {
+            await Applicant.updateApplicantAction(id, payload)
+
             if(resumeFile) {
                 const resumePayload = new FormData()
                 resumePayload.append("file", resumeFile)

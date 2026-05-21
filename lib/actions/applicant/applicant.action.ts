@@ -30,6 +30,30 @@ export async function createApplicantAction(formData: FormData): Promise<Modific
       return await response.json()
 }
 
+export async function updateApplicantAction(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
+     const formValue = formData.get("form")
+
+     if(typeof formValue !== "string") {
+          throw new Error("Applicant form data is missing.")
+     }
+
+     const payload = new FormData()
+     payload.append("form", new Blob([formValue], {type: "application/json"}))
+
+     const file = formData.get("file")
+
+     if(file instanceof File && file.size > 0) {
+          payload.append("file", file)
+     }
+
+     const response = await secureRequest(`applicant/${id}`, {
+          method: "PUT",
+          body: payload
+     })
+
+     return await response.json()
+}
+
 export async function uploadApplicantResumeAction(formData: FormData): Promise<ModificationResult<string>> {
      const file = formData.get("file")
 
