@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Roboto } from "next/font/google";
-import "./globals.css";
+import "./global.css";
 import { Toaster } from "@/components/ui/sonner";
 
 const roboto = Roboto({

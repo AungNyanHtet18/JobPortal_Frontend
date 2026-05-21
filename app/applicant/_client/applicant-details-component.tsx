@@ -53,7 +53,11 @@ export default function ApplicantDetailsComponent() {
         load()
     }, [])
 
-    const resumeFileName = useMemo(() => getFileName(details?.resume ?? null), [details?.resume])
+    const resumeFileName = useMemo(() => 
+            getFileName(details?.resume ?? null), 
+          [details?.resume]) //Only run getFileName() again when details.resume changes.
+    
+    
     const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if (!details) {
@@ -68,7 +72,6 @@ export default function ApplicantDetailsComponent() {
                         <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
                             <div className="flex aspect-[4/5] items-center justify-center bg-zinc-100">
                                 {visibleProfileImage ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img
                                         src={profileImageUrl}
                                         alt={`${details.name} profile`}

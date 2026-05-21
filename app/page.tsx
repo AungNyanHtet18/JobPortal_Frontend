@@ -13,7 +13,6 @@ export default function Page() {
    return (
      <div className="px-4 py-4">
         <PageTitle icon="Home" title="Home"/>
-
      </div>
    )
 }
