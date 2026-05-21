@@ -2,16 +2,13 @@
 
 import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import * as applicant from "@/lib/actions/applicant/applicant.action" 
 
 
 export default function ApplicantEditComponent({id} : {id: string}) {
-    
-    const router = useRouter()
-    
+
     const form = useForm<ApplicantForm>({
       resolver: zodResolver(ApplicantSchema),
             defaultValues: {
@@ -94,6 +91,6 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
 
     return (
-        <h1>Edit Applicant</h1>
+        <h1>Edit Applicant {id}</h1>
      )
 }

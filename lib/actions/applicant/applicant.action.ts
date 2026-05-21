@@ -1,27 +1,51 @@
 'use server'
 
-import { POST_CONFIG, secureRequest, secureSearch } from "@/lib";
+import { secureRequest, secureSearch } from "@/lib";
 import { getApplicantId, getLoginUser } from "@/lib/login-users";
 import { ModificationResult, PageResult } from "@/lib/type";
-import { ApplicantDetails, ApplicantForm, JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema";
+import { ApplicantDetails, JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema";
 
-export async function createApplicantAction(form: ApplicantForm): Promise<ModificationResult<number>> {
+export async function createApplicantAction(formData: FormData): Promise<ModificationResult<number>> {
      
-     const payload = { 
-          ...form, 
-          skills: form.skills.map(s => s.skill), 
-          experiences: form.experiences.map(e => ({ 
-          ...e,
-          year: Number(e.year)
-          }))
+     const formValue = formData.get("form")
+
+     if(typeof formValue !== "string") {
+          throw new Error("Applicant form data is missing.")
+     }
+
+     const payload = new FormData()
+     payload.append("form", new Blob([formValue], {type: "application/json"}))
+
+     const file = formData.get("file")
+
+     if(file instanceof File && file.size > 0) {
+          payload.append("file", file)
      }
      
      const response = await secureRequest('applicant',{
-           ...POST_CONFIG,
-           body: JSON.stringify(payload)
+           method: "POST",
+           body: payload
       })
 
       return await response.json()
+}
+
+export async function uploadApplicantResumeAction(formData: FormData): Promise<ModificationResult<string>> {
+     const file = formData.get("file")
+
+     if(!(file instanceof File) || file.size === 0) {
+          throw new Error("Please select a resume file.")
+     }
+
+     const payload = new FormData()
+     payload.append("file", file)
+
+     const response = await secureRequest('applicant/uploadresume',{
+          method: "PATCH",
+          body: payload
+     })
+
+     return await response.json()
 }
 
 export async function search(form: JobSearch):Promise<PageResult<JobListItem>> {

@@ -21,7 +21,7 @@ export default function SignInFormComponent() {
         }
     })
 
-    async function save(form: SignInForm) { //test by removing async
+    async function save(form: SignInForm) { 
          safeCall(async () => await signInAction(form))
     }
 

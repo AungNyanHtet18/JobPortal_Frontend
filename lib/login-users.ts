@@ -65,4 +65,5 @@ export async function clearAuthResult() {
       cookieStore.delete("loginUser")
       cookieStore.delete("accessToken")
       cookieStore.delete("refreshToken")
+      cookieStore.delete("applicantId")
 }
