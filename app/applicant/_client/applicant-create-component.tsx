@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {BriefcaseBusiness,FileText,GraduationCap,ImagePlus,Loader2,Plus, Save,Trash,Upload,UserRound,X} from "lucide-react"
-
 import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
 import { Form } from "@/components/ui/form"

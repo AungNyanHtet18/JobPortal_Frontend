@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BriefcaseBusiness, FileText, GraduationCap, ImagePlus, Loader2, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
-
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
@@ -155,7 +154,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
             <PageTitle
-                icon="User"
+                icon="UserPen"
                 title="Applicant Edit"
                 description="Review and update your applicant profile"
             />

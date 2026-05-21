@@ -1,134 +1,213 @@
 'use client'
 
-import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
-import { safeCall } from "@/lib/utils"
-import { useEffect, useState } from "react"
-import * as applicant from "@/lib/actions/applicant/applicant.action" 
-import Loading from "@/components/widgets/loading"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useMemo, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Mail, User, MapPin, Phone, Briefcase, Wrench, FileText,Calendar} from "lucide-react"
+import Loading from "@/components/widgets/loading"
+import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
+import { safeCall } from "@/lib/utils"
+import * as applicant from "@/lib/actions/applicant/applicant.action"
+import { Briefcase, Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
+
+function getInitials(name: string) {
+    return name
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(item => item[0]?.toUpperCase())
+        .join("") || "AP"
+}
+
+function getFileName(fileName: string | null) {
+    if(!fileName) {
+        return "No resume uploaded"
+    }
+
+    const normalized = fileName.split(/[\\/]/).pop() || fileName
+
+    try {
+        return decodeURIComponent(normalized)
+    } catch {
+        return normalized
+    }
+}
 
 export default function ApplicantDetailsComponent() {
     const [details, setDetails] = useState<ApplicantDetails>()
+    const [profileImageUrl, setProfileImageUrl] = useState<string>()
+    const [profileImageFailed, setProfileImageFailed] = useState(false)
 
     useEffect(() => {
         function load() {
             safeCall(async () => {
                 const result = await applicant.findByName()
+
                 if(result !== null) {
-                setDetails(result) 
+                    setDetails(result)
+                    setProfileImageUrl(await applicant.getApplicantProfileImageUrl(result.profileImage))
+                    setProfileImageFailed(false)
                 }
             })
         }
+
         load()
     }, [])
+
+    const resumeFileName = useMemo(() => getFileName(details?.resume ?? null), [details?.resume])
+    const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if (!details) {
         return <Loading />
     }
 
     return (
-        <div className="max-w-8xl mx-auto p-6 space-y-8 ">
-          
-            <div className="flex flex-col md:flex-row justify-between  md:items-center gap-4 p-6 rounded-xl shadow- border border-1 border-gray-500  bg-white">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">{details.name}</h1>
-                    <div className="flex flex-wrap gap-3 text-slate-500 text-sm">
-                        <span className="flex items-center gap-1 text-slate-700">
-                            <Mail className="w-4 h-4" /> {details.email}
-                        </span>
-                        <span className="flex items-center gap-1 text-slate-700">
-                            <User className="w-4 h-4" /> {details.gender}
-                        </span>
-                        <span className="flex items-center gap-1 text-slate-700">
-                            <MapPin className="w-4 h-4" /> {details.address}
-                        </span>
-                    </div>
-                </div>
-                <Badge variant="outline" className="px-4 py-1 text-base text-white  bg-zinc-600">
-                    {details.highestEducationalAttainment}
-                </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="p-3 lg:col-span-2 space-y-8  border border-1 border-slate-300 bg-white rounded-xl shadow-sm ">
-                    <section className="space-y-3">
-                        <div className="flex items-center gap-2 text-slate-900">
-                            <FileText className="w-5 h-5 text-black-600" />
-                            <h2 className="text-xl font-semibold">Professional Summary</h2>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed">
-                            {details.professionalSummary}
-                        </p>
-                    </section>
-
-                    <section className="space-y-4">
-                        <div className="flex items-center gap-2 text-slate-900">
-                            <Briefcase className="w-5 h-5 text-black-600" />
-                            <h2 className="text-xl font-semibold">Work Experience</h2>
-                        </div>
-                        <div className="space-y-6">
-                            {details.experience.map((exp, index) => (
-                                <div key={index} className="relative pl-6 border-l-2 border-gray-300 pb-2">
-                                    <div className="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-gray-400 border-2 border-gray-400" />
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h3 className="font-bold text-slate-800">{exp.companyName}</h3>
-                                        <span className="text-xs font-medium text-slate-400 flex items-center gap-1">
-                                            <Calendar className="w-3 h-3" />
-                                             {exp.years || 'Present'}
-                                        </span>
+        <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
+            <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+                <aside className="space-y-4">
+                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                        <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
+                            <div className="flex aspect-[4/5] items-center justify-center bg-zinc-100">
+                                {visibleProfileImage ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={profileImageUrl}
+                                        alt={`${details.name} profile`}
+                                        className="size-full object-cover"
+                                        onError={() => setProfileImageFailed(true)}
+                                    />
+                                ) : (
+                                    <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
+                                        {getInitials(details.name)}
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">{exp.position}</p>
-                                </div>
-                            ))}
+                                )}
+                            </div>
                         </div>
-                    </section>
-                </div>
+
+                        <div className="mt-5 space-y-2">
+                            <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.name}</h1>
+                            <div className="flex flex-wrap gap-2">
+                                <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
+                                    {details.gender}
+                                </Badge>
+                                {details.highestEducationalAttainment && (
+                                    <Badge className="bg-zinc-950 text-white hover:bg-zinc-800">
+                                        {details.highestEducationalAttainment}
+                                    </Badge>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                        <div className="mb-4 flex items-center gap-2">
+                            <Phone className="size-5 text-zinc-900" />
+                            <h2 className="text-base font-semibold">Contact</h2>
+                        </div>
+                        <div className="space-y-4 text-sm">
+                            <div className="flex gap-3">
+                                <Mail className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                                <span className="break-all text-zinc-800">{details.email}</span>
+                            </div>
+                            <Separator />
+                            <div className="flex gap-3">
+                                <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                                <span className="text-zinc-800">{details.contactDetail}</span>
+                            </div>
+                            <Separator />
+                            <div className="flex gap-3">
+                                <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                                <span className="text-zinc-800">{details.address}</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
 
                 <div className="space-y-6">
-                    <Card className="shadow-sm bg-white border border-1 border-gray-300">
-                        <CardHeader>
-                            <CardTitle className="text-xl flex items-center gap-2">
-                                <Wrench className="w-5 h-5 text-black-600" />
-                                Skills
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {details.skills.map((skill, i) => (
-                                    <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-900 font-medium hover:bg-gray-300 cursor-pointer border-none">
-                                        {skill}
-                                    </Badge>
+                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
+                            <User className="size-5 text-zinc-900" />
+                            <h2 className="text-base font-semibold">Professional Summary</h2>
+                        </div>
+                        <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
+                            {details.professionalSummary || "No professional summary added."}
+                        </p>
+                    </div>
+
+                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
+                            <Briefcase className="size-5 text-zinc-900" />
+                            <h2 className="text-base font-semibold">Work Experience</h2>
+                        </div>
+
+                        {details.experience.length > 0 ? (
+                            <div className="space-y-4">
+                                {details.experience.map((exp) => (
+                                    <div key={exp.id} className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                            <div>
+                                                <h3 className="font-semibold text-zinc-950">{exp.companyName}</h3>
+                                                <p className="text-sm text-zinc-600">{exp.position}</p>
+                                            </div>
+                                            <div className="inline-flex items-center gap-1 text-sm text-zinc-500">
+                                                <Calendar className="size-4" />
+                                                {exp.years || "Present"}
+                                            </div>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
-                        </CardContent>
-                    </Card>
+                        ) : (
+                            <p className="text-sm text-zinc-500">No work experience added.</p>
+                        )}
+                    </div>
 
-                    <Card className="shadow-sm bg-white border border-1 border-gray-300">
-                        <CardHeader>
-                            <CardTitle className="text-xl flex items-center gap-2">
-                                <Phone className="w-5 h-5 text-black-600" />
-                                Contact Info
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-1">
-                                <p className="text-base font-semibold text-gray-500 uppercase tracking-wider">Phone</p>
-                                <p className="text-sm text-gray-900">{details.contactDetail}</p>
+                    <div className="grid gap-6 xl:grid-cols-3">
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
+                                <Wrench className="size-5 text-zinc-900" />
+                                <h2 className="text-base font-semibold">Skills</h2>
                             </div>
-                            <Separator className="bg-gray-300" />
-                            <div className="space-y-1">
-                                <p className="text-base font-semibold text-gray-500 uppercase tracking-wider">Education</p>
-                                <p className="text-sm text-gray-900">{details.highestEducationalAttainment}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {details.skills.length > 0 ? details.skills.map((skill) => (
+                                    <Badge key={skill} variant="secondary" className="text-[14px]  border border-zinc-200 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+                                        {skill}
+                                    </Badge>
+                                )) : (
+                                    <p className="text-sm text-zinc-500">No skills added.</p>
+                                )}
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
+                                <GraduationCap className="size-5 text-zinc-900" />
+                                <h2 className="text-base font-semibold">Education</h2>
+                            </div>
+                            <p className="text-sm leading-7 text-zinc-700">
+                                {details.highestEducationalAttainment || "No education added."}
+                            </p>
+                        </div>
+
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-4 flex items-center gap-2">
+                                <FileText className="size-5 text-zinc-900" />
+                                <h2 className="text-base font-semibold">Resume</h2>
+                            </div>
+                            <div className="flex  gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
+                                    <FileText className="size-5" />
+                                </div>
+                                <div>
+                                    <p className="truncate text-sm font-medium text-zinc-950">{resumeFileName}</p>
+                                    <p className="text-xs text-zinc-500">Uploaded resume file</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-
-    
+        </section>
     )
 }
