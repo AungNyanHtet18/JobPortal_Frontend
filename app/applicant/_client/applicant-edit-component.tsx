@@ -39,7 +39,10 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     const [resumeFile, setResumeFile] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
+    const [profileImageFailed, setProfileImageFailed] = useState(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
+    const visibleProfileImage = profilePreview || (!profileImageFailed ? uploadedProfileUrl : undefined)
 
     const form = useForm<ApplicantForm>({
         resolver: zodResolver(ApplicantSchema),
@@ -77,8 +80,11 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         async function load() {
             await safeCall(async () => {
                 const result = await Applicant.findByName()
-
+                console.log(result);
                 if(result) {
+                    setUploadedProfileUrl(await Applicant.getApplicantProfileImageUrl(result.profileImage))
+                    setProfileImageFailed(false)
+
                     form.reset({
                         applicantName: result.name ?? "",
                         gender: result.gender ?? "",
@@ -165,10 +171,18 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
                             <div className="space-y-3">
                                 <div
-                                    className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
-                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}
+                                    className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50"
                                 >
-                                    {!profilePreview && (
+                                    {visibleProfileImage && (
+                                        <img
+                                            src={visibleProfileImage}
+                                            alt="Applicant profile"
+                                            className="size-full object-cover"
+                                            onError={() => setProfileImageFailed(true)}
+                                        />
+                                    )}
+
+                                    {!visibleProfileImage && (
                                         <div className="flex flex-col items-center gap-2 text-zinc-500">
                                             <ImagePlus className="size-8" />
                                             <span className="text-sm font-medium">Current profile</span>

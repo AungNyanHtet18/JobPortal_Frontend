@@ -65,3 +65,25 @@ export async function findByName() : Promise<ApplicantDetails | null> {
 export async function findByApplicant() : Promise<string | undefined> {
       return await getApplicantId()
 }
+
+export async function getApplicantProfileImageUrl(profileImage: string | null): Promise<string | undefined> {
+     const baseUrl = process.env.BACKEND_URL
+
+     if(!baseUrl) {
+          throw new Error("Backend URL is missing.")
+     }
+
+     if(!profileImage) {
+          return undefined
+     }
+
+     if(profileImage.startsWith("http://") || profileImage.startsWith("https://")) {
+          return profileImage
+     }
+
+     if(profileImage.startsWith("/profile/")) {
+          return `${baseUrl}${profileImage}`
+     }
+
+     return `${baseUrl}/profile/${encodeURIComponent(profileImage)}`
+}

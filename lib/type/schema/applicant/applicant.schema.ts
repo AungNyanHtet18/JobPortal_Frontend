@@ -54,6 +54,8 @@ export type ApplicantDetails = {
      professionalSummary: string,
      contactDetail: string
      address: string
+     profileImage: string | null
+     resume: string | null
 }
 
 
