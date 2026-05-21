@@ -11,8 +11,8 @@ export default async function Navigation() {
    const UserisLogin: boolean = await isLogin()
 
     return (
-      <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-white/90 backdrop-blur-md flex justify-between items-center">
-        <h2 className="text-2xl font-bold flex justify-between items-center gap-2">
+      <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">
+        <h2 className="text-2xl text-white font-bold flex justify-between items-center gap-2">
           <Briefcase size={20} />Job Portal
         </h2>
       
@@ -20,15 +20,15 @@ export default async function Navigation() {
           <NavigationMenu >
               <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+                    <NavigationMenuTrigger className="text-[13px]">Apply List</NavigationMenuTrigger>
 
                    <NavigationMenuContent>
                         <NavigationMenuLink asChild>
-                          <Link href="/applicant/detail">Detail</Link>
+                          <Link href="/applicant/detail">Applied List</Link>
                         </NavigationMenuLink>
 
                         <NavigationMenuLink asChild>
-                          <Link href="/apply">Apply</Link>
+                          <Link href="/apply">Interview List</Link>
                         </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
@@ -36,7 +36,7 @@ export default async function Navigation() {
                   {nav.map(a => 
                     <NavigationMenuItem key={a.id}>
                       <NavigationMenuLink asChild>
-                        <Link href={a.url}>{a.name}</Link>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href={a.url}>{a.name}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
                     
@@ -68,9 +68,7 @@ export default async function Navigation() {
                     </NavigationMenuItem> 
                   }
 
-                  <NavigationMenuItem>
-                    <ShoppingBag  size={25}/>
-                  </NavigationMenuItem>
+
               </NavigationMenuList>
           </NavigationMenu>
         </div>

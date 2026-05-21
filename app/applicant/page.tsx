@@ -33,7 +33,7 @@ export default function ApplicantPage() {
    })
 
    return (
-      <section className="py-4">
+      <section className="py-4 min-h-screen">
          <PageTitle icon="User" title="Applicant"/>
 
          <h1 className="text-2xl">
