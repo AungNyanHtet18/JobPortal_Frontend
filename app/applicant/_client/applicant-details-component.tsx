@@ -14,12 +14,13 @@ export default function ApplicantDetailsComponent() {
     const [details, setDetails] = useState<ApplicantDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
-
+    const resumeFileName = useMemo(() => getFileName(details?.resume ?? null), [details?.resume]) //Only run getFileName() again when details.resume changes.
+    
     useEffect(() => {
         function load() {
             safeCall(async () => {
                 const result = await applicant.findByName()
-
+                console.log(result);
                 if(result !== null) {
                     setDetails(result)
                     setProfileImageUrl(await applicant.getApplicantProfileImageUrl(result.profileImage))
@@ -30,11 +31,6 @@ export default function ApplicantDetailsComponent() {
 
         load()
     }, [])
-
-    const resumeFileName = useMemo(() => 
-            getFileName(details?.resume ?? null), 
-          [details?.resume]) //Only run getFileName() again when details.resume changes.
-    
     
     const visibleProfileImage = profileImageUrl && !profileImageFailed
 

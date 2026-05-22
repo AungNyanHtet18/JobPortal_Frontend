@@ -40,3 +40,25 @@ export async function findByName() : Promise<CompanyDetails | null> {
    
    return await response.json().catch(() => null);
 }
+
+export async function getCompanyProfileImageUrl(profileImage: string | null | undefined): Promise<string | undefined> {
+   const baseUrl = process.env.BACKEND_URL
+
+   if(!baseUrl) {
+      throw new Error("Backend URL is missing.")
+   }
+
+   if(!profileImage) {
+      return undefined
+   }
+
+   if(profileImage.startsWith("http://") || profileImage.startsWith("https://")) {
+      return profileImage
+   }
+
+   if(profileImage.startsWith("/companyprofile/")) {
+      return `${baseUrl}${profileImage}`
+   }
+
+   return `${baseUrl}/companyprofile/${encodeURIComponent(profileImage)}`
+}

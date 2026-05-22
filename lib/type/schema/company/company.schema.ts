@@ -25,6 +25,7 @@ export type CompanyDetails = {
       phone : string,
       websiteUrl : string,
       description : string,
+      profileImage?: string | null,
       totalPostedJobs : number,
       uploadedJob: UploadedJob[]
 }

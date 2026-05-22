@@ -149,33 +149,34 @@ export default function CompanyCreateComponent() {
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <MapPin className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Location And Contact</h2>
-                            </div>
-
-                            <div className="grid gap-4 md:grid-cols-2">
-                                <FormsTextAreaInput control={form.control} path="location" label="Location" placeHolder="Enter your company location" rowHeight="min-h-[96px]" />
-                                <FormsInput control={form.control} path="phone" label="Phone" placeHolder="Enter 10 digit phone number" />
-                            </div>
-                        </div>
-
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
                                 <Globe className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Website</h2>
                             </div>
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormsInput control={form.control} path="websiteUrl" label="Website URL" placeHolder="https://example.com" />
-                                <div className="rounded-lg border border-zinc-100 bg-zinc-50 p-4">
-                                    <div className="flex items-start gap-3">
+                                <FormsInput control={form.control} path="phone" label="Phone" placeHolder="Enter 10 digit phone number" />
+                            
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
+                                <MapPin className="size-5 text-zinc-900" />
+                                <h2 className="text-base font-semibold">Location And Contact</h2>
+                            </div>
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <FormsTextAreaInput control={form.control} path="location" label="Location" placeHolder="Enter your company location" rowHeight="min-h-[96px]" />
+                                <div className="flex items-center rounded-lg border border-zinc-100 bg-zinc-50 mt-5 p-3">
+                                    <div className="flex gap-3">
                                         <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                             <Phone className="size-5" />
                                         </div>
-                                        <div className="min-w-0 flex-1">
+                                         <div className="flex flex-col">
                                             <p className="text-sm font-medium text-zinc-950">Company Contact</p>
                                             <p className="text-xs text-zinc-500">Use a reachable phone number for applicant inquiries.</p>
-                                        </div>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
