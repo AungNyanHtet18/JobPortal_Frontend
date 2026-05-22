@@ -14,39 +14,9 @@ import FormsTextAreaInput from "@/components/fields/form-textarea"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { safeCall } from "@/lib/utils"
+import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 
-const emptyExperience = {
-    companyName: "",
-    position: "",
-    year: ""
-}
-
-function formatFileSize(size: number) {
-    if(size < 1024 * 1024) {
-        return `${Math.max(1, Math.round(size / 1024))} KB`
-    }
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`
-}
-
-function toApplicantPayload(form: ApplicantForm) {
-    return {
-        applicantName: form.applicantName,
-        gender: form.gender,
-        highestEducationalAttainment: form.highestEducationalAttainment,
-        professionalSummary: form.professionalSummary,
-        contactDetail: form.contactDetail,
-        address: form.address,
-        skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
-        experiences: form.experiences.map(item => ({
-            companyName: item.companyName.trim(),
-            position: item.position.trim(),
-            year: Number(item.year)
-        }))
-    }
-}
 
 export default function ApplicantCreateComponent() {
 
@@ -55,6 +25,12 @@ export default function ApplicantCreateComponent() {
     const [resumeFile, setResumeFile] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
+
+    const emptyExperience = {
+        companyName: "",
+        position: "",
+        year: ""
+    }
 
     const form = useForm<ApplicantForm>({
         resolver: zodResolver(ApplicantSchema),
@@ -112,6 +88,24 @@ export default function ApplicantCreateComponent() {
         }
 
         experiencesFieldArray.remove(index)
+    }
+
+
+    function toApplicantPayload(form: ApplicantForm) {
+        return {
+            applicantName: form.applicantName,
+            gender: form.gender,
+            highestEducationalAttainment: form.highestEducationalAttainment,
+            professionalSummary: form.professionalSummary,
+            contactDetail: form.contactDetail,
+            address: form.address,
+            skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
+            experiences: form.experiences.map(item => ({
+                companyName: item.companyName.trim(),
+                position: item.position.trim(),
+                year: Number(item.year)
+            }))
+        }
     }
 
     async function save(values: ApplicantForm) {

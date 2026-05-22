@@ -1,4 +1,4 @@
-import { isLogin } from "@/lib/login-users"
+import { getCompanyId, isLogin } from "@/lib/login-users"
 import { Briefcase, Lock } from "lucide-react"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "../ui/navigation-menu"
 import Link from "next/link"
@@ -9,6 +9,7 @@ import { companyNavbar} from "@/lib/type/navbartype"
 export default async function CompanyNavigation() {
 
    const UserisLogin: boolean = await isLogin()
+   const companyId: string | undefined = await getCompanyId() 
 
     return (
       <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">
@@ -27,7 +28,13 @@ export default async function CompanyNavigation() {
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
 
-         
+                  {companyId &&
+                    <NavigationMenuItem>
+                      <NavigationMenuLink asChild>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href='/companyaccount/detail'>detail</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  }
 
                   { !UserisLogin && 
                      <NavigationMenuItem>
@@ -35,9 +42,7 @@ export default async function CompanyNavigation() {
                         <Link href={'/signup'}>signup</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>  
-
                   }
-
 
                   { !UserisLogin && 
                     <NavigationMenuItem>
@@ -47,7 +52,6 @@ export default async function CompanyNavigation() {
                     </NavigationMenuItem> 
                   }
 
-
                   { UserisLogin && 
                     <NavigationMenuItem>
                         <Button onClick={signOutAction} className="flex items-center  gap-2 hover:bg-slate-700">
@@ -55,7 +59,6 @@ export default async function CompanyNavigation() {
                         </Button>
                     </NavigationMenuItem> 
                   }
-
 
               </NavigationMenuList>
           </NavigationMenu>

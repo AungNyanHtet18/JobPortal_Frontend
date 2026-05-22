@@ -23,16 +23,6 @@ export default async function setAuthResult(auth: AuthResult) {
     cookieStore.set("refreshToken", refreshToken, COOKIE_OPTIONS)
 } 
 
-export async function setApplicantId(id: string) {
-      const cookieStore = await cookies()
-      cookieStore.set("applicantId",id, COOKIE_OPTIONS)
-}
-
-export async function getApplicantId() {
-     const cookieStore = await cookies()
-     return cookieStore.get("applicantId")?.value
-}
-
 export async function isLogin() :Promise<boolean> {
      const cookieStore = await cookies()
      return cookieStore.get("loginUser")?.value != undefined
@@ -60,10 +50,33 @@ export async function getRefreshToken() {
      return cookieStore.get("refreshToken")?.value
 }
 
+
+export async function setApplicantId(id: string) {
+      const cookieStore = await cookies()
+      cookieStore.set("applicantId",id, COOKIE_OPTIONS)
+}
+
+export async function getApplicantId() {
+     const cookieStore = await cookies()
+     return cookieStore.get("applicantId")?.value
+}
+
+
+export async function setCompanyId(id: string) {
+      const cookieStore = await cookies()
+      cookieStore.set("companyId",id, COOKIE_OPTIONS)
+}
+ 
+export async function getCompanyId() {
+     const cookieStore = await cookies()
+     return cookieStore.get("companyId")?.value
+}
+
 export async function clearAuthResult() {
       const cookieStore = await cookies()
       cookieStore.delete("loginUser")
       cookieStore.delete("accessToken")
       cookieStore.delete("refreshToken")
       cookieStore.delete("applicantId")
+      cookieStore.delete("companyId")
 }

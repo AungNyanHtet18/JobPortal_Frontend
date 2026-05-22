@@ -5,32 +5,10 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import Loading from "@/components/widgets/loading"
 import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
-import { safeCall } from "@/lib/utils"
+import { getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicant from "@/lib/actions/applicant/applicant.action"
 import { Briefcase, Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
 
-function getInitials(name: string) {
-    return name
-        .split(" ")
-        .filter(Boolean)
-        .slice(0, 2)
-        .map(item => item[0]?.toUpperCase())
-        .join("") || "AP"
-}
-
-function getFileName(fileName: string | null) {
-    if(!fileName) {
-        return "No resume uploaded"
-    }
-
-    const normalized = fileName.split(/[\\/]/).pop() || fileName
-
-    try {
-        return decodeURIComponent(normalized)
-    } catch {
-        return normalized
-    }
-}
 
 export default function ApplicantDetailsComponent() {
     const [details, setDetails] = useState<ApplicantDetails>()

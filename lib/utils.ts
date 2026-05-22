@@ -28,3 +28,36 @@ export async function safeCall(action: () => Promise<void>) {
      })
    }
 }
+
+
+export function formatFileSize(size: number) {
+    if(size < 1024 * 1024) {
+        return `${Math.max(1, Math.round(size / 1024))} KB`
+    }
+
+    return `${(size / 1024 / 1024).toFixed(1)} MB`
+}
+
+
+export function getInitials(name: string) {
+    return name
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(item => item[0]?.toUpperCase())
+        .join("") || "AP"
+}
+
+export function getFileName(fileName: string | null) {
+    if(!fileName) {
+        return "No resume uploaded"
+    }
+
+    const normalized = fileName.split(/[\\/]/).pop() || fileName
+
+    try {
+        return decodeURIComponent(normalized)
+    } catch {
+        return normalized
+    }
+}

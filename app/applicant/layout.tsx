@@ -1,4 +1,4 @@
-import ApplicantNavigation from "@/components/widgets/navigation";
+import ApplicantNavigation from "@/components/widgets/applicant-navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
