@@ -13,40 +13,9 @@ import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PageTitle from "@/components/widgets/page-title"
-import { safeCall } from "@/lib/utils"
+import { formatFileSize, safeCall } from "@/lib/utils"
 import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
-
-const emptyExperience = {
-    companyName: "",
-    position: "",
-    year: ""
-}
-
-function formatFileSize(size: number) {
-    if(size < 1024 * 1024) {
-        return `${Math.max(1, Math.round(size / 1024))} KB`
-    }
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`
-}
-
-function toApplicantPayload(form: ApplicantForm) {
-    return {
-        applicantName: form.applicantName,
-        gender: form.gender,
-        highestEducationalAttainment: form.highestEducationalAttainment,
-        professionalSummary: form.professionalSummary,
-        contactDetail: form.contactDetail,
-        address: form.address,
-        skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
-        experiences: form.experiences.map(item => ({
-            companyName: item.companyName.trim(),
-            position: item.position.trim(),
-            year: Number(item.year)
-        }))
-    }
-}
 
 export default function ApplicantEditComponent({id} : {id: string}) {
 
@@ -59,6 +28,12 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     const [profileImageFailed, setProfileImageFailed] = useState(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
     const visibleProfileImage = profilePreview || (!profileImageFailed ? uploadedProfileUrl : undefined)
+
+    const emptyExperience = {
+        companyName: "",
+        position: "",
+        year: ""
+    }
 
     const form = useForm<ApplicantForm>({
         resolver: zodResolver(ApplicantSchema),
@@ -96,7 +71,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         async function load() {
             await safeCall(async () => {
                 const result = await Applicant.findByName()
-                console.log(result);
+
                 if(result) {
                     setUploadedProfileUrl(await Applicant.getApplicantProfileImageUrl(result.profileImage))
                     setProfileImageFailed(false)
@@ -150,6 +125,24 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         }
 
         experiencesFieldArray.remove(index)
+    }
+
+
+    const toApplicantPayload = (form: ApplicantForm) => {
+        return {
+            applicantName: form.applicantName,
+            gender: form.gender,
+            highestEducationalAttainment: form.highestEducationalAttainment,
+            professionalSummary: form.professionalSummary,
+            contactDetail: form.contactDetail,
+            address: form.address,
+            skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
+            experiences: form.experiences.map(item => ({
+                companyName: item.companyName.trim(),
+                position: item.position.trim(),
+                year: Number(item.year)
+            }))
+        }
     }
 
     async function save(values: ApplicantForm) {

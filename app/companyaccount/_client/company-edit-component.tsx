@@ -1,37 +1,41 @@
 'use client'
 
-import { useEffect, useMemo, useState } from "react";
-import FormsInput from "@/components/fields/form-input";
-import FormsTextAreaInput from "@/components/fields/form-textarea";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import PageTitle from "@/components/widgets/page-title";
-import * as Company from "@/lib/actions/company/company.action";
-import { CompanyForm, CompanySchema } from "@/lib/type/schema/company/company.schema";
-import { formatFileSize, safeCall } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2, Globe, ImagePlus, Loader2, MapPin, Phone, Save, Upload, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react"
+import FormsInput from "@/components/fields/form-input"
+import FormsTextAreaInput from "@/components/fields/form-textarea"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import PageTitle from "@/components/widgets/page-title"
+import { CompanyForm, CompanySchema } from "@/lib/type/schema/company/company.schema"
+import { formatFileSize, safeCall } from "@/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Building2, Globe, ImagePlus, Loader2, MapPin, Phone, Save, Upload, X } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import * as Company from "@/lib/actions/company/company.action"
 
-export default function CompanyCreateComponent() {
+export default function CompanyEditComponent({id} : {id: string}) {
      
     const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
+    const [profileImageFailed, setProfileImageFailed] = useState(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
+    const visibleProfileImage = profilePreview || (!profileImageFailed ? uploadedProfileUrl : undefined)
 
     const form = useForm<CompanyForm>({
-         resolver: zodResolver(CompanySchema),
-         defaultValues: {
-             companyName: "",
-             location: "",
-             phone: "",
-             websiteUrl: "",
-             description: ""
-         }
+            resolver: zodResolver(CompanySchema),
+            defaultValues: {
+                companyName: "",
+                location: "",
+                phone: "",
+                websiteUrl: "",
+                description: ""
+            }
     })
 
     useEffect(() => {
@@ -41,6 +45,32 @@ export default function CompanyCreateComponent() {
             }
         }
     }, [profilePreview])
+
+    useEffect(() => {
+         async function load() {
+             await safeCall(async () => {
+                 const result = await Company.findByName()
+              
+                 if(result) {
+                     setUploadedProfileUrl(await Company.getCompanyProfileImageUrl(result.profileImage))
+                     setProfileImageFailed(false)
+
+                     form.reset({
+                        companyName: result.companyName ?? "",
+                        location: result.location ?? "",
+                        phone: result.phone ?? "",
+                        websiteUrl: result.websiteUrl ?? "",
+                        description: result.description ?? ""
+                     })
+                 }
+             
+            })
+
+            setIsLoading(false)
+         }
+
+         load()
+    },[id, form])
 
 
     const toCompanyPayload = (form: CompanyForm) => {
@@ -54,7 +84,7 @@ export default function CompanyCreateComponent() {
    }
 
 
-    async function save(values: CompanyForm) {
+    async function  save(values: CompanyForm) {
         setIsSaving(true)
 
         const payload = new FormData()
@@ -65,7 +95,7 @@ export default function CompanyCreateComponent() {
         }
 
         await safeCall(async () =>  {
-            await Company.createCompanyAction(payload)
+            await Company.updateCompanyAction(id, payload)
             router.replace("/companyaccount/detail")
         })
 
@@ -76,8 +106,8 @@ export default function CompanyCreateComponent() {
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
             <PageTitle
                 icon="Building2"
-                title="Company Create"
-                description="Create a complete company profile"
+                title="Company Edit"
+                description="Review and update your company profile"
             />
 
             <Form {...form}>
@@ -91,19 +121,27 @@ export default function CompanyCreateComponent() {
 
                             <div className="space-y-3">
                                 <div
-                                    className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
-                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}
+                                    className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50"
                                 >
-                                    {!profilePreview && (
+                                    {visibleProfileImage && (
+                                        <img
+                                            src={visibleProfileImage}
+                                            alt="Company profile"
+                                            className="size-full object-cover"
+                                            onError={() => setProfileImageFailed(true)}
+                                        />
+                                    )}
+
+                                    {!visibleProfileImage && (
                                         <div className="flex flex-col items-center gap-2 text-zinc-500">
                                             <ImagePlus className="size-8" />
-                                            <span className="text-sm font-medium">Company image</span>
+                                            <span className="text-sm font-medium">Current profile</span>
                                         </div>
                                     )}
                                 </div>
 
                                 <Input
-                                    id="company-profile-image"
+                                    id="edit-company-profile-image"
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
@@ -112,7 +150,7 @@ export default function CompanyCreateComponent() {
 
                                 <div className="flex gap-2">
                                     <Button type="button" variant="outline" className="flex-1 border-zinc-900 bg-white text-zinc-950 hover:bg-zinc-100" asChild>
-                                        <Label htmlFor="company-profile-image" className="cursor-pointer">
+                                        <Label htmlFor="edit-company-profile-image" className="cursor-pointer">
                                             <Upload className="size-4" />
                                             Choose
                                         </Label>
@@ -156,7 +194,6 @@ export default function CompanyCreateComponent() {
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormsInput control={form.control} path="websiteUrl" label="Website URL" placeHolder="https://example.com" />
                                 <FormsInput control={form.control} path="phone" label="Phone" placeHolder="Enter 10 digit phone number" />
-                            
                             </div>
                         </div>
 
@@ -168,22 +205,22 @@ export default function CompanyCreateComponent() {
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormsTextAreaInput control={form.control} path="location" label="Location" placeHolder="Enter your company location" rowHeight="min-h-[96px]" />
-                                <div className="flex items-center rounded-lg border border-zinc-100 bg-zinc-50 mt-5 p-3">
+                                <div className="mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
                                     <div className="flex gap-3">
                                         <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                             <Phone className="size-5" />
                                         </div>
-                                         <div className="flex flex-col">
+                                        <div className="flex flex-col">
                                             <p className="text-sm font-medium text-zinc-950">Company Contact</p>
                                             <p className="text-xs text-zinc-500">Use a reachable phone number for applicant inquiries.</p>
-                                         </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">
-                            <Button type="submit" disabled={isSaving} className="bg-zinc-950 px-6 text-white hover:bg-zinc-800">
+                            <Button type="submit" disabled={isSaving || isLoading} className="bg-zinc-950 px-6 text-white hover:bg-zinc-800">
                                 {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
                                 {isSaving ? "Saving" : "Save Company"}
                             </Button>

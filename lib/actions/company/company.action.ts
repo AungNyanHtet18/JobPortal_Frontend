@@ -1,7 +1,7 @@
 'use server'
 
 import { secureRequest, secureSearch } from "@/lib";
-import { getLoginUser, setCompanyId } from "@/lib/login-users";
+import { getCompanyId, getLoginUser, setCompanyId } from "@/lib/login-users";
 import { ModificationResult } from "@/lib/type";
 import type { CompanyDetails } from "@/lib/type/schema/company/company.schema";
 
@@ -33,6 +33,32 @@ export async function createCompanyAction(formData: FormData): Promise<Modificat
    return result
 }
 
+export async function updateCompanyAction(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
+   const formValue = formData.get("form")
+
+   if(typeof formValue !== "string") {
+      throw new Error("Company form data is missing.")
+   }
+
+   const payload = new FormData()
+   payload.append("form", new Blob([formValue], {type: "application/json"}))
+
+   const file = formData.get("file")
+
+   if(file instanceof File && file.size > 0) {
+      payload.append("file", file)
+   }
+
+   const response = await secureRequest(`company/${id}`, {
+      method: "PUT",
+      body: payload
+   })
+
+   const result = await response.json() as ModificationResult<number>
+   await setCompanyId(result.id.toString())
+
+   return result
+}
 
 export async function findByName() : Promise<CompanyDetails | null> {
    const loginUser = await getLoginUser()
@@ -40,6 +66,11 @@ export async function findByName() : Promise<CompanyDetails | null> {
    
    return await response.json().catch(() => null);
 }
+
+export async function findByCompany() : Promise<string | undefined> {
+   return await getCompanyId()
+}
+
 
 export async function getCompanyProfileImageUrl(profileImage: string | null | undefined): Promise<string | undefined> {
    const baseUrl = process.env.BACKEND_URL

@@ -22,7 +22,7 @@ export default function ApplicantEditPage() {
            }
     
            load()
-       })
+       }, [])
 
 
        if(id) {

@@ -1,7 +1,7 @@
 'use server'
 
 import { secureRequest, secureSearch } from "@/lib";
-import { getApplicantId, getLoginUser } from "@/lib/login-users";
+import { getApplicantId, getLoginUser, setApplicantId } from "@/lib/login-users";
 import { ModificationResult, PageResult } from "@/lib/type";
 import { ApplicantDetails, JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema";
 
@@ -27,7 +27,10 @@ export async function createApplicantAction(formData: FormData): Promise<Modific
            body: payload
       })
 
-      return await response.json()
+      const result =  await response.json() as ModificationResult<number>
+      await setApplicantId(result.id.toString())
+
+      return result
 }
 
 export async function updateApplicantAction(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
@@ -51,7 +54,11 @@ export async function updateApplicantAction(id: string | number, formData: FormD
           body: payload
      })
 
-     return await response.json()
+     const result = await response.json() as ModificationResult<number>
+     await setApplicantId(result.id.toString())
+
+     return result
+
 }
 
 export async function uploadApplicantResumeAction(formData: FormData): Promise<ModificationResult<string>> {

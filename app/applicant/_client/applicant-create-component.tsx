@@ -64,6 +64,7 @@ export default function ApplicantCreateComponent() {
         }
     }, [profilePreview])
 
+
     const appendSkill = () => {
         skillsFieldArray.append({skill: ""})
     }
@@ -90,8 +91,7 @@ export default function ApplicantCreateComponent() {
         experiencesFieldArray.remove(index)
     }
 
-
-    function toApplicantPayload(form: ApplicantForm) {
+    const toApplicantPayload = (form: ApplicantForm) => {
         return {
             applicantName: form.applicantName,
             gender: form.gender,
