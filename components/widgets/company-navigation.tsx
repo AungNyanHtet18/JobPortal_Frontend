@@ -4,7 +4,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { signOutAction } from "@/lib/actions/auth.action"
-import { companyNavbar} from "@/lib/type/navbartype"
+import { companyAuthNavbar, companyNavbar} from "@/lib/type/navbartype"
 
 export default async function CompanyNavigation() {
 
@@ -28,13 +28,12 @@ export default async function CompanyNavigation() {
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
 
-                  {companyId &&
-                    <NavigationMenuItem>
+                  {companyAuthNavbar.map(a => 
+                    <NavigationMenuItem key={a.id}>
                       <NavigationMenuLink asChild>
-                        <Link className="text-[14px] font-semibold text-zinc-100" href='/companyaccount/detail'>detail</Link>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href={a.url}>{a.name}</Link>
                       </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  }
+                    </NavigationMenuItem>)}
 
                   { !UserisLogin && 
                      <NavigationMenuItem>
