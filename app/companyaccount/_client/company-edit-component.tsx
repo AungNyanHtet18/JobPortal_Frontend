@@ -24,7 +24,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
     const [isLoading, setIsLoading] = useState(true)
     const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
-    const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
+    const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage]) //URL.createObjectURL(file) creates a temporary URL that points to the file data in memory.  
     const visibleProfileImage = profilePreview || (!profileImageFailed ? uploadedProfileUrl : undefined)
 
     const form = useForm<CompanyForm>({
@@ -40,6 +40,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
 
     useEffect(() => {
         return () => {
+            // cleanup the old URL when the component unmounts or profileImage changes
             if(profilePreview) {
                 URL.revokeObjectURL(profilePreview)
             }
@@ -49,7 +50,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
     useEffect(() => {
          async function load() {
              await safeCall(async () => {
-                 const result = await Company.findByName()
+                 const result = await Company.findByCompanyName()
               
                  if(result) {
                      setUploadedProfileUrl(await Company.getCompanyProfileImageUrl(result.profileImage))
@@ -73,7 +74,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
     },[id, form])
 
 
-    const toCompanyPayload = (form: CompanyForm) => {
+    const CompanyPayload = (form: CompanyForm) => {
         return {
             companyName: form.companyName.trim(),
             location: form.location.trim(),
@@ -83,19 +84,18 @@ export default function CompanyEditComponent({id} : {id: string}) {
         }
    }
 
-
-    async function  save(values: CompanyForm) {
+    async function  save(form: CompanyForm) {
         setIsSaving(true)
 
         const payload = new FormData()
-        payload.append("form", JSON.stringify(toCompanyPayload(values)))
+        payload.append("form", JSON.stringify(CompanyPayload(form)))
 
         if(profileImage) {
             payload.append("file", profileImage)
         }
 
         await safeCall(async () =>  {
-            await Company.updateCompanyAction(id, payload)
+            await Company.updateCompany(id, payload)
             router.replace("/companyaccount/detail")
         })
 
@@ -121,8 +121,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
 
                             <div className="space-y-3">
                                 <div
-                                    className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50"
-                                >
+                                    className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50">
                                     {visibleProfileImage && (
                                         <img
                                             src={visibleProfileImage}
@@ -170,7 +169,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
                                 )}
                             </div>
                         </div>
-                    </aside>
+                    </aside> 
 
                     <div className="space-y-6">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

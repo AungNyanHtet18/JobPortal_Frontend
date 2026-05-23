@@ -18,9 +18,8 @@ export type JobDetails = {
      companyPhone: string
      companyWebsite: string
      positionName: string
-     jobDescription?: string
-     JobDescription?: string
-     salary?: string | number
+     jobDescription: string
+     salary: number
      jobLevel: string
      jobType: string
 }

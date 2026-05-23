@@ -7,13 +7,12 @@ import { Form } from "@/components/ui/form"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import { cn, safeCall } from "@/lib/utils"
+import { safeCall } from "@/lib/utils"
 import { Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
-import JobSearchResult from "./job-search-result"
-import PagerWidget from "@/components/widgets/pager-widgert"
+import PagerWidget from "@/components/widgets/pager-widget"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 
@@ -67,7 +66,7 @@ export default function JobSearchComponent() {
          }
       
          await safeCall(async () => {
-             const response = await applicantClient.search(form)
+             const response = await applicantClient.searchJobs(form)
              setResult(response)
          })
     }
@@ -88,7 +87,6 @@ export default function JobSearchComponent() {
            </Form>
 
           {/* <JobSearchResult list={list}/>  */}
-
 
           <div className="grid grid-cols-4 gap-3">
             {list.map(job => 

@@ -11,27 +11,28 @@ import { JobDetails } from "@/lib/type/schema/job/job.schema"
 import { safeCall } from "@/lib/utils"
 import { BriefcaseBusiness, Building2, DollarSign, Globe, Layers, MapPin, Pencil, Phone } from "lucide-react"
 import * as Job from "@/lib/actions/job/job.action"
+import * as Company from "@/lib/actions/company/company.action"
 
 export default function JobDetailsComponent({jobId}: {jobId: string}) {
     const [details, setDetails] = useState<JobDetails>()
-
+    const [companyId, setCompanyId] = useState<string | undefined>(undefined)
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await Job.findJobByIdAction(jobId)
+                const companyId = await Company.findByCompany()
+                const result = await Job.findJobById(jobId)
                 setDetails(result)
+                setCompanyId(companyId)
             })
         }
 
         load()
+        
     }, [jobId])
 
     if(!details) {
         return <Loading />
     }
-
-    const description = details.jobDescription ?? details.JobDescription ?? "No job description added."
-    const salary = details.salary?.toString()
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
@@ -61,12 +62,14 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                             </Badge>
                         </div>
 
-                        <Button asChild className="mt-5 w-full bg-zinc-950 text-white hover:bg-zinc-800">
-                            <Link href={`/companyaccount/job?jobId=${details.jobId}`}>
-                                <Pencil className="size-4" />
-                                Edit Job
-                            </Link>
-                        </Button>
+                        {companyId && 
+                            <Button asChild className="mt-5 w-full bg-zinc-950 text-white hover:bg-zinc-800">
+                                <Link href={`/companyaccount/job?jobId=${details.jobId}`}>
+                                    <Pencil className="size-4" />
+                                    Edit Job
+                                </Link>
+                            </Button>
+                        }                        
                     </div>
                 </aside>
 
@@ -77,7 +80,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                             <h2 className="text-base font-semibold">Job Description</h2>
                         </div>
                         <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
-                            {description}
+                            {details.jobDescription || "No job description added."}
                         </p>
                     </div>
 
@@ -105,7 +108,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                 <DollarSign className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Salary</h2>
                             </div>
-                            <p className="text-2xl font-semibold text-zinc-950">{salary || "Not added"}</p>
+                            <p className="text-2xl font-semibold text-zinc-950">{details.salary || "Not added"}</p>
                             <p className="mt-1 text-sm text-zinc-500">Compensation</p>
                         </div>
                     </div>

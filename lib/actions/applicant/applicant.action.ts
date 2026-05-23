@@ -5,7 +5,7 @@ import { getApplicantId, getLoginUser, setApplicantId } from "@/lib/login-users"
 import { ModificationResult, PageResult } from "@/lib/type";
 import { ApplicantDetails, JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema";
 
-export async function createApplicantAction(formData: FormData): Promise<ModificationResult<number>> {
+export async function createApplicant(formData: FormData): Promise<ModificationResult<number>> {
      
      const formValue = formData.get("form")
 
@@ -33,7 +33,7 @@ export async function createApplicantAction(formData: FormData): Promise<Modific
       return result
 }
 
-export async function updateApplicantAction(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
+export async function updateApplicant(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
      const formValue = formData.get("form")
 
      if(typeof formValue !== "string") {
@@ -61,7 +61,7 @@ export async function updateApplicantAction(id: string | number, formData: FormD
 
 }
 
-export async function uploadApplicantResumeAction(formData: FormData): Promise<ModificationResult<string>> {
+export async function uploadApplicantResume(formData: FormData): Promise<ModificationResult<string>> {
      const file = formData.get("file")
 
      if(!(file instanceof File) || file.size === 0) {
@@ -79,13 +79,13 @@ export async function uploadApplicantResumeAction(formData: FormData): Promise<M
      return await response.json()
 }
 
-export async function search(form: JobSearch):Promise<PageResult<JobListItem>> {
+export async function searchJobs(form: JobSearch):Promise<PageResult<JobListItem>> {
      const response = await secureSearch('job',form)
      return await response.json()
 }
 
 
-export async function findByName() : Promise<ApplicantDetails | null> {
+export async function findByApplicantName() : Promise<ApplicantDetails | null> {
      const loginUser = await getLoginUser()
      const response = await secureSearch(`applicant/${loginUser.email}`)
           
@@ -106,14 +106,6 @@ export async function getApplicantProfileImageUrl(profileImage: string | null): 
 
      if(!profileImage) {
           return undefined
-     }
-
-     if(profileImage.startsWith("http://") || profileImage.startsWith("https://")) {
-          return profileImage
-     }
-
-     if(profileImage.startsWith("/profile/")) {
-          return `${baseUrl}${profileImage}`
      }
 
      return `${baseUrl}/profile/${encodeURIComponent(profileImage)}`

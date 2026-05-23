@@ -6,7 +6,7 @@ import { ModificationResult } from "@/lib/type";
 import type { CompanyDetails } from "@/lib/type/schema/company/company.schema";
 
 
-export async function createCompanyAction(formData: FormData): Promise<ModificationResult<number>> {
+export async function createCompany(formData: FormData): Promise<ModificationResult<number>> {
    const formValue = formData.get("form")
 
    if(typeof formValue !== "string") {
@@ -33,7 +33,7 @@ export async function createCompanyAction(formData: FormData): Promise<Modificat
    return result
 }
 
-export async function updateCompanyAction(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
+export async function updateCompany(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
    const formValue = formData.get("form")
 
    if(typeof formValue !== "string") {
@@ -60,7 +60,7 @@ export async function updateCompanyAction(id: string | number, formData: FormDat
    return result
 }
 
-export async function findByName() : Promise<CompanyDetails | null> {
+export async function findByCompanyName() : Promise<CompanyDetails | null> {
    const loginUser = await getLoginUser()
    const response = await secureSearch(`company/${loginUser.email}`)
    
@@ -81,14 +81,6 @@ export async function getCompanyProfileImageUrl(profileImage: string | null | un
 
    if(!profileImage) {
       return undefined
-   }
-
-   if(profileImage.startsWith("http://") || profileImage.startsWith("https://")) {
-      return profileImage
-   }
-
-   if(profileImage.startsWith("/companyprofile/")) {
-      return `${baseUrl}${profileImage}`
    }
 
    return `${baseUrl}/companyprofile/${encodeURIComponent(profileImage)}`

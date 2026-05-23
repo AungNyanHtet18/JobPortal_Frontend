@@ -21,7 +21,7 @@ export async function signInAction(form: SignInForm) {
      await  setAuthResult(result)
 
      if(result.role === 'Applicant' ) {
-      const applicantResult = await applicant.findByName()
+      const applicantResult = await applicant.findByApplicantName()
 
       if(applicantResult) {
         await setApplicantId(applicantResult.id.toString())
@@ -29,7 +29,7 @@ export async function signInAction(form: SignInForm) {
      }
 
      if(result.role === 'CompanyAccount') {
-       const companyResult = await company.findByName()
+       const companyResult = await company.findByCompanyName()
        
        if(companyResult) {
            await setCompanyId(companyResult.id.toString())

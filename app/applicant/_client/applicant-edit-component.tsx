@@ -70,7 +70,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     useEffect(() => {
         async function load() {
             await safeCall(async () => {
-                const result = await Applicant.findByName()
+                const result = await Applicant.findByApplicantName()
 
                 if(result) {
                     setUploadedProfileUrl(await Applicant.getApplicantProfileImageUrl(result.profileImage))
@@ -128,7 +128,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     }
 
 
-    const toApplicantPayload = (form: ApplicantForm) => {
+    const ApplicantPayload = (form: ApplicantForm) => {
         return {
             applicantName: form.applicantName,
             gender: form.gender,
@@ -145,23 +145,23 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         }
     }
 
-    async function save(values: ApplicantForm) {
+    async function save(form: ApplicantForm) {
         setIsSaving(true)
 
         const payload = new FormData()
-        payload.append("form", JSON.stringify(toApplicantPayload(values)))
+        payload.append("form", JSON.stringify(ApplicantPayload(form)))
 
         if(profileImage) {
             payload.append("file", profileImage)
         }
 
         await safeCall(async () => {
-            await Applicant.updateApplicantAction(id, payload)
+            await Applicant.updateApplicant(id, payload)
 
             if(resumeFile) {
                 const resumePayload = new FormData()
                 resumePayload.append("file", resumeFile)
-                await Applicant.uploadApplicantResumeAction(resumePayload)
+                await Applicant.uploadApplicantResume(resumePayload)
             }
 
             router.replace("/applicant/detail")

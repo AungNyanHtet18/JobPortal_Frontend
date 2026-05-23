@@ -33,7 +33,7 @@ export default function JobCreateComponent() {
          }
     })
 
-    const toJobPayload = (form: JobForm): JobForm => {
+    const JobPayload = (form: JobForm): JobForm => {
         return {
             positionName: form.positionName.trim(),
             jobDescription: form.jobDescription.trim(),
@@ -48,8 +48,8 @@ export default function JobCreateComponent() {
         setIsSaving(true)
          
         await safeCall(async () => {
-            const result = await Job.createJobAction(toJobPayload(values))
-             router.replace(`/companyaccount/job/${result.id}`)
+            const result = await Job.createJob(JobPayload(values))
+             router.replace(`/job/${result.id}`)
         })
 
         setIsSaving(false)

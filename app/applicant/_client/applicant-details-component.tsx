@@ -9,7 +9,6 @@ import { getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicant from "@/lib/actions/applicant/applicant.action"
 import { Briefcase, Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
 
-
 export default function ApplicantDetailsComponent() {
     const [details, setDetails] = useState<ApplicantDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
@@ -19,7 +18,7 @@ export default function ApplicantDetailsComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await applicant.findByName()
+                const result = await applicant.findByApplicantName()
                 console.log(result);
                 if(result !== null) {
                     setDetails(result)

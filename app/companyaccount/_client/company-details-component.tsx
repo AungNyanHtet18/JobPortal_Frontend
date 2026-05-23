@@ -17,7 +17,7 @@ export default function CompanyDetailsComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await company.findByName()
+                const result = await company.findByCompanyName()
     
                 if(result !== null) {
                     setDetails(result)

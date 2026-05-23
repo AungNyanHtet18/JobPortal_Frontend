@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 
-
 export default function ApplicantCreateComponent() {
 
     const router = useRouter()
@@ -91,7 +90,7 @@ export default function ApplicantCreateComponent() {
         experiencesFieldArray.remove(index)
     }
 
-    const toApplicantPayload = (form: ApplicantForm) => {
+    const ApplicantPayload = (form: ApplicantForm) => {
         return {
             applicantName: form.applicantName,
             gender: form.gender,
@@ -108,23 +107,23 @@ export default function ApplicantCreateComponent() {
         }
     }
 
-    async function save(values: ApplicantForm) {
+    async function save(form: ApplicantForm) {
         setIsSaving(true)
 
         const payload = new FormData()
-        payload.append("form", JSON.stringify(toApplicantPayload(values)))
+        payload.append("form", JSON.stringify(ApplicantPayload(form)))
 
         if(profileImage) {
             payload.append("file", profileImage)
         }
 
         await safeCall(async () =>  {
-            await Applicant.createApplicantAction(payload)
+            await Applicant.createApplicant(payload)
 
             if(resumeFile) {
                 const resumePayload = new FormData()
                 resumePayload.append("file", resumeFile)
-                await Applicant.uploadApplicantResumeAction(resumePayload)
+                await Applicant.uploadApplicantResume(resumePayload)
             }
 
             router.replace(`/applicant/detail`)
@@ -143,7 +142,7 @@ export default function ApplicantCreateComponent() {
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
-                    <aside className="space-y-4">
+                     <aside className="space-y-4">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-4 flex items-center gap-2">
                                 <UserRound className="size-5 text-zinc-900" />
@@ -239,7 +238,7 @@ export default function ApplicantCreateComponent() {
                                 </div>
                             </div>
                         </div>
-                    </aside>
+                    </aside> 
 
                     <div className="space-y-6">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

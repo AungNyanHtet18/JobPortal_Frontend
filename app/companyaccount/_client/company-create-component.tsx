@@ -43,7 +43,7 @@ export default function CompanyCreateComponent() {
     }, [profilePreview])
 
 
-    const toCompanyPayload = (form: CompanyForm) => {
+    const CompanyPayload = (form: CompanyForm) => {
         return {
             companyName: form.companyName.trim(),
             location: form.location.trim(),
@@ -54,18 +54,18 @@ export default function CompanyCreateComponent() {
    }
 
 
-    async function save(values: CompanyForm) {
+    async function save(form: CompanyForm) {
         setIsSaving(true)
 
         const payload = new FormData()
-        payload.append("form", JSON.stringify(toCompanyPayload(values)))
+        payload.append("form", JSON.stringify(CompanyPayload(form)))
 
         if(profileImage) {
             payload.append("file", profileImage)
         }
 
         await safeCall(async () =>  {
-            await Company.createCompanyAction(payload)
+            await Company.createCompany(payload)
             router.replace("/companyaccount/detail")
         })
 
@@ -92,8 +92,7 @@ export default function CompanyCreateComponent() {
                             <div className="space-y-3">
                                 <div
                                     className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
-                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}
-                                >
+                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}>
                                     {!profilePreview && (
                                         <div className="flex flex-col items-center gap-2 text-zinc-500">
                                             <ImagePlus className="size-8" />
@@ -132,7 +131,7 @@ export default function CompanyCreateComponent() {
                                 )}
                             </div>
                         </div>
-                    </aside>
+                    </aside>  
 
                     <div className="space-y-6">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

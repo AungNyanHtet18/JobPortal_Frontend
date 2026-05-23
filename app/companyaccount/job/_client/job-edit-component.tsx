@@ -37,11 +37,11 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
     useEffect(() => {
         async function load() {
             await safeCall(async () => {
-                const result = await Job.findJobByIdAction(jobId)
+                const result = await Job.findJobById(jobId)
 
                 form.reset({
                     positionName: result.positionName ?? "",
-                    jobDescription: result.jobDescription ?? result.JobDescription ?? "",
+                    jobDescription: result.jobDescription ?? "",
                     salary: result.salary?.toString() ?? "",
                     jobLevel: result.jobLevel ?? "",
                     jobType: result.jobType ?? "",
@@ -55,7 +55,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
         load()
     }, [jobId, form])
 
-    const toJobPayload = (form: JobForm): JobForm => {
+    const JobPayload = (form: JobForm): JobForm => {
         return {
             positionName: form.positionName.trim(),
             jobDescription: form.jobDescription.trim(),
@@ -70,8 +70,8 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
         setIsSaving(true)
          
         await safeCall(async () => {
-            const result = await Job.updateJobAction(jobId, toJobPayload(values))
-            router.replace(`/companyaccount/job/${result.id}`)
+            const result = await Job.updateJob(jobId, JobPayload(values))
+            router.replace(`/job/${result.id}`)
         })
 
         setIsSaving(false)
