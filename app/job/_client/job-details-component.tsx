@@ -36,11 +36,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle
-                icon="BriefcaseBusiness"
-                title="Job Detail"
-                description="Review the published job information"
-            />
+            <PageTitle icon="BriefcaseBusiness" title="Job Detail" description="Review the published job information" />
 
             <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
                 <aside className="space-y-4">

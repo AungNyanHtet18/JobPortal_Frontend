@@ -38,7 +38,7 @@ export default async function CompanyNavigation() {
                   { !UserisLogin && 
                      <NavigationMenuItem>
                       <NavigationMenuLink asChild>
-                        <Link href={'/signup'}>signup</Link>
+                        <Link  className="text-[14px] font-semibold text-zinc-100" href={'/signup'}>signup</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>  
                   }
@@ -46,7 +46,7 @@ export default async function CompanyNavigation() {
                   { !UserisLogin && 
                     <NavigationMenuItem>
                       <NavigationMenuLink asChild>
-                        <Link href={'/signin'}>signin</Link>
+                        <Link  className="text-[14px] font-semibold text-zinc-100" href={'/signin'}>signin</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem> 
                   }

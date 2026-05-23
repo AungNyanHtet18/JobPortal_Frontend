@@ -51,7 +51,7 @@ export default async function ApplicantNavigation() {
 
                   { !UserisLogin && 
                      <NavigationMenuItem>
-                      <NavigationMenuLink asChild>
+                      <NavigationMenuLink className="text-[14px] font-semibold text-zinc-100" asChild>
                         <Link href={'/signup'}>signup</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>  
@@ -61,7 +61,7 @@ export default async function ApplicantNavigation() {
 
                   { !UserisLogin && 
                     <NavigationMenuItem>
-                      <NavigationMenuLink asChild>
+                      <NavigationMenuLink className="text-[14px] font-semibold text-zinc-100" asChild>
                         <Link href={'/signin'}>signin</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem> 

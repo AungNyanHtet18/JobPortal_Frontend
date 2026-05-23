@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
+import InputComponent from "@/components/widgets/input-component"
+import ProfileLayout from "@/components/widgets/content-layout"
+import ContentLayout from "@/components/widgets/content-layout"
 
 export default function ApplicantCreateComponent() {
 
@@ -134,26 +137,17 @@ export default function ApplicantCreateComponent() {
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle
-                icon="User"
-                title="Applicant Create"
-                description="Create a complete candidate profile"
-            />
+            <PageTitle icon="User" title="Applicant Create" description="Create a complete candidate profile" />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
+                     
                      <aside className="space-y-4">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <UserRound className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Profile</h2>
-                            </div>
-
+                        <ContentLayout title="Profile" icon={<UserRound className="size-5 text-zinc-900" />}>
                             <div className="space-y-3">
                                 <div
                                     className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
-                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}
-                                >
+                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}>
                                     {!profilePreview && (
                                         <div className="flex flex-col items-center gap-2 text-zinc-500">
                                             <ImagePlus className="size-8" />
@@ -167,8 +161,7 @@ export default function ApplicantCreateComponent() {
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
-                                    onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)}
-                                />
+                                    onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)}/>
 
                                 <div className="flex gap-2">
                                     <Button type="button" variant="outline" className="flex-1 border-zinc-900 bg-white text-zinc-950 hover:bg-zinc-100" asChild>
@@ -191,14 +184,9 @@ export default function ApplicantCreateComponent() {
                                     </p>
                                 )}
                             </div>
-                        </div>
+                        </ContentLayout>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <FileText className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Resume</h2>
-                            </div>
-
+                        <ContentLayout title="Resume" icon={<FileText className="size-5 text-zinc-900" />}>
                             <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                                 <Input
                                     id="resume-file"
@@ -237,35 +225,22 @@ export default function ApplicantCreateComponent() {
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </ContentLayout>
                     </aside> 
 
+
                     <div className="space-y-6">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <UserRound className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Personal Information</h2>
-                            </div>
+                        <InputComponent className="md:grid-cols-2" title="Personal Information" icon={<UserRound className="size-5 text-zinc-900" />}>
+                            <FormsInput control={form.control} path="applicantName" label="Applicant Name" placeHolder="Enter your applicant name" />
+                            <FormSelect control={form.control} path="gender" label="Gender" options={[{key: "Male", value: "Male"}, {key: "Female", value: "Female"}]} />
+                            <FormsTextAreaInput control={form.control} path="contactDetail" label="Contact Detail" placeHolder="Enter your contact detail" rowHeight="min-h-[96px]" />
+                            <FormsTextAreaInput control={form.control} path="address" label="Address" placeHolder="Enter your address" rowHeight="min-h-[96px]" />
+                        </InputComponent>
 
-                            <div className="grid gap-4 md:grid-cols-2">
-                                <FormsInput control={form.control} path="applicantName" label="Applicant Name" placeHolder="Enter your applicant name" />
-                                <FormSelect control={form.control} path="gender" label="Gender" options={[{key: "Male", value: "Male"}, {key: "Female", value: "Female"}]} />
-                                <FormsTextAreaInput control={form.control} path="contactDetail" label="Contact Detail" placeHolder="Enter your contact detail" rowHeight="min-h-[96px]" />
-                                <FormsTextAreaInput control={form.control} path="address" label="Address" placeHolder="Enter your address" rowHeight="min-h-[96px]" />
-                            </div>
-                        </div>
-
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <GraduationCap className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Education And Summary</h2>
-                            </div>
-
-                            <div className="grid gap-4">
-                                <FormsTextAreaInput control={form.control} path="highestEducationalAttainment" label="Highest Education Attainment" placeHolder="Enter highest education attainment" rowHeight="min-h-[96px]" />
-                                <FormsTextAreaInput control={form.control} path="professionalSummary" label="Professional Summary" placeHolder="Please fill your professional summary" rowHeight="min-h-[120px]" />
-                            </div>
-                        </div>
+                        <InputComponent className="md:grid-cols-2" title="Education and Summary" icon={<GraduationCap className="size-5 text-zinc-900" />}>
+                            <FormsTextAreaInput control={form.control} path="highestEducationalAttainment" label="Highest Education Attainment" placeHolder="Enter highest education attainment" rowHeight="min-h-[96px]" />
+                            <FormsTextAreaInput control={form.control} path="professionalSummary" label="Professional Summary" placeHolder="Please fill your professional summary" rowHeight="min-h-[120px]" />
+                        </InputComponent>
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
