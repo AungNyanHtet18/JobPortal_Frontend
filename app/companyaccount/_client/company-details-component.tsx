@@ -127,8 +127,8 @@ export default function CompanyDetailsComponent() {
                             <p className="mt-1 text-sm text-zinc-500">Total uploaded jobs</p>
                         </div>
                         
-                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
+                         <div className="rounded-lg  border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
                                 <Phone className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Contact</h2>
                             </div>
@@ -136,11 +136,6 @@ export default function CompanyDetailsComponent() {
                                 <div className="flex gap-3">
                                     <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.phone}</span>
-                                </div>
-                                <Separator />
-                                <div className="flex gap-3">
-                                    <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
-                                    <span className="text-zinc-800">{details.location}</span>
                                 </div>
                             </div>
                         </div>
@@ -152,9 +147,13 @@ export default function CompanyDetailsComponent() {
                                 <MapPin className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Location</h2>
                             </div>
-                            <p className="text-sm leading-7 text-zinc-700">
-                                {details.location || "No location added."}
-                            </p>
+                            <div className="flex gap-2">
+                                 <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                                 <p className="text-sm leading-7 text-zinc-700">
+                                    {details.location || "No location added."}
+                                </p>
+                            </div>
+                            
                         </div>
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

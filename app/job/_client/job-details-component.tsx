@@ -80,7 +80,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </p>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-3">
+                    <div className="grid gap-4 xl:grid-cols-3">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
                                 <Layers className="size-5 text-zinc-900" />
@@ -140,7 +140,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </div>
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
+                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
                                 <Phone className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Contact</h2>
                             </div>
@@ -149,7 +149,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                     <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.companyPhone || "No phone added"}</span>
                                 </div>
-                                <Separator />
+                                
                                 <div className="flex gap-3">
                                     <Globe className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="min-w-0 truncate text-zinc-800">{details.companyWebsite || "No website added"}</span>
