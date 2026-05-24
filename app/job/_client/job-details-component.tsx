@@ -4,31 +4,43 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import Loading from "@/components/widgets/loading"
 import PageTitle from "@/components/widgets/page-title"
 import { JobDetails } from "@/lib/type/schema/job/job.schema"
-import { safeCall } from "@/lib/utils"
-import { BriefcaseBusiness, Building2, DollarSign, Globe, Layers, MapPin, Pencil, Phone } from "lucide-react"
+import { getInitials, safeCall } from "@/lib/utils"
+import { Globe, GraduationCap, Layers, Layers2, Pencil, Phone } from "lucide-react"
 import * as Job from "@/lib/actions/job/job.action"
 import * as Company from "@/lib/actions/company/company.action"
+import PageDetailComponent from "@/components/widgets/page-detail.component"
 
 export default function JobDetailsComponent({jobId}: {jobId: string}) {
-    const [details, setDetails] = useState<JobDetails>()
     const [companyId, setCompanyId] = useState<string | undefined>(undefined)
+    const [details, setDetails] = useState<JobDetails>()
+    const [profileImageUrl, setProfileImageUrl] = useState<string>()
+    const [profileImageFailed, setProfileImageFailed] = useState<boolean>(false)
+
     useEffect(() => {
         function load() {
             safeCall(async () => {
                 const companyId = await Company.findByCompany()
                 const result = await Job.findJobById(jobId)
-                setDetails(result)
-                setCompanyId(companyId)
+
+                if(result != null) {
+                    setCompanyId(companyId)
+                    setDetails(result)
+                    setProfileImageUrl(await Company.getCompanyProfileImageUrl(result.companyImage))
+                    setProfileImageFailed(false)
+                }
             })
         }
 
         load()
         
     }, [jobId])
+
+
+    const visibleProfileImage = profileImageUrl && !profileImageFailed
+
 
     if(!details) {
         return <Loading />
@@ -41,12 +53,27 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
             <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
                 <aside className="space-y-4">
                     <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="flex aspect-[4/5] flex-col items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 p-6 text-center">
-                            <div className="flex size-24 items-center justify-center rounded-lg bg-zinc-950 text-white">
-                                <BriefcaseBusiness className="size-12" />
+                        <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
+                            <div className="flex aspect-[4/5]  items-center justify-center bg-zinc-100 ">
+                                {visibleProfileImage ? (
+                                    <img
+                                        src={profileImageUrl}
+                                        alt={`${details.companyName} profile`}
+                                        className="size-full object-cover"
+                                        onError={() => setProfileImageFailed(true)}
+                                    />
+                                ) : (
+                                    <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
+                                        {getInitials(details.companyName)}
+                                    </div>
+                                )}
                             </div>
-                            <p className="mt-5 text-sm font-medium text-zinc-500">Open Position</p>
-                            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-950">{details.positionName}</h1>
+                           
+                        </div>
+
+                        <div className="mt-5 space-y-1">
+                            <p className="text-sm font-medium text-zinc-500">Open Position</p>
+                            <h1 className="flex items-center gap-1 text-2xl font-semibold tracking-tight text-zinc-950"><Layers2 size="33" /> {details.positionName}</h1>
                         </div>
 
                         <div className="mt-5 flex flex-wrap gap-2">
@@ -70,51 +97,30 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                 </aside>
 
                 <div className="space-y-6">
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <BriefcaseBusiness className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Job Description</h2>
-                        </div>
+                    <PageDetailComponent title="Job Description" icon="Briefcase">
                         <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
                             {details.jobDescription || "No job description added."}
                         </p>
-                    </div>
+                    </PageDetailComponent>
 
                     <div className="grid gap-4 xl:grid-cols-3">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <Layers className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Level</h2>
-                            </div>
+                        <PageDetailComponent title="Level" icon="Layers">
                             <p className="text-2xl font-semibold text-zinc-950">{details.jobLevel}</p>
                             <p className="mt-1 text-sm text-zinc-500">Required experience level</p>
-                        </div>
+                        </PageDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <MapPin className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Type</h2>
-                            </div>
+                        <PageDetailComponent title="Type" icon="MapPin">
                             <p className="text-2xl font-semibold text-zinc-950">{details.jobType}</p>
                             <p className="mt-1 text-sm text-zinc-500">Work arrangement</p>
-                        </div>
+                        </PageDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <DollarSign className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Salary</h2>
-                            </div>
+                        <PageDetailComponent title="Salary" icon="DollarSign">
                             <p className="text-2xl font-semibold text-zinc-950">{details.salary || "Not added"}</p>
                             <p className="mt-1 text-sm text-zinc-500">Compensation</p>
-                        </div>
+                        </PageDetailComponent>
                     </div>
-
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <Building2 className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Company Information</h2>
-                        </div>
-
+    
+                    <PageDetailComponent title="Company Information" icon="Building2">
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                                 <p className="text-xs font-medium uppercase text-zinc-500">Company</p>
@@ -126,24 +132,16 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                 <p className="mt-1 truncate text-sm font-medium text-zinc-950">{details.companyWebsite || "No website added"}</p>
                             </div>
                         </div>
-                    </div>
+                    </PageDetailComponent>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <MapPin className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Location</h2>
-                            </div>
+                    <div className="grid gap-4 md:grid-cols-2">  
+                        <PageDetailComponent title="Location" icon="MapPin">
                             <p className="text-sm leading-7 text-zinc-700">
                                 {details.companyLocation || "No location added."}
                             </p>
-                        </div>
+                        </PageDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <Phone className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Contact</h2>
-                            </div>
+                        <PageDetailComponent title="Contact" icon="Phone">
                             <div className="space-y-4 text-sm">
                                 <div className="flex gap-3">
                                     <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
@@ -155,7 +153,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                     <span className="min-w-0 truncate text-zinc-800">{details.companyWebsite || "No website added"}</span>
                                 </div>
                             </div>
-                        </div>
+                        </PageDetailComponent>
                     </div>
                 </div>
             </div>

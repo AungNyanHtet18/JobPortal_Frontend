@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import Loading from "@/components/widgets/loading"
 import * as company from "@/lib/actions/company/company.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { Briefcase, Building2, Globe, Layers, MapPin, Phone } from "lucide-react"
+import {  Globe, MapPin, Phone } from "lucide-react"
+import PageDetailComponent from "@/components/widgets/page-detail.component"
 
 export default function CompanyDetailsComponent() {
     const [details, setDetails] = useState<CompanyDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
-    const [profileImageFailed, setProfileImageFailed] = useState(false)
+    const [profileImageFailed, setProfileImageFailed] = useState<boolean>(false)
     
     useEffect(() => {
         function load() {
@@ -75,22 +75,13 @@ export default function CompanyDetailsComponent() {
                 </aside>
 
                 <div className="space-y-6">
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <Building2 className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Company Description</h2>
-                        </div>
+                    <PageDetailComponent title="Company Description" icon="Building2">
                         <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
                             {details.description || "No company description added."}
                         </p>
-                    </div>
+                    </PageDetailComponent>
 
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <Briefcase className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Uploaded Jobs</h2>
-                        </div>
-
+                    <PageDetailComponent title="Uploaded Jobs" icon="Briefcase">
                         {details.uploadedJob.length > 0 ? (
                             <div className="space-y-4">
                                 {details.uploadedJob.map((job, index) => (
@@ -115,52 +106,35 @@ export default function CompanyDetailsComponent() {
                         ) : (
                             <p className="text-sm text-zinc-500">No uploaded jobs added.</p>
                         )}
-                    </div>
+                    </PageDetailComponent>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <Layers className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Posted Jobs</h2>
-                            </div>
+                        <PageDetailComponent title="Posted Jobs" icon="Layers">
                             <p className="text-3xl font-semibold text-zinc-950">{details.totalPostedJobs}</p>
                             <p className="mt-1 text-sm text-zinc-500">Total uploaded jobs</p>
-                        </div>
-                        
-                         <div className="rounded-lg  border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <Phone className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Contact</h2>
-                            </div>
+                        </PageDetailComponent>
+
+                        <PageDetailComponent title="Contact" icon="Phone">
                             <div className="space-y-4 text-sm">
                                 <div className="flex gap-3">
                                     <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.phone}</span>
                                 </div>
                             </div>
-                        </div>
+                        </PageDetailComponent>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <MapPin className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Location</h2>
-                            </div>
+                        <PageDetailComponent title="Location" icon="MapPin">
                             <div className="flex gap-2">
                                  <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                  <p className="text-sm leading-7 text-zinc-700">
                                     {details.location || "No location added."}
                                 </p>
-                            </div>
-                            
-                        </div>
+                            </div> 
+                        </PageDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <Globe className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Website</h2>
-                            </div>
+                        <PageDetailComponent title="Website" icon="Globe" >
                             <div className="flex gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                                 <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                     <Globe className="size-5" />
@@ -170,9 +144,8 @@ export default function CompanyDetailsComponent() {
                                     <p className="text-xs text-zinc-500">Company website URL</p>
                                 </div>
                             </div>
-                        </div>
+                        </PageDetailComponent>
                     </div>
-
                 </div>
             </div>
         </section>

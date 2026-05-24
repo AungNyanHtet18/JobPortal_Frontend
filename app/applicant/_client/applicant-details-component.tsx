@@ -8,6 +8,7 @@ import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
 import { getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicant from "@/lib/actions/applicant/applicant.action"
 import { Briefcase, Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
+import PageDetailComponent from "@/components/widgets/page-detail.component"
 
 export default function ApplicantDetailsComponent() {
     const [details, setDetails] = useState<ApplicantDetails>()
@@ -100,22 +101,13 @@ export default function ApplicantDetailsComponent() {
                 </aside>
 
                 <div className="space-y-6">
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <User className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Professional Summary</h2>
-                        </div>
-                        <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
+                    <PageDetailComponent title="Professional Summary" icon="User">
+                         <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
                             {details.professionalSummary || "No professional summary added."}
                         </p>
-                    </div>
+                    </PageDetailComponent>
 
-                    <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                            <Briefcase className="size-5 text-zinc-900" />
-                            <h2 className="text-base font-semibold">Work Experience</h2>
-                        </div>
-
+                    <PageDetailComponent title="Work Experience" icon="Briefcase">
                         {details.experience.length > 0 ? (
                             <div className="space-y-4">
                                 {details.experience.map((exp) => (
@@ -136,34 +128,27 @@ export default function ApplicantDetailsComponent() {
                         ) : (
                             <p className="text-sm text-zinc-500">No work experience added.</p>
                         )}
-                    </div>
+                    </PageDetailComponent>
 
                     <div className="grid gap-6 xl:grid-cols-3">
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <Wrench className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Skills</h2>
-                            </div>
+
+                        <PageDetailComponent title="Skill" icon="Wrench">
                             <div className="flex flex-wrap gap-2">
-                                {details.skills.length > 0 ? details.skills.map((skill) => (
-                                    <Badge key={skill} variant="secondary" className="text-[14px]  border border-zinc-200 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
+                                {details.skills.length > 0 ? details.skills.map((skill, index) => (
+                                    <Badge key={index} variant="secondary" className="text-[14px]  border border-zinc-200 bg-zinc-100 text-zinc-900 hover:bg-zinc-200">
                                         {skill}
                                     </Badge>
                                 )) : (
                                     <p className="text-sm text-zinc-500">No skills added.</p>
                                 )}
                             </div>
-                        </div>
+                        </PageDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center gap-2 border-b border-zinc-100 pb-4">
-                                <GraduationCap className="size-5 text-zinc-900" />
-                                <h2 className="text-base font-semibold">Education</h2>
-                            </div>
+                        <PageDetailComponent title="Education" icon="GraduationCap">
                             <p className="text-sm leading-7 text-zinc-700">
                                 {details.highestEducationalAttainment || "No education added."}
                             </p>
-                        </div>
+                        </PageDetailComponent>
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-4 flex items-center gap-2">

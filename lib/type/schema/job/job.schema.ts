@@ -12,14 +12,15 @@ export const JobSchema = z.object({
 export type JobForm = z.infer<typeof JobSchema>
 
 export type JobDetails = {
-     jobId: number
-     companyName: string
-     companyLocation: string
-     companyPhone: string
-     companyWebsite: string
-     positionName: string
-     jobDescription: string
-     salary: number
-     jobLevel: string
+     jobId: number,
+     companyName: string,
+     companyLocation: string,
+     companyPhone: string,
+     companyWebsite: string,
+     companyImage: string | null,
+     positionName: string,
+     jobDescription: string,
+     salary: number,
+     jobLevel: string,
      jobType: string
 }
