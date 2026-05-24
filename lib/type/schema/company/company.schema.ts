@@ -14,6 +14,7 @@ export type CompanyForm = z.infer<typeof CompanySchema>
 export type UploadedJob = {
       postionName : string,
       salary : number,
+      jobId: number,
       jobLevel : string,
       jobType : string
 }
