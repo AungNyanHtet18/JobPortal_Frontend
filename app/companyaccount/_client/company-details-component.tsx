@@ -20,7 +20,7 @@ export default function CompanyDetailsComponent() {
             safeCall(async () => {
                 const result = await companyClient.findByCompanyName()
     
-                if(result !== null) {
+                if(result) {
                     setDetails(result)
                     setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
                     setProfileImageFailed(false)

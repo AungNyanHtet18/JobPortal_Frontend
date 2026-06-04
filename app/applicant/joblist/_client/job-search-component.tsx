@@ -21,19 +21,19 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { toast } from "sonner"
 
 export default function JobSearchComponent() {
-    const form = useForm<JobSearch>({
-       defaultValues: {
-         page: 0,
-         size: 10
-       }
-    })
-
     const [result, setResult] = useState<PageResult<JobListItem>>(DEFAULT_PAGE_RESULT)
     const [savedJobs, setSavedJobs] = useState<number[]>([])
     const [appliedJobs, setAppliedJobs] = useState<number[]>([])
     const [confirmJob, setConfirmJob] = useState<JobListItem | null>(null)
     const [isApplying, setIsApplying] = useState(false)
     const { list, pageInfo } = result
+
+    const form = useForm<JobSearch>({
+       defaultValues: {
+         page: 0,
+         size: 10
+       }
+    })
 
     const jobLevel = form.watch("jobLevel")
     const jobType = form.watch("jobType")
@@ -73,9 +73,17 @@ export default function JobSearchComponent() {
       setIsApplying(true)
 
       await safeCall(async () => {
-         const response = await jobApplyClient.applyJob(confirmJob.jobId)
-         toast.success(response.id || "Applied successfully")
-         setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
+        const applicant = await applicantClient.findByApplicant()
+
+        if(!applicant) {
+           toast.error("Applicant cannot apply jobs",{
+            description: "Please fill applicant form details to apply jobs"})
+            
+          }else{
+          const response = await jobApplyClient.applyJob(confirmJob.jobId)
+          toast.success(response.id || "Applied successfully")
+          setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
+        }
       })
       
       setIsApplying(false)
@@ -92,8 +100,16 @@ export default function JobSearchComponent() {
          }
 
          await safeCall(async () => {
-             const response = await applicantClient.searchJobs(formValues)
-             setResult(response)
+            const response = await applicantClient.searchJobs(formValues)
+            const applicant = await applicantClient.findByApplicant()
+             
+            if(applicant) {
+                const appliedList = await jobApplyClient.getAppliedJobList()
+                  if(appliedList.id) {
+                    setAppliedJobs(appliedList.id.map(item => item.jobId))
+             }
+            }
+              setResult(response)
          })
     }
 
@@ -178,14 +194,14 @@ export default function JobSearchComponent() {
 
           <AlertDialog
             open={!!confirmJob}
-            onOpenChange={(open) => {
-              if (!open) {
+            onOpenChange={(open) => { 
+              if (!open) { //when open is not true => referencing open={!!confirmJob}
                 setConfirmJob(null)
               }
             }}
             title="Confirm job application"
             description={`Do you want to apply for ${confirmJob?.positionName ?? "this job"} at ${confirmJob?.companyName ?? "the company"}?`}
-            actionText={isApplying ? "Applying..." : "Apply now"}
+            actionText={isApplying ? "Applying" : "Apply now"}
             onConfirm={applySelectedJob}
             loading={isApplying}>
 

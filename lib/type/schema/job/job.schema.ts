@@ -43,3 +43,15 @@ export type JobApplicationListItem= {
       status: ApplicantionStatus
 }
 
+
+export type ApplicantAppliedJobListItem = {
+      positionName: string
+      salary: number
+      jobId: number
+      jobType: string
+      jobLevel: string
+      companyName: string
+      websiteUrl: string
+      status: ApplicantionStatus
+}
+
