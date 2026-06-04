@@ -1,5 +1,14 @@
 import z from "zod";
 
+export type ApplicantionStatus =  'APPLIED' | 
+                                  'REVIEWING' | 
+                                  'SHORTLISTED' | 
+                                  'INTERVIEW' | 
+                                  'OFFERED' | 
+                                  'HIRED' | 
+                                  'REJECTED' 
+
+
 export const JobSchema = z.object({
      positionName : z.string().nonempty("Please enter job position name."),
      jobDescription : z.string().nonempty("Please enter summary for position."),
@@ -24,3 +33,13 @@ export type JobDetails = {
      jobLevel: string,
      jobType: string
 }
+
+
+export type JobApplicationListItem= {
+      applicantId: number
+      applicantName: string
+      applicantEmail: string
+      gender: 'Male' | 'Female',
+      status: ApplicantionStatus
+}
+

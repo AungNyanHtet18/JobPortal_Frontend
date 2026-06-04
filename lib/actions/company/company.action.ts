@@ -71,7 +71,6 @@ export async function findByCompany() : Promise<string | undefined> {
    return await getCompanyId()
 }
 
-
 export async function getCompanyProfileImageUrl(profileImage: string | null | undefined): Promise<string | undefined> {
    const baseUrl = process.env.BACKEND_URL
 

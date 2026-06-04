@@ -84,6 +84,22 @@ export async function searchJobs(form: JobSearch):Promise<PageResult<JobListItem
      return await response.json()
 }
 
+export async function applyJob(jobId: number): Promise<ModificationResult<string>> {
+     const response = await secureRequest(`apply/position/${jobId}`)
+     return await response.json()
+}
+
+export async function cancelJob(jobId: number): Promise<ModificationResult<string>> {
+     const response = await secureRequest(`job/cancel/${jobId}`, {
+          method: 'DELETE'
+     })
+     return await response.json()
+}
+
+export async function getApplicantById(id: string | number): Promise<ApplicantDetails | null> {
+     const response = await secureSearch(`applicant/id/${id}`)
+     return await response.json().catch(() => null)
+}
 
 export async function findByApplicantName() : Promise<ApplicantDetails | null> {
      const loginUser = await getLoginUser()

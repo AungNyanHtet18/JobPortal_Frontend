@@ -1,23 +1,25 @@
 'use client'
 
+import Link from "next/link"
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
 import { safeCall } from "@/lib/utils"
-import { Search } from "lucide-react"
+import { ArrowRight, Heart, Search } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
 import PagerWidget from "@/components/widgets/pager-widget"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-
+import { toast } from "sonner"
 
 export default function JobSearchComponent() {
-    
     const form = useForm<JobSearch>({
        defaultValues: {
          page: 0,
@@ -26,47 +28,70 @@ export default function JobSearchComponent() {
     })
 
     const [result, setResult] = useState<PageResult<JobListItem>>(DEFAULT_PAGE_RESULT)
-    const {list, pageInfo}  = result 
+    const [savedJobs, setSavedJobs] = useState<number[]>([])
+    const [appliedJobs, setAppliedJobs] = useState<number[]>([])
+    const [confirmJob, setConfirmJob] = useState<JobListItem | null>(null)
+    const [isApplying, setIsApplying] = useState(false)
+    const { list, pageInfo } = result
 
     const jobLevel = form.watch("jobLevel")
     const jobType = form.watch("jobType")
     const deleted = form.watch("deleted")
     const keyword = form.watch("keyword")
 
-
     useEffect(() => {
-         form.setValue("page",0)
+         form.setValue("page", 0)
     }, [jobLevel, jobType, deleted, keyword])
-
 
    useEffect(() => {
        form.handleSubmit(search) ()
    }, [form.handleSubmit])
 
-
-   const onPageChange = (page: number) => { 
+   const onPageChange = (page: number) => {
       form.setValue("page", page)
-      form.handleSubmit(search)()
+      form.handleSubmit(search) ()
    }
 
-   const onSizeChange = (size: number) => { 
+   const onSizeChange = (size: number) => {
       form.setValue("page", 0)
       form.setValue("size", size)
       form.handleSubmit(search) ()
    }
 
-    async function search(form: JobSearch) {
+    const toggleSave = (jobId: number) => {
+      setSavedJobs(prev =>
+         prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
+      )
+    }
+
+    async function applySelectedJob() {
+      if (!confirmJob) {
+        return
+      }
+
+      setIsApplying(true)
+
+      await safeCall(async () => {
+         const response = await applicantClient.applyJob(confirmJob.jobId)
+         toast.success(response.id || "Applied successfully")
+         setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
+      })
       
-         if(form.jobLevel === "-1") {
-           delete form.jobLevel
+      setIsApplying(false)
+      setConfirmJob(null)
+    }
+
+    async function search(formValues: JobSearch) {
+         if (formValues.jobLevel === "-1") {
+           delete formValues.jobLevel
          }
 
-         if(form.jobType === "-1") {
-           delete form.jobType
+         if (formValues.jobType === "-1") {
+           delete formValues.jobType
          }
-      
+
          await safeCall(async () => {
-             const response = await applicantClient.searchJobs(form)
+             const response = await applicantClient.searchJobs(formValues)
              setResult(response)
          })
     }
@@ -74,35 +99,99 @@ export default function JobSearchComponent() {
     return (
         <div className="space-y-4">
            <Form {...form}>
-              <form onSubmit={form.handleSubmit(search)} className="flex items-end gap-4 " >
-                <FormSelect control={form.control} path="jobLevel" label="Job Level" options={[{key: "-1", value: "Select Job Level"}, ...JobLevel]}  className="w-fit"/>
-                <FormSelect control={form.control} path="jobType" label="Job Type"  options={[{key: "-1", value: "Select Job Type"}, ...JobType]} className="w-fit"/>
-                <FormSelect control={form.control} path="deleted" label="Status" options={Status} className="w-25 mr-4"/>
-                <FormsInput control={form.control} path="keyword" label="Keyword" placeHolder="Enter Keyword"/>
-
-                <Button  type="submit">
-                  <Search/>Search
+              <form onSubmit={form.handleSubmit(search)} className="flex flex-wrap items-end gap-4" >
+                <FormSelect control={form.control} path="jobLevel" label="Job Level" options={[{key: "-1", value: "Select Job Level"}, ...JobLevel]} className="w-fit"/>
+                <FormSelect control={form.control} path="jobType" label="Job Type" options={[{key: "-1", value: "Select Job Type"}, ...JobType]} className="w-fit"/>
+                <FormSelect control={form.control} path="deleted" label="Status" options={Status} className="w-28"/>
+                <FormsInput control={form.control} path="keyword" label="Keyword" placeHolder="Enter keyword"/>
+                <Button type="submit" className="h-11">
+                  <Search /> Search
                 </Button>
               </form>
            </Form>
 
-          {/* <JobSearchResult list={list}/>  */}
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {list.map((job) => {
+              const isSaved = savedJobs.includes(job.jobId)
+              const isApplied = appliedJobs.includes(job.jobId)
 
-          <div className="grid grid-cols-4 gap-3">
-            {list.map(job => 
-             <Card key={job.jobId}>
-                <img className="object-cover w-75 mx-auto mb-2" src="/images/signin.jpg"></img>
-                <CardHeader >
-                    <CardTitle>{job.positionName} <span className="text-gray-600 text-sm">({job.jobType})</span></CardTitle>
-                    <CardDescription className="font-semibold text-black">Position - {job.jobLevel}</CardDescription>
-                    <CardDescription className="font-normal text-black overflow-hidden whitespace-nowrap truncate">Location - {job.location} </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                    <Button className="w-full">Save Job</Button>
-                </CardFooter>
-            </Card>)}
+              return (
+                <Card key={job.jobId} className="group overflow-hidden rounded-2xl border border-zinc-200/60 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                    
+                    <div className="relative h-40 w-full overflow-hidden">
+                      <img
+                        src="/images/signin.jpg"
+                        alt={job.positionName}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"/>
+
+                      <button
+                        type="button"
+                        onClick={() => toggleSave(job.jobId)}
+                        className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-zinc-900 shadow-md backdrop-blur transition hover:bg-white"
+                        aria-label={isSaved ? "Unsave job" : "Save job"}>
+                        <Heart className={isSaved ? "size-5 text-rose-500 fill-rose-500" : "size-5"} />
+                      </button>
+
+                      <div className="absolute bottom-3 left-3">
+                        <Badge className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">
+                          {job.jobType}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <CardHeader>
+                      <CardTitle className="text-base font-semibold text-zinc-900">
+                        {job.positionName} <span className="text-zinc-500">({job.jobLevel})</span>
+                      </CardTitle>
+
+                      <CardDescription className="text-sm font-medium text-zinc-700">
+                        {job.companyName}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardFooter className="flex flex-col gap-3">
+                      <div className="w-full flex items-center justify-center">
+                        <Button
+                          className="rounded-none rounded-l-lg  h-10 w-2/3  bg-zinc-900 text-white transition hover:bg-zinc-800"
+                          disabled={isApplied || isApplying}
+                          onClick={() => setConfirmJob(job)}>
+                          {isApplied ? "Applied" : "Apply Now"}
+                        </Button>
+                        <Button className="rounded-none rounded-r-lg  h-10 w-1/3 bg-zinc-200 transition hover:bg-zinc-300 text-black">
+                          <Link className="flex justify-center items-center gap-1" href={`/job/${job.jobId}`}>
+                            <span className="font-semibold">Detail</span><ArrowRight className="size-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                      
+                      <div className="flex w-full justify-end gap-2">
+                         <span className="text-xs text-zinc-400">Posted {job.createAt}</span>                          
+                      </div>
+                    </CardFooter>
+                  </Card>
+              )
+            })}
           </div>
 
-          <PagerWidget pager={pageInfo} onPageChange={onPageChange} onSizeChange={onSizeChange}/> 
-        </div>)
+          <PagerWidget pager={pageInfo} onPageChange={onPageChange} onSizeChange={onSizeChange} />
+
+          <AlertDialog
+            open={!!confirmJob}
+            onOpenChange={(open) => {
+              if (!open) {
+                setConfirmJob(null)
+              }
+            }}
+            title="Confirm job application"
+            description={`Do you want to apply for ${confirmJob?.positionName ?? "this job"} at ${confirmJob?.companyName ?? "the company"}?`}
+            actionText={isApplying ? "Applying..." : "Apply now"}
+            onConfirm={applySelectedJob}
+            loading={isApplying}>
+
+              <p className="text-sm leading-6 text-zinc-600">
+                This action will submit your application and notify the employer. You can cancel if you need more time.
+              </p>
+          </AlertDialog>
+        </div>
+    )
 }

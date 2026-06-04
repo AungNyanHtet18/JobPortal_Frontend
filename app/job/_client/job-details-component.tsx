@@ -8,7 +8,7 @@ import Loading from "@/components/widgets/loading"
 import PageTitle from "@/components/widgets/page-title"
 import { JobDetails } from "@/lib/type/schema/job/job.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { Globe, GraduationCap, Layers, Layers2, Pencil, Phone } from "lucide-react"
+import { Globe, GraduationCap, Layers, Layers2, Pencil, Phone, Users } from "lucide-react"
 import * as Job from "@/lib/actions/job/job.action"
 import * as Company from "@/lib/actions/company/company.action"
 import PageDetailComponent from "@/components/widgets/page-detail.component"
@@ -38,9 +38,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
         
     }, [jobId])
 
-
     const visibleProfileImage = profileImageUrl && !profileImageFailed
-
 
     if(!details) {
         return <Loading />
@@ -86,12 +84,21 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </div>
 
                         {companyId && 
-                            <Button asChild className="mt-5 w-full bg-zinc-950 text-white hover:bg-zinc-800">
-                                <Link href={`/companyaccount/job?jobId=${details.jobId}`}>
-                                    <Pencil className="size-4" />
-                                    Edit Job
-                                </Link>
-                            </Button>
+                            <>
+                              <Button asChild className="mt-5 w-full bg-zinc-950 text-white hover:bg-zinc-800">
+                                  <Link href={`/companyaccount/job/edit?jobId=${details.jobId}`}>
+                                      <Pencil className="size-4" />
+                                      Edit Job
+                                  </Link>
+                              </Button>
+
+                              <Button asChild variant="outline" className="mt-3 w-full text-zinc-950 hover:bg-zinc-100">
+                                  <Link href={`/companyaccount/job/${details.jobId}`}>
+                                      <Users className="size-4" />
+                                      View Applicants
+                                  </Link>
+                              </Button>
+                            </>
                         }                        
                     </div>
                 </aside>

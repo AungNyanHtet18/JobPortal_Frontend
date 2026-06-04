@@ -15,6 +15,6 @@ export const companyNavbar: NavbarType[] = [
 
 export const companyAuthNavbar: NavbarType[] = [
     {id: 1, name: "detail", url: "/companyaccount/detail"},
-    {id: 2, name: "job", url: "/companyaccount/job"}]
+    {id: 2, name: "job", url: "/companyaccount/job/edit"}]
 
     

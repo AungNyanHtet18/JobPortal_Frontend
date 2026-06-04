@@ -24,8 +24,7 @@ export async function updateJob(id: string | number, form: JobForm): Promise<Mod
 }
 
 
-export async function findJobById(id: string | number): Promise<JobDetails> {
+export async function findJobById(id: string): Promise<JobDetails> {
     const response = await secureSearch(`job/${id}`)
-
     return await response.json() as JobDetails
 }

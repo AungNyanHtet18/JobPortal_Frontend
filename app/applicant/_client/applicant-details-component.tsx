@@ -7,10 +7,10 @@ import Loading from "@/components/widgets/loading"
 import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
 import { getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicant from "@/lib/actions/applicant/applicant.action"
-import { Briefcase, Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
+import { Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail.component"
 
-export default function ApplicantDetailsComponent() {
+export default function ApplicantDetailsComponent({applicantId} : {applicantId?: string}) {
     const [details, setDetails] = useState<ApplicantDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
@@ -19,8 +19,9 @@ export default function ApplicantDetailsComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await applicant.findByApplicantName()
-                console.log(result);
+     
+                const result = applicantId ? await applicant.getApplicantById(applicantId) : await applicant.findByApplicantName() 
+ 
                 if(result !== null) {
                     setDetails(result)
                     setProfileImageUrl(await applicant.getApplicantProfileImageUrl(result.profileImage))
