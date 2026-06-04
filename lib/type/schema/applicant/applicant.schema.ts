@@ -39,6 +39,7 @@ export type JobListItem = {
    jobLevel: string
    jobType: string
    companyName: string
+   profilePhoto: string
    location: string
    createAt: string
 }

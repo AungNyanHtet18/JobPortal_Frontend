@@ -9,7 +9,7 @@ import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import { safeCall } from "@/lib/utils"
+import { getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
 import { ArrowRight, Heart, Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -105,7 +105,7 @@ export default function JobSearchComponent() {
                 <FormSelect control={form.control} path="jobType" label="Job Type" options={[{key: "-1", value: "Select Job Type"}, ...JobType]} className="w-fit"/>
                 <FormSelect control={form.control} path="deleted" label="Status" options={Status} className="w-28"/>
                 <FormsInput control={form.control} path="keyword" label="Keyword" placeHolder="Enter keyword"/>
-                <Button type="submit" className="h-11">
+                <Button type="submit" className="h-9 rounded-lg hover:bg-zinc-700 transition shadow-md ">
                   <Search /> Search
                 </Button>
               </form>
@@ -115,16 +115,16 @@ export default function JobSearchComponent() {
             {list.map((job) => {
               const isSaved = savedJobs.includes(job.jobId)
               const isApplied = appliedJobs.includes(job.jobId)
-
+              
               return (
                 <Card key={job.jobId} className="group overflow-hidden rounded-2xl border border-zinc-200/60 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                    
                     <div className="relative h-40 w-full overflow-hidden">
-                      <img
-                        src="/images/signin.jpg"
-                        alt={job.positionName}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"/>
 
+                      <img
+                          src={job.profilePhoto ? `${getCompanyPhotoForJobList(job.profilePhoto)}` : '/images/signin.jpg' }
+                          alt={job.positionName}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"/>
+                      
                       <button
                         type="button"
                         onClick={() => toggleSave(job.jobId)}

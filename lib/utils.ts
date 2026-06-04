@@ -61,3 +61,7 @@ export function getFileName(fileName: string | null) {
         return normalized
     }
 }
+
+export function getCompanyPhotoForJobList(profileImage: string):  string  {
+   return `http://localhost:8081/companyprofile/${encodeURIComponent(profileImage)}`
+}

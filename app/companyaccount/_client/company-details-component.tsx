@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import Loading from "@/components/widgets/loading"
-import * as company from "@/lib/actions/company/company.action"
+import * as companyClient from "@/lib/actions/company/company.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import {  ArrowRight, ArrowRightIcon, Globe, MapPin, Phone } from "lucide-react"
+import { ArrowRightIcon, Globe, MapPin, Phone } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail.component"
 import Link from "next/link"
 
@@ -18,11 +18,11 @@ export default function CompanyDetailsComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await company.findByCompanyName()
+                const result = await companyClient.findByCompanyName()
     
                 if(result !== null) {
                     setDetails(result)
-                    setProfileImageUrl(await company.getCompanyProfileImageUrl(result.profileImage))
+                    setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
                     setProfileImageFailed(false)
                 }
             })
