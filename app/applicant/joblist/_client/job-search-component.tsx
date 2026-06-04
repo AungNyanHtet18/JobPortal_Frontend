@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
+import * as jobApplyClient from '@/lib/actions/job/job-apply.action'
 import PagerWidget from "@/components/widgets/pager-widget"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
@@ -72,7 +73,7 @@ export default function JobSearchComponent() {
       setIsApplying(true)
 
       await safeCall(async () => {
-         const response = await applicantClient.applyJob(confirmJob.jobId)
+         const response = await jobApplyClient.applyJob(confirmJob.jobId)
          toast.success(response.id || "Applied successfully")
          setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
       })

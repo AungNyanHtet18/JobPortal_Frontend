@@ -84,16 +84,14 @@ export async function searchJobs(form: JobSearch):Promise<PageResult<JobListItem
      return await response.json()
 }
 
-export async function applyJob(jobId: number): Promise<ModificationResult<string>> {
-     const response = await secureRequest(`apply/position/${jobId}`)
-     return await response.json()
-}
+export async function downloadApplicantResume(id: number): Promise<Blob>{
+      const response = await secureSearch(`applicant/resume/${id}/download`)
 
-export async function cancelJob(jobId: number): Promise<ModificationResult<string>> {
-     const response = await secureRequest(`job/cancel/${jobId}`, {
-          method: 'DELETE'
-     })
-     return await response.json()
+      if(!response.ok) {
+           throw new Error("Failed to download resume file.")
+      }
+
+      return await response.blob()
 }
 
 export async function getApplicantById(id: string | number): Promise<ApplicantDetails | null> {

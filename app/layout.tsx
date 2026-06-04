@@ -37,7 +37,7 @@ export default function RootLayout({
 
         <main className="w-full">
           {children}
-          <Toaster position="top-left" />
+          <Toaster position="bottom-right" />
         </main>
       </body>
     </html>

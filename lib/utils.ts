@@ -53,7 +53,7 @@ export function getFileName(fileName: string | null) {
         return "No resume uploaded"
     }
 
-    const normalized = fileName.split(/[\\/]/).pop() || fileName
+    const normalized = fileName.split(/[\\/]/).pop() || fileName   //Extracts only the actual file name E.g C:\upload\resume\cv.pdf to cv.pdf
 
     try {
         return decodeURIComponent(normalized)

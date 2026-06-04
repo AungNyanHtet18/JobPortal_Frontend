@@ -44,7 +44,7 @@ export default async function ApplicantNavigation() {
                   {applicantId &&
                     <NavigationMenuItem>
                       <NavigationMenuLink asChild>
-                        <Link className="text-[14px] font-semibold text-zinc-100" href='/applicant/detail'>detail</Link>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href='/applicant/detail'>Profile</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   }
