@@ -21,8 +21,9 @@ export type UploadedJob = {
 
 
 export type CompanyDetails = {
-      id: number,
+      id: number | string,
       companyName : string ,
+      companyEmail: string,
       location : string,
       phone : string,
       websiteUrl : string,

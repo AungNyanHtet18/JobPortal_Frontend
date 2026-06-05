@@ -11,10 +11,10 @@ export const applicantNavbar: NavbarType[] = [
 
 export const companyNavbar: NavbarType[] = [
     {id: 1, name: "company", url: "/companyaccount"},
-    {id: 2, name: "create", url: "/companyaccount/edit"}]
+    {id: 2, name: "create", url: "/companyaccount/edit"},
+    {id: 3, name: "profile", url: "/companyaccount/detail"}]
 
 export const companyAuthNavbar: NavbarType[] = [
-    {id: 1, name: "job", url: "/companyaccount/job/edit"},
-    {id: 2, name: "profile", url: "/companyaccount/detail"}]
+    {id: 1, name: "job", url: "/companyaccount/job/edit"}]
 
     

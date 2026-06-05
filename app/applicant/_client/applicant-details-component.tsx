@@ -6,8 +6,9 @@ import { Separator } from "@/components/ui/separator"
 import Loading from "@/components/widgets/loading"
 import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema"
 import { getFileName, getInitials, safeCall } from "@/lib/utils"
-import * as applicant from "@/lib/actions/applicant/applicant.action"
-import { Calendar, FileText, GraduationCap, Mail, MapPin, Phone, User, Wrench } from "lucide-react"
+import * as applicantClient from "@/lib/actions/applicant/applicant.action"
+import * as authClient from "@/lib/actions/auth.action"
+import { Calendar, FileText, Mail, MapPin, Phone} from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail.component"
 
 export default function ApplicantDetailsComponent({applicantId} : {applicantId?: string}) {
@@ -19,13 +20,36 @@ export default function ApplicantDetailsComponent({applicantId} : {applicantId?:
     useEffect(() => {
         function load() {
             safeCall(async () => {
-     
-                const result = applicantId ? await applicant.getApplicantById(applicantId) : await applicant.findByApplicantName() 
- 
-                if(result !== null) {
-                    setDetails(result)
-                    setProfileImageUrl(await applicant.getApplicantProfileImageUrl(result.profileImage))
-                    setProfileImageFailed(false)
+
+                //Show Account Information
+                //Checking account active to show default
+                //Use tenary operator when adding feature for applicant Id
+                const status = await authClient.checkRoleStatus()
+                
+                if(!status.id) {
+                    const loginUser  = await authClient.findByLoginUser()
+                    setDetails({
+                        id: 'undefined',
+                        name: loginUser.name,
+                        email: loginUser.email,
+                        gender: null,
+                        skills: [],
+                        experience: [],
+                        highestEducationalAttainment: 'undefined',
+                        professionalSummary: 'undefined',
+                        contactDetail: 'undefined',
+                        address: 'undefined',
+                        profileImage: null,
+                        resume: null
+                        })
+                }else {
+                    const result = applicantId ? await applicantClient.getApplicantById(applicantId) : await applicantClient.findByApplicantName() 
+                
+                    if(result !== null) {
+                        setDetails(result)
+                        setProfileImageUrl(await applicantClient.getApplicantProfileImageUrl(result.profileImage))
+                        setProfileImageFailed(false)
+                    }
                 }
             })
         }

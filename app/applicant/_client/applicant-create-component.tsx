@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 import InputComponent from "@/components/widgets/input-component"
-import ProfileLayout from "@/components/widgets/content-layout"
 import ContentLayout from "@/components/widgets/content-layout"
 
 export default function ApplicantCreateComponent() {

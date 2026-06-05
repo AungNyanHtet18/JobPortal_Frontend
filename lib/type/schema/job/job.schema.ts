@@ -55,3 +55,7 @@ export type ApplicantAppliedJobListItem = {
       status: ApplicantionStatus
 }
 
+export type SavedJobListItem = {
+       jobId : number
+}
+

@@ -5,12 +5,12 @@ import { ModificationResult } from "@/lib/type"
 import { ApplicantAppliedJobListItem, JobApplicationListItem } from "@/lib/type/schema/job/job.schema"
 
 
-export async function applyJob(jobId: number): Promise<ModificationResult<string>> {
-     const response = await secureRequest(`apply/position/${jobId}`)
+export async function applyJob(jobId: number) : Promise<ModificationResult<string>> {
+     const response = await secureSearch(`apply/position/${jobId}`)
      return await response.json()
 }
 
-export async function cancelJob(jobId: number): Promise<ModificationResult<string>> {
+export async function cancelJob(jobId: number) : Promise<ModificationResult<string>> {
      const response = await secureRequest(`job/cancel/${jobId}`, {
           method: 'DELETE'
      })

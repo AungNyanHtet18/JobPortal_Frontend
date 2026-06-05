@@ -41,13 +41,13 @@ export default async function ApplicantNavigation() {
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
 
-                  {applicantId &&
+                  
                     <NavigationMenuItem>
                       <NavigationMenuLink asChild>
                         <Link className="text-[14px] font-semibold text-zinc-100" href='/applicant/detail'>Profile</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
-                  }
+                  
 
                   { !UserisLogin && 
                      <NavigationMenuItem>

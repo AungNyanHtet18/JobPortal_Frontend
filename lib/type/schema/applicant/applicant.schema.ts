@@ -45,10 +45,10 @@ export type JobListItem = {
 }
 
 export type ApplicantDetails = {
-     id: number
+     id: number | string
      name: string
      email: string
-     gender: 'Male' | 'Female'
+     gender: 'Male' | 'Female' | null
      skills: string[]
      experience: Experience[],
      highestEducationalAttainment: string

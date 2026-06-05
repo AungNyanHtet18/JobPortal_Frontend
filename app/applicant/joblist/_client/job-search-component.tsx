@@ -22,6 +22,7 @@ import { toast } from "sonner"
 
 export default function JobSearchComponent() {
     const [result, setResult] = useState<PageResult<JobListItem>>(DEFAULT_PAGE_RESULT)
+    const [applicant, setApplicant] = useState<string>("")
     const [savedJobs, setSavedJobs] = useState<number[]>([])
     const [appliedJobs, setAppliedJobs] = useState<number[]>([])
     const [confirmJob, setConfirmJob] = useState<JobListItem | null>(null)
@@ -59,7 +60,8 @@ export default function JobSearchComponent() {
       form.handleSubmit(search) ()
    }
 
-    const toggleSave = (jobId: number) => {
+    const saveJob = (jobId: number) => {
+            
       setSavedJobs(prev =>
          prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
       )
@@ -133,21 +135,26 @@ export default function JobSearchComponent() {
               const isApplied = appliedJobs.includes(job.jobId)
               
               return (
-                <Card key={job.jobId} className="group overflow-hidden rounded-2xl border border-zinc-200/60 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <Card key={job.jobId} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                     <div className="relative h-40 w-full overflow-hidden">
 
                       <img
                           src={job.profilePhoto ? `${getCompanyPhotoForJobList(job.profilePhoto)}` : '/images/signin.jpg' }
                           alt={job.positionName}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"/>
+                          className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"/>
+                      
+                      {applicant ||  
                       
                       <button
                         type="button"
-                        onClick={() => toggleSave(job.jobId)}
+                        onClick={() => saveJob(job.jobId)}
                         className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-zinc-900 shadow-md backdrop-blur transition hover:bg-white"
                         aria-label={isSaved ? "Unsave job" : "Save job"}>
-                        <Heart className={isSaved ? "size-5 text-rose-500 fill-rose-500" : "size-5"} />
+                        <Heart className={isSaved ? "size-5 text-rose-800 fill-rose-600" : "size-5"} />
                       </button>
+                      
+                      }
+                    
 
                       <div className="absolute bottom-3 left-3">
                         <Badge className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import Loading from "@/components/widgets/loading"
 import * as companyClient from "@/lib/actions/company/company.action"
+import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
 import { ArrowRightIcon, Globe, MapPin, Phone } from "lucide-react"
@@ -18,12 +19,31 @@ export default function CompanyDetailsComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result = await companyClient.findByCompanyName()
+                
+                const status = await authClient.checkRoleStatus()
+                
+                if(!status.id) {
+                     const loginUser = await authClient.findByLoginUser()
+                     setDetails({
+                        id: 'undefined',
+                        companyName: loginUser.name,
+                        companyEmail: loginUser.email,
+                        phone: 'undefined',
+                        websiteUrl: 'undefined',
+                        location: 'undefined',
+                        description: 'undefined',
+                        profileImage: null,
+                        totalPostedJobs: 0,
+                        uploadedJob: []
+                    })
+                }else {
+                 const result = await companyClient.findByCompanyName()
     
-                if(result) {
-                    setDetails(result)
-                    setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
-                    setProfileImageFailed(false)
+                    if(result) {
+                        setDetails(result)
+                        setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
+                        setProfileImageFailed(false)
+                    }
                 }
             })
         }

@@ -1,11 +1,12 @@
 'use server'
 
 import { redirect } from "next/navigation";
-import { POST_CONFIG, publicRequest } from "..";
-import { AuthResult, SignInForm, SignUpForm } from "../type/schema/auth.schema";
-import setAuthResult, { clearAuthResult, setApplicantId, setCompanyId } from "../login-users";
+import { POST_CONFIG, publicRequest, secureSearch } from "..";
+import { AuthResult, LoginUser, SignInForm, SignUpForm } from "../type/schema/auth.schema";
+import setAuthResult, { clearAuthResult, getLoginUser, setApplicantId, setCompanyId } from "../login-users";
 import * as applicant from "../actions/applicant/applicant.action"  
 import * as company from "../actions/company/company.action"
+import { ModificationResult } from "../type";
 
 export async function signInAction(form: SignInForm) {
       const response = await publicRequest('token/signin', {
@@ -55,6 +56,18 @@ export async function signUpAction(form: SignUpForm) {
 
      redirect(`/${result.role.toLowerCase()}`)
 }
+
+export async function checkRoleStatus() : Promise<ModificationResult<boolean>> {
+       const loginUser = await getLoginUser()
+       const response = await secureSearch(`account/status/${loginUser.email}`)
+      
+       return await response.json()
+}
+
+export async function findByLoginUser() : Promise<LoginUser> {
+      return await getLoginUser()
+}
+
 
 export async function signOutAction() {
       await clearAuthResult()
