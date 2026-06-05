@@ -16,17 +16,21 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
 import * as jobApplyClient from '@/lib/actions/job/job-apply.action'
+import * as jobSavedClient from '@/lib/actions/job/job-saved.action'
 import PagerWidget from "@/components/widgets/pager-widget"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
+import Loading from "@/components/widgets/loading"
 
 export default function JobSearchComponent() {
+
     const [result, setResult] = useState<PageResult<JobListItem>>(DEFAULT_PAGE_RESULT)
-    const [applicant, setApplicant] = useState<string>("")
+    const [applicant, setApplicant] = useState<string | null>(null)
     const [savedJobs, setSavedJobs] = useState<number[]>([])
     const [appliedJobs, setAppliedJobs] = useState<number[]>([])
     const [confirmJob, setConfirmJob] = useState<JobListItem | null>(null)
     const [isApplying, setIsApplying] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const { list, pageInfo } = result
 
     const form = useForm<JobSearch>({
@@ -60,11 +64,14 @@ export default function JobSearchComponent() {
       form.handleSubmit(search) ()
    }
 
-    const saveJob = (jobId: number) => {
-            
-      setSavedJobs(prev =>
-         prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
-      )
+    async function saveJob (jobId: number) {
+      
+      safeCall(async() => {
+
+        const result = savedJobs.includes(jobId) ? await jobSavedClient.unsavedJob(jobId) :  await jobSavedClient.savedJob(jobId)
+        console.log(`result ${result.id}`);
+        setSavedJobs(prev => prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId])
+      })
     }
 
     async function applySelectedJob() {
@@ -78,10 +85,9 @@ export default function JobSearchComponent() {
         const applicant = await applicantClient.findByApplicant()
 
         if(!applicant) {
-           toast.error("Applicant cannot apply jobs",{
-            description: "Please fill applicant form details to apply jobs"})
-            
-          }else{
+          toast.error("Applicant cannot apply jobs",{
+                description: "Please fill applicant form details to apply jobs"})
+        }else{
           const response = await jobApplyClient.applyJob(confirmJob.jobId)
           toast.success(response.id || "Applied successfully")
           setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
@@ -93,7 +99,10 @@ export default function JobSearchComponent() {
     }
 
     async function search(formValues: JobSearch) {
-         if (formValues.jobLevel === "-1") {
+        
+        setLoading(true) 
+      
+        if (formValues.jobLevel === "-1") {
            delete formValues.jobLevel
          }
 
@@ -102,17 +111,32 @@ export default function JobSearchComponent() {
          }
 
          await safeCall(async () => {
-            const response = await applicantClient.searchJobs(formValues)
+            const result = await applicantClient.searchJobs(formValues)
             const applicant = await applicantClient.findByApplicant()
-             
+            const savedJobs = await jobSavedClient.getSavedJobList()
+
+            console.log(`Save Jobs ${savedJobs.id.map(item => item.jobId)}`);
+
             if(applicant) {
+                setApplicant(applicant)
+
+                //Append Applied Job List of Applicant
                 const appliedList = await jobApplyClient.getAppliedJobList()
                   if(appliedList.id) {
-                    setAppliedJobs(appliedList.id.map(item => item.jobId))
-             }
+                    setAppliedJobs(appliedList.id.map(item => item.jobId)) 
+                  }
+
+                //Append Saved Job List
+                setSavedJobs(savedJobs.id.map(item => item.jobId))
             }
-              setResult(response)
+              setResult(result)
          })
+
+         setLoading(false)
+    }
+
+    if(loading) {
+       return <Loading/>
     }
 
     return (
@@ -143,18 +167,15 @@ export default function JobSearchComponent() {
                           alt={job.positionName}
                           className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"/>
                       
-                      {applicant ||  
-                      
-                      <button
-                        type="button"
-                        onClick={() => saveJob(job.jobId)}
-                        className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-zinc-900 shadow-md backdrop-blur transition hover:bg-white"
-                        aria-label={isSaved ? "Unsave job" : "Save job"}>
-                        <Heart className={isSaved ? "size-5 text-rose-800 fill-rose-600" : "size-5"} />
-                      </button>
-                      
+                      {applicant && 
+                        <button
+                          type="button"
+                          onClick={() => saveJob(job.jobId)}
+                          className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-zinc-900 shadow-md backdrop-blur transition hover:bg-white"
+                          aria-label={isSaved ? "Unsave job" : "Save job"}>
+                          <Heart className={isSaved ? "size-5 text-rose-800 fill-rose-600" : "size-5"} />
+                        </button>
                       }
-                    
 
                       <div className="absolute bottom-3 left-3">
                         <Badge className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">

@@ -83,7 +83,7 @@ export default function CompanyDetailsComponent() {
                             <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
                             <div className="flex flex-wrap gap-2">
                                 <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
-                                    {details.totalPostedJobs} Posted Jobs
+                                    {details.companyEmail} 
                                 </Badge>
                                 {details.websiteUrl && (
                                     <Badge className="bg-zinc-950 text-white hover:bg-zinc-800">

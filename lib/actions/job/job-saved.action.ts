@@ -15,7 +15,7 @@ export async function unsavedJob(jobId: number) : Promise<ModificationResult<num
 }
 
 export async function getSavedJobList() : Promise<ModificationResult<SavedJobListItem[]>> {
-     const response = await secureSearch(`job/savedjoblist`)
+    const response = await secureSearch(`job/savedjoblist`)
     return await response.json()
 }
 
