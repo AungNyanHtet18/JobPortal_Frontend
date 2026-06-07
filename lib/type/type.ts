@@ -12,7 +12,6 @@ export const RoleOptions: OptionItem[] = [
      {key: "CompanyAccount", value: "CompanyAccount"}
 ] 
 
-
 export const JobLevel: OptionItem[] = [
      {key: "Intern", value: "Intern"},
      {key: "EntryLevel", value: "EntryLevel"},
