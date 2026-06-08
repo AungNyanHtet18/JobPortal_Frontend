@@ -46,7 +46,7 @@ export  const ApplicantSchema = z.object({
     experiences: z.array(ExperienceSchema).optional().default([]),
     socialLinks: z.array(SocialLinkSchema).optional().default([]),
     educations: z.array(EducationSchema).optional().default([]),
-    careerRoles: z.array(CareerRoleSchema),
+    careerRoles: z.array(CareerRoleSchema).min(1, "Please select at least one career role."),
     skills: z.array(SkillSchema).optional().default([]),
     languages : z.array(LanguageSchema).optional().default([]),
     file: z.instanceof(File).optional()

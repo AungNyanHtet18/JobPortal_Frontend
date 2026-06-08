@@ -2,22 +2,79 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useFieldArray, useForm } from "react-hook-form"
+import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {BriefcaseBusiness,FileText,GraduationCap,ImagePlus,Loader2,Plus, Save,Trash,Upload,UserRound,X} from "lucide-react"
-import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
+import {
+    BriefcaseBusiness,
+    FileText,
+    GraduationCap,
+    ImagePlus,
+    Languages,
+    LinkIcon,
+    Loader2,
+    Pencil,
+    Plus,
+    Save,
+    Sparkles,
+    Target,
+    Trash,
+    Upload,
+    UserRound,
+    X,
+} from "lucide-react"
+import {
+    ApplicantForm,
+    ApplicantSchema,
+    QualificationType,
+    SkillType,
+} from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
-import { Form } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import {Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
+import FormsDate from "@/components/fields/form.date"
+import DialogComponent from "@/components/widgets/dialog-widget"
+import FormsCheckBox from "@/components/fields/form-checkbox"
+
+const emptyExperience = {
+    companyName: "",
+    position: "",
+    joinedDate: "",
+    leftDate: "",
+    currentlyWorking: false,
+    experienceDescription: "",
+}
+
+const emptyEducation = {
+    qualificationType: "",
+    qualificationName: "",
+    completionDate: "",
+}
+
+const emptySocialLink = {
+    platform: "",
+    url: "",
+}
+
+const emptySkill = {
+    skillType: "",
+    skillName: "",
+}
+
+const emptyLanguage = {
+    name: "",
+}
 
 export default function ApplicantCreateComponent() {
 
@@ -25,36 +82,56 @@ export default function ApplicantCreateComponent() {
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [resumeFile, setResumeFile] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
+    const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
+    const [skillDialogIndex, setSkillDialogIndex] = useState<number | null>(null)
+    const [languageDialogIndex, setLanguageDialogIndex] = useState<number | null>(null)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
 
-    const emptyExperience = {
-        companyName: "",
-        position: "",
-        year: ""
-    }
-
     const form = useForm<ApplicantForm>({
-        resolver: zodResolver(ApplicantSchema),
+        resolver: zodResolver(ApplicantSchema) as Resolver<ApplicantForm>,
         defaultValues: {
             applicantName: "",
             gender: "",
-            highestEducationalAttainment: "",
-            skills: [{skill: ""}],
             professionalSummary: "",
             contactDetail: "",
             address: "",
-            experiences: [emptyExperience]
+            experiences: [],
+            socialLinks: [],
+            educations: [],
+            careerRoles: [{ roleName: "" }],
+            skills: [],
+            languages: [],
         }
-    })
-
-    const skillsFieldArray = useFieldArray({
-        control: form.control,
-        name: 'skills'
     })
 
     const experiencesFieldArray = useFieldArray({
         control: form.control,
-        name: 'experiences'
+        name: "experiences"
+    })
+
+    const socialLinksFieldArray = useFieldArray({
+        control: form.control,
+        name: "socialLinks"
+    })
+
+    const educationsFieldArray = useFieldArray({
+        control: form.control,
+        name: "educations"
+    })
+
+    const careerRolesFieldArray = useFieldArray({
+        control: form.control,
+        name: "careerRoles"
+    })
+
+    const skillsFieldArray = useFieldArray({
+        control: form.control,
+        name: "skills"
+    })
+
+    const languagesFieldArray = useFieldArray({
+        control: form.control,
+        name: "languages"
     })
 
     useEffect(() => {
@@ -65,47 +142,86 @@ export default function ApplicantCreateComponent() {
         }
     }, [profilePreview])
 
+    const openNewExperience = () => {
+        const nextIndex = experiencesFieldArray.fields.length
+        experiencesFieldArray.append(emptyExperience)
+        setExperienceDialogIndex(nextIndex)
+    }
 
-    const appendSkill = () => {
-        skillsFieldArray.append({skill: ""})
+    const removeExperience = (index: number) => {
+        experiencesFieldArray.remove(index)
+        setExperienceDialogIndex(null)
+    }
+
+    const openNewSkill = () => {
+        const nextIndex = skillsFieldArray.fields.length
+        skillsFieldArray.append(emptySkill)
+        setSkillDialogIndex(nextIndex)
     }
 
     const removeSkill = (index: number) => {
-        if(skillsFieldArray.fields.length === 1) {
-            form.setValue("skills.0.skill", "")
-            return
-        }
-
         skillsFieldArray.remove(index)
+        setSkillDialogIndex(null)
     }
 
-    const appendExperiences = () => {
-        experiencesFieldArray.append(emptyExperience)
+    const openNewLanguage = () => {
+        const nextIndex = languagesFieldArray.fields.length
+        languagesFieldArray.append(emptyLanguage)
+        setLanguageDialogIndex(nextIndex)
     }
 
-    const removeExperiences = (index: number) => {
-        if(experiencesFieldArray.fields.length === 1) {
-            experiencesFieldArray.update(index, emptyExperience)
+    const removeLanguage = (index: number) => {
+        languagesFieldArray.remove(index)
+        setLanguageDialogIndex(null)
+    }
+
+    const appendCareerRole = () => {
+        careerRolesFieldArray.append({ roleName: "" })
+    }
+
+    const removeCareerRole = (index: number) => {
+        if(careerRolesFieldArray.fields.length === 1) {
+            form.setValue("careerRoles.0.roleName", "")
             return
         }
-
-        experiencesFieldArray.remove(index)
+        careerRolesFieldArray.remove(index)
     }
 
     const ApplicantPayload = (form: ApplicantForm) => {
+        
         return {
-            applicantName: form.applicantName,
+            applicantName: form.applicantName.trim(),
             gender: form.gender,
-            highestEducationalAttainment: form.highestEducationalAttainment,
-            professionalSummary: form.professionalSummary,
-            contactDetail: form.contactDetail,
-            address: form.address,
-            skills: form.skills.map(item => item.skill.trim()).filter(Boolean),
+            professionalSummary: form.professionalSummary?.trim() || "",
+            contactDetail: form.contactDetail.trim(),
+            address: form.address.trim(),
             experiences: form.experiences.map(item => ({
                 companyName: item.companyName.trim(),
                 position: item.position.trim(),
-                year: Number(item.year)
-            }))
+                joinedDate: item.joinedDate,
+                leftDate: item.currentlyWorking ? "" : item.leftDate,
+                currentlyWorking: item.currentlyWorking,
+                experienceDescription: item.experienceDescription?.trim() || "",
+            })),
+            socialLinks: form.socialLinks.map(item => ({
+                platform: item.platform.trim(),
+                url: item.url.trim(),
+            })),
+            educations: form.educations.map(item => ({
+                qualificationType: item.qualificationType,
+                qualificationName: item.qualificationName.trim(),
+                completionDate: item.completionDate,
+            })),
+            careerRoles: form.careerRoles.map(item => ({
+                roleName: item.roleName.trim(),
+            })),
+            skills: form.skills.map(item => ({
+                skillType: item.skillType,
+                skillName: item.skillName.trim(),
+            })),
+            languages: form.languages.map(item => ({
+                name: item.name.trim(),
+            })),
         }
     }
 
@@ -119,20 +235,26 @@ export default function ApplicantCreateComponent() {
             payload.append("file", profileImage)
         }
 
-        await safeCall(async () =>  {
-            await Applicant.createApplicant(payload)
+        // await safeCall(async () =>  {
+        //     await Applicant.createApplicant(payload)
 
-            if(resumeFile) {
-                const resumePayload = new FormData()
-                resumePayload.append("file", resumeFile)
-                await Applicant.uploadApplicantResume(resumePayload)
-            }
+        //     if(resumeFile) {
+        //         const resumePayload = new FormData()
+        //         resumePayload.append("file", resumeFile)
+        //         await Applicant.uploadApplicantResume(resumePayload)
+        //     }
+        //     router.replace(`/applicant/detail`)
+        // })
 
-            router.replace(`/applicant/detail`)
-        })
+        
 
         setIsSaving(false)
     }
+
+    const currentExperience = useWatch({  //When checkbox  is checked, usewatch returns true 
+        control: form.control,
+        name: experienceDialogIndex !== null ? `experiences.${experienceDialogIndex}.currentlyWorking` : "experiences.0.currentlyWorking",
+    })
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
@@ -140,8 +262,7 @@ export default function ApplicantCreateComponent() {
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
-                     
-                     <aside className="space-y-4">
+                    <aside className="space-y-4">
                         <ContentLayout title="Profile" icon={<UserRound className="size-5 text-zinc-900" />}>
                             <div className="space-y-3">
                                 <div
@@ -225,8 +346,7 @@ export default function ApplicantCreateComponent() {
                                 </div>
                             </div>
                         </ContentLayout>
-                    </aside> 
-
+                    </aside>
 
                     <div className="space-y-6">
                         <InputComponent className="md:grid-cols-2" title="Personal Information" icon={<UserRound className="size-5 text-zinc-900" />}>
@@ -234,30 +354,89 @@ export default function ApplicantCreateComponent() {
                             <FormSelect control={form.control} path="gender" label="Gender" options={[{key: "Male", value: "Male"}, {key: "Female", value: "Female"}]} />
                             <FormsTextAreaInput control={form.control} path="contactDetail" label="Contact Detail" placeHolder="Enter your contact detail" rowHeight="min-h-[96px]" />
                             <FormsTextAreaInput control={form.control} path="address" label="Address" placeHolder="Enter your address" rowHeight="min-h-[96px]" />
-                        </InputComponent>
-
-                        <InputComponent className="md:grid-cols-2" title="Education and Summary" icon={<GraduationCap className="size-5 text-zinc-900" />}>
-                            <FormsTextAreaInput control={form.control} path="highestEducationalAttainment" label="Highest Education Attainment" placeHolder="Enter highest education attainment" rowHeight="min-h-[96px]" />
-                            <FormsTextAreaInput control={form.control} path="professionalSummary" label="Professional Summary" placeHolder="Please fill your professional summary" rowHeight="min-h-[120px]" />
+                            <FormsTextAreaInput control={form.control} path="professionalSummary" label="Professional Summary" placeHolder="Write a short profile summary" rowHeight="min-h-[120px] md:col-span-2" />
                         </InputComponent>
 
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
                                 <div className="flex items-center gap-2">
-                                    <BriefcaseBusiness className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Skills</h2>
+                                    <Target className="size-5 text-zinc-900" />
+                                    <h2 className="text-base font-semibold">Career Roles</h2>
                                 </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={appendSkill}>
+                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={appendCareerRole}>
+                                    <Plus className="size-4" />
+                                    Add
+                                </Button>
+                            </div>
+
+                            <div className="grid gap-3 md:grid-cols-2">
+                                {careerRolesFieldArray.fields.map((field, index) => (
+                                    <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                                        <FormsInput control={form.control} path={`careerRoles.${index}.roleName`} placeHolder="Frontend Developer" />
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-zinc-950 hover:bg-zinc-100" onClick={() => removeCareerRole(index)}>
+                                            <Trash className="size-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                                <div className="flex items-center gap-2">
+                                    <GraduationCap className="size-5 text-zinc-900" />
+                                    <h2 className="text-base font-semibold">Education</h2>
+                                </div>
+                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => educationsFieldArray.append(emptyEducation)}>
+                                    <Plus className="size-4" />
+                                    Add
+                                </Button>
+                            </div>
+
+                            <div className="space-y-4">
+                                {educationsFieldArray.fields.length === 0 && (
+                                    <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
+                                        Add education history with qualification type, name, and completion date.
+                                    </div>
+                                )}
+
+                                {educationsFieldArray.fields.map((field, index) => (
+                                    <div key={field.id} className="grid gap-3 rounded-lg border border-zinc-100 bg-zinc-50 p-4 md:grid-cols-[1fr_1fr_150px_auto]">
+                                        <FormSelect control={form.control} path={`educations.${index}.qualificationType`} options={QualificationType} placeHolder="Qualification" />
+                                        <FormsInput control={form.control} path={`educations.${index}.qualificationName`} placeHolder="Qualification name" />
+                                        <FormsInput control={form.control} type="date" path={`educations.${index}.completionDate`} placeHolder="Completion date" />
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100" onClick={() => educationsFieldArray.remove(index)}>
+                                            <Trash className="size-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                                <div className="flex items-center gap-2">
+                                    <LinkIcon className="size-5 text-zinc-900" />
+                                    <h2 className="text-base font-semibold">Social Links</h2>
+                                </div>
+                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => socialLinksFieldArray.append(emptySocialLink)}>
                                     <Plus className="size-4" />
                                     Add
                                 </Button>
                             </div>
 
                             <div className="space-y-3">
-                                {skillsFieldArray.fields.map((field, index) => (
-                                    <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
-                                        <FormsInput control={form.control} path={`skills.${index}.skill`} placeHolder="Enter your skill" />
-                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-zinc-950 hover:bg-zinc-100" onClick={() => removeSkill(index)}>
+                                {socialLinksFieldArray.fields.length === 0 && (
+                                    <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
+                                        Add portfolio, LinkedIn, GitHub, or other professional links.
+                                    </div>
+                                )}
+
+                                {socialLinksFieldArray.fields.map((field, index) => (
+                                    <div key={field.id} className="grid gap-2 md:grid-cols-[180px_1fr_auto]">
+                                        <FormsInput control={form.control} path={`socialLinks.${index}.platform`} placeHolder="Platform" />
+                                        <FormsInput control={form.control} path={`socialLinks.${index}.url`} placeHolder="https://..." />
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-zinc-950 hover:bg-zinc-100" onClick={() => socialLinksFieldArray.remove(index)}>
                                             <Trash className="size-4" />
                                         </Button>
                                     </div>
@@ -271,23 +450,110 @@ export default function ApplicantCreateComponent() {
                                     <BriefcaseBusiness className="size-5 text-zinc-900" />
                                     <h2 className="text-base font-semibold">Experience</h2>
                                 </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={appendExperiences}>
+                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewExperience}>
                                     <Plus className="size-4" />
-                                    Add
+                                    New Role
                                 </Button>
                             </div>
 
-                            <div className="space-y-4">
-                                {experiencesFieldArray.fields.map((field, index) => (
-                                    <div key={field.id} className="grid gap-3 rounded-lg border border-zinc-100 bg-zinc-50 p-3 md:grid-cols-[1fr_1fr_110px_auto]">
-                                        <FormsInput control={form.control} path={`experiences.${index}.companyName`} placeHolder="Company name" />
-                                        <FormsInput control={form.control} path={`experiences.${index}.position`} placeHolder="Position" />
-                                        <FormsInput control={form.control} type="number" path={`experiences.${index}.year`} placeHolder="Year" />
-                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100" onClick={() => removeExperiences(index)}>
-                                            <Trash className="size-4" />
-                                        </Button>
+                            <div className="grid gap-3 md:grid-cols-2">
+                                <button type="button" onClick={openNewExperience} className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-center text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-white hover:text-zinc-950">
+                                    <div className="flex size-10 items-center justify-center rounded-md bg-white shadow-sm">
+                                        <Plus className="size-5" />
                                     </div>
-                                ))}
+                                    <span className="text-sm font-medium">Add experience</span>
+                                </button>
+
+                                {experiencesFieldArray.fields.map((field, index) => {
+                                    const value = form.getValues(`experiences.${index}`)
+                                    
+                                    return (
+                                        <div key={field.id} className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-semibold text-zinc-950">{value.position || "Untitled position"}</p>
+                                                    <p className="truncate text-sm text-zinc-500">{value.companyName || "Company name"}</p>
+                                                </div>
+                                                <Badge variant="outline" className="bg-white">
+                                                    {value.currentlyWorking ? "Current" : "Past"}
+                                                </Badge>
+                                            </div>
+                                            <p className="mt-3 text-xs text-zinc-500">
+                                                {value.joinedDate || "Start date"} - {value.currentlyWorking ? "Present" : value.leftDate || "Left date"}
+                                            </p>
+                                            <div className="mt-4 flex gap-2">
+                                                <Button type="button" variant="outline" size="sm" className="flex-1 bg-white" onClick={() => setExperienceDialogIndex(index)}>
+                                                    <Pencil className="size-4" />
+                                                    Edit
+                                                </Button>
+                                                <Button type="button" variant="outline" size="icon-sm" className="bg-white" onClick={() => removeExperience(index)}>
+                                                    <Trash className="size-4" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="grid gap-6 xl:grid-cols-2">
+                            <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                                <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Sparkles className="size-5 text-zinc-900" />
+                                        <h2 className="text-base font-semibold">Skills</h2>
+                                    </div>
+                                    <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewSkill}>
+                                        <Plus className="size-4" />
+                                        Add
+                                    </Button>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {skillsFieldArray.fields.length === 0 && (
+                                        <p className="text-sm text-zinc-500">Add technical and soft skills.</p>
+                                    )}
+
+                                    {skillsFieldArray.fields.map((field, index) => {
+                                        const value = form.getValues(`skills.${index}`)
+
+                                        return (
+                                            <button key={field.id} type="button" onClick={() => setSkillDialogIndex(index)} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-left text-sm transition-colors hover:border-zinc-900 hover:bg-white">
+                                                <span className="font-medium text-zinc-950">{value.skillName || "Unnamed skill"}</span>
+                                                {value.skillType && <span className="ml-2 text-xs text-zinc-500">{value.skillType}</span>}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                                <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                                    <div className="flex items-center gap-2">
+                                        <Languages className="size-5 text-zinc-900" />
+                                        <h2 className="text-base font-semibold">Languages</h2>
+                                    </div>
+                                    <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewLanguage}>
+                                        <Plus className="size-4" />
+                                        Add
+                                    </Button>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {languagesFieldArray.fields.length === 0 && (
+                                        <p className="text-sm text-zinc-500">Add languages you can use professionally.</p>
+                                    )}
+
+                                    {languagesFieldArray.fields.map((field, index) => {
+                                        const value = form.getValues(`languages.${index}`)
+
+                                        return (
+                                            <button key={field.id} type="button" onClick={() => setLanguageDialogIndex(index)} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:border-zinc-900 hover:bg-white">
+                                                {value.name || "Unnamed language"}
+                                            </button>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </div>
 
@@ -298,6 +564,51 @@ export default function ApplicantCreateComponent() {
                             </Button>
                         </div>
                     </div>
+
+                    <DialogComponent diaLogIndex={experienceDialogIndex} diaLogTitle="Experience Detail" diaLogDescription="Capture the role, dates, and a short description."
+                        onOpenChange={()=> {setExperienceDialogIndex(null)}}  
+                        onRemoveChange={(experienceDialogIndex) => {
+                           if(experienceDialogIndex !== null) {
+                                removeExperience(experienceDialogIndex)
+                           }   
+                        }}>
+                        {experienceDialogIndex !== null && (
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <FormsInput control={form.control} path={`experiences.${experienceDialogIndex}.companyName`} label="Company Name" placeHolder="Company name" />
+                            <FormsInput control={form.control} path={`experiences.${experienceDialogIndex}.position`} label="Position" placeHolder="Position" />
+                            <FormsInput control={form.control} type="date" path={`experiences.${experienceDialogIndex}.joinedDate`} label="Joined Date" />
+                            <FormsDate control={form.control} path={`experiences.${experienceDialogIndex}.leftDate`} label="Left Date" disable={currentExperience}/>
+                            <FormsCheckBox control={form.control} path={`experiences.${experienceDialogIndex}.currentlyWorking`}  label="Currently working here" description="Leave the left date empty and show this role as present." 
+                                        className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 md:col-span-2" action={() =>  {form.setValue(`experiences.${experienceDialogIndex}.leftDate`, "")}} />
+                            <FormsTextAreaInput control={form.control} path={`experiences.${experienceDialogIndex}.experienceDescription`} label="Description" placeHolder="What did you work on?" rowHeight="min-h-[80px]" className="col-span-2" />
+                        </div>)}
+                    </DialogComponent>
+
+                    <DialogComponent diaLogIndex={skillDialogIndex}  diaLogTitle="Skill Detail" diaLogDescription="Choose the skill type and enter the skill name." 
+                        onOpenChange={() => {setSkillDialogIndex(null)}}
+                        onRemoveChange={(skillDialogIndex) => {
+                            if(skillDialogIndex !== null) {    
+                                removeSkill(skillDialogIndex)
+                            }
+                        }}>
+                        
+                        {skillDialogIndex !== null && (
+                        <div className="grid gap-4">
+                            <FormSelect control={form.control} path={`skills.${skillDialogIndex}.skillType`} label="Skill Type" options={SkillType} />
+                            <FormsInput control={form.control} path={`skills.${skillDialogIndex}.skillName`} label="Skill Name" placeHolder="React, Communication, SQL..." />
+                        </div>
+                        )}
+                    </DialogComponent>
+
+                    <DialogComponent diaLogIndex={languageDialogIndex} diaLogTitle="Language Detail"  diaLogDescription="Add one language at a time." 
+                        onOpenChange={() => {setLanguageDialogIndex(null)}}
+                        onRemoveChange={(languageDialogIndex) => {
+                             if(languageDialogIndex !== null) {
+                                    removeLanguage(languageDialogIndex)
+                             }
+                         }}>
+                        {languageDialogIndex != null &&  <FormsInput control={form.control} path={`languages.${languageDialogIndex}.name`} label="Language" placeHolder="English, Japanese, Myanmar..." />}
+                    </DialogComponent>
                 </form>
             </Form>
         </section>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useFieldArray, useForm } from "react-hook-form"
+import { Resolver, useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BriefcaseBusiness, FileText, GraduationCap, ImagePlus, Loader2, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
 import FormsInput from "@/components/fields/form-input"
@@ -14,10 +14,25 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PageTitle from "@/components/widgets/page-title"
 import { formatFileSize, safeCall } from "@/lib/utils"
-import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
+import { ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
+
+type LegacyApplicantEditForm = {
+    applicantName: string
+    gender: string
+    highestEducationalAttainment: string
+    skills: { skill: string }[]
+    professionalSummary: string
+    contactDetail: string
+    address: string
+    experiences: {
+        companyName: string
+        position: string
+        year: string
+    }[]
+}
 
 export default function ApplicantEditComponent({id} : {id: string}) {
 
@@ -37,8 +52,8 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         year: ""
     }
 
-    const form = useForm<ApplicantForm>({
-        resolver: zodResolver(ApplicantSchema),
+    const form = useForm<LegacyApplicantEditForm>({
+        resolver: zodResolver(ApplicantSchema) as unknown as Resolver<LegacyApplicantEditForm>,
         defaultValues: {
             applicantName: "",
             gender: "",
@@ -130,7 +145,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     }
 
 
-    const ApplicantPayload = (form: ApplicantForm) => {
+    const ApplicantPayload = (form: LegacyApplicantEditForm) => {
         return {
             applicantName: form.applicantName,
             gender: form.gender,
@@ -147,7 +162,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         }
     }
 
-    async function save(form: ApplicantForm) {
+    async function save(form: LegacyApplicantEditForm) {
         setIsSaving(true)
 
         const payload = new FormData()
