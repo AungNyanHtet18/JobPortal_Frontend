@@ -4,30 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-    BriefcaseBusiness,
-    FileText,
-    GraduationCap,
-    ImagePlus,
-    Languages,
-    LinkIcon,
-    Loader2,
-    Pencil,
-    Plus,
-    Save,
-    Sparkles,
-    Target,
-    Trash,
-    Upload,
-    UserRound,
-    X,
-} from "lucide-react"
-import {
-    ApplicantForm,
-    ApplicantSchema,
-    QualificationType,
-    SkillType,
-} from "@/lib/type/schema/applicant/applicant.schema"
+import { BriefcaseBusiness, FileText, FormInput, GraduationCap, ImagePlus, Languages, LinkIcon, Loader2, Pencil, Plus, Save, Sparkles, Target, Trash, Upload, UserRound,X } from "lucide-react"
+import { ApplicantForm, ApplicantSchema, QualificationType, SkillType } from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import FormsInput from "@/components/fields/form-input"
@@ -59,6 +37,7 @@ const emptyExperience = {
 const emptyEducation = {
     qualificationType: "",
     qualificationName: "",
+    institutionName: "",
     completionDate: "",
 }
 
@@ -82,6 +61,7 @@ export default function ApplicantCreateComponent() {
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [resumeFile, setResumeFile] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
+    const [educationDialogIndex, setEducationDialogIndex] = useState<number | null>(null)
     const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
     const [skillDialogIndex, setSkillDialogIndex] = useState<number | null>(null)
     const [languageDialogIndex, setLanguageDialogIndex] = useState<number | null>(null)
@@ -141,6 +121,17 @@ export default function ApplicantCreateComponent() {
             }
         }
     }, [profilePreview])
+
+    const openNewEducation = () => {
+         const nextIndex = educationsFieldArray.fields.length
+         educationsFieldArray.append(emptyEducation) //when empty data append in education array, the array length is 1
+         setEducationDialogIndex(nextIndex)
+    }
+
+    const removeEducation = (index: number) => {
+         educationsFieldArray.remove(index)
+         setEducationDialogIndex(null)
+    }
 
     const openNewExperience = () => {
         const nextIndex = experiencesFieldArray.fields.length
@@ -210,6 +201,7 @@ export default function ApplicantCreateComponent() {
             educations: form.educations.map(item => ({
                 qualificationType: item.qualificationType,
                 qualificationName: item.qualificationName.trim(),
+                institutionName: item.institutionName.trim(),
                 completionDate: item.completionDate,
             })),
             careerRoles: form.careerRoles.map(item => ({
@@ -227,7 +219,7 @@ export default function ApplicantCreateComponent() {
 
     async function save(form: ApplicantForm) {
         setIsSaving(true)
-
+        
         const payload = new FormData()
         payload.append("form", JSON.stringify(ApplicantPayload(form)))
 
@@ -245,8 +237,6 @@ export default function ApplicantCreateComponent() {
         //     }
         //     router.replace(`/applicant/detail`)
         // })
-
-        
 
         setIsSaving(false)
     }
@@ -384,38 +374,6 @@ export default function ApplicantCreateComponent() {
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
                                 <div className="flex items-center gap-2">
-                                    <GraduationCap className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Education</h2>
-                                </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => educationsFieldArray.append(emptyEducation)}>
-                                    <Plus className="size-4" />
-                                    Add
-                                </Button>
-                            </div>
-
-                            <div className="space-y-4">
-                                {educationsFieldArray.fields.length === 0 && (
-                                    <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
-                                        Add education history with qualification type, name, and completion date.
-                                    </div>
-                                )}
-
-                                {educationsFieldArray.fields.map((field, index) => (
-                                    <div key={field.id} className="grid gap-3 rounded-lg border border-zinc-100 bg-zinc-50 p-4 md:grid-cols-[1fr_1fr_150px_auto]">
-                                        <FormSelect control={form.control} path={`educations.${index}.qualificationType`} options={QualificationType} placeHolder="Qualification" />
-                                        <FormsInput control={form.control} path={`educations.${index}.qualificationName`} placeHolder="Qualification name" />
-                                        <FormsInput control={form.control} type="date" path={`educations.${index}.completionDate`} placeHolder="Completion date" />
-                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-100" onClick={() => educationsFieldArray.remove(index)}>
-                                            <Trash className="size-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                <div className="flex items-center gap-2">
                                     <LinkIcon className="size-5 text-zinc-900" />
                                     <h2 className="text-base font-semibold">Social Links</h2>
                                 </div>
@@ -433,7 +391,7 @@ export default function ApplicantCreateComponent() {
                                 )}
 
                                 {socialLinksFieldArray.fields.map((field, index) => (
-                                    <div key={field.id} className="grid gap-2 md:grid-cols-[180px_1fr_auto]">
+                                    <div key={field.id} className="grid gap-2 md:grid-cols-[200px_1fr_auto]">
                                         <FormsInput control={form.control} path={`socialLinks.${index}.platform`} placeHolder="Platform" />
                                         <FormsInput control={form.control} path={`socialLinks.${index}.url`} placeHolder="https://..." />
                                         <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-zinc-950 hover:bg-zinc-100" onClick={() => socialLinksFieldArray.remove(index)}>
@@ -441,6 +399,68 @@ export default function ApplicantCreateComponent() {
                                         </Button>
                                     </div>
                                 ))}
+                            </div>
+                        </div>
+                    
+                    
+                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
+                                <div className="flex items-center gap-2">
+                                    <GraduationCap className="size-5 text-zinc-900" />
+                                    <h2 className="text-base font-semibold">Education</h2>
+                                </div>
+                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => openNewEducation()}>
+                                    <Plus className="size-4" />
+                                    Add
+                                </Button>
+                            </div>
+
+                            <div className="space-y-4">
+                                 {educationsFieldArray.fields.length === 0 && (
+                                    <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
+                                        Add education history with qualification type, name, and completion date.
+                                    </div>
+                                )} 
+
+                                <div className="grid md:grid-cols-2 gap-3">
+                                    <button type="button" onClick={() => openNewEducation()} className="min-h-36 flex flex-col items-center justify-center gap-2  rounded-lg border border-dashed border-zinc-300 bg-zinc-50 text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-white hover:text-zinc-950">
+                                        <div className="flex size-10  items-center justify-center rounded-md bg-white shadow-sm">
+                                            <Plus className="size-5"/>
+                                        </div>
+                                        <span className="text-sm font-medium">Add Education</span>
+                                    </button> 
+
+                                  {educationsFieldArray.fields.map((field, index) => {  
+                                
+                                    const value = form.getValues(`educations.${index}`)
+                                    
+                                    return (
+                                        <div key={field.id} className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between item-center">
+                                                    <p className="truncate text-sm font-semibold text-zinc-950">{value.qualificationType || 'Qualification Type'}</p>
+                                                    <Badge variant='outline' className="bg-white">
+                                                       {value.qualificationName  || 'QualificationName'}
+                                                    </Badge>
+                                                </div>
+                                                <p className="truncate text-sm text-zinc-500">{value.institutionName || 'Institution Name'}</p>
+                                            </div>
+                                            
+                                            <p className="mt-2 truncate text-xs text-zinc-500">{value.completionDate || 'Completion Date'}</p>
+
+                                            <div className="flex gap-2 mt-2">
+                                                <Button type="button" variant='outline' size='sm' className="flex-1 bg-white" onClick={() => setEducationDialogIndex(index)}>
+                                                    <Pencil size={4}/> Edit
+                                                </Button>
+                                                
+                                                <Button type="button" variant='outline' size='sm' onClick={() => removeEducation(index)}>
+                                                    <Trash size={4}/>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        
+                                    )})}  
+                                </div>
                             </div>
                         </div>
 
@@ -457,7 +477,7 @@ export default function ApplicantCreateComponent() {
                             </div>
 
                             <div className="grid gap-3 md:grid-cols-2">
-                                <button type="button" onClick={openNewExperience} className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-center text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-white hover:text-zinc-950">
+                                <button type="button" onClick={openNewExperience} className="min-h-36 flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-center text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-white hover:text-zinc-950">
                                     <div className="flex size-10 items-center justify-center rounded-md bg-white shadow-sm">
                                         <Plus className="size-5" />
                                     </div>
@@ -564,6 +584,25 @@ export default function ApplicantCreateComponent() {
                             </Button>
                         </div>
                     </div>
+
+                    <DialogComponent diaLogIndex={educationDialogIndex} diaLogTitle="Education Details" diaLogDescription="  Add education history with qualification type, name, and completion date." 
+                        onOpenChange={()=> {setEducationDialogIndex(null)}}
+                        onRemoveChange={(educationDialogIndex) => {
+                             if(educationDialogIndex !== null) {
+                                 removeEducation(educationDialogIndex)
+                             }
+                        }}>
+
+                        {educationDialogIndex !== null && (
+                         <div className="space-y-8">
+                            <FormSelect control={form.control} path={`educations.${educationDialogIndex}.qualificationType`} label="Qualification Type" options={QualificationType} className="w-full"/> 
+                            <FormsInput control={form.control} path={`educations.${educationDialogIndex}.qualificationName`} label="Qualification Name" placeHolder="Enter Qualification Name" className="w-full"/> 
+                            
+                            <FormsInput control={form.control} path={`educations.${educationDialogIndex}.institutionName`} label="Institution Name" placeHolder="Enter Institution Name" />
+                            <FormsInput control={form.control} type="date" path={`educations.${educationDialogIndex}.completionDate`} label="Completion Date" />
+                         </div>)}
+
+                    </DialogComponent>
 
                     <DialogComponent diaLogIndex={experienceDialogIndex} diaLogTitle="Experience Detail" diaLogDescription="Capture the role, dates, and a short description."
                         onOpenChange={()=> {setExperienceDialogIndex(null)}}  

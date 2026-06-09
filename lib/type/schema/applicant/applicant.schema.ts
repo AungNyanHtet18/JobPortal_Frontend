@@ -20,6 +20,7 @@ export const SocialLinkSchema = z.object({
 export const EducationSchema = z.object({
      qualificationType: z.string().nonempty("Please enter qualification type."),
      qualificationName: z.string().nonempty("Please fill your qualification name."),
+     institutionName: z.string().nonempty("Please fill institution name."),
      completionDate: z.string().nonempty("Please enter completion date.")
 })
 
