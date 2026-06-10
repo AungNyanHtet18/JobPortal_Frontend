@@ -4,10 +4,10 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { BriefcaseBusiness, FileText, FormInput, GraduationCap, ImagePlus, Languages, LinkIcon, Loader2, Pencil, Plus, Save, Sparkles, Target, Trash, Upload, UserRound,X } from "lucide-react"
-import { ApplicantForm, ApplicantSchema, QualificationType, SkillType } from "@/lib/type/schema/applicant/applicant.schema"
+import { BriefcaseBusiness, FileText, GraduationCap, ImagePlus, Languages, LinkIcon, Loader2, Pencil, Plus, Save, Sparkles, Target, Trash, Upload, UserRound,X } from "lucide-react"
+import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
@@ -15,8 +15,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import {Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 import InputComponent from "@/components/widgets/input-component"
@@ -24,6 +22,7 @@ import ContentLayout from "@/components/widgets/content-layout"
 import FormsDate from "@/components/fields/form.date"
 import DialogComponent from "@/components/widgets/dialog-widget"
 import FormsCheckBox from "@/components/fields/form-checkbox"
+import { LanguageLevel, QualificationType, SkillType } from "@/lib/type/type"
 
 const emptyExperience = {
     companyName: "",
@@ -52,7 +51,8 @@ const emptySkill = {
 }
 
 const emptyLanguage = {
-    name: "",
+    languageName: "",
+    languageLevel: ""
 }
 
 export default function ApplicantCreateComponent() {
@@ -212,7 +212,8 @@ export default function ApplicantCreateComponent() {
                 skillName: item.skillName.trim(),
             })),
             languages: form.languages.map(item => ({
-                name: item.name.trim(),
+                languageName: item.languageName.trim(),
+                languageLevel: item.languageLevel.trim()
             })),
         }
     }
@@ -227,16 +228,16 @@ export default function ApplicantCreateComponent() {
             payload.append("file", profileImage)
         }
 
-        // await safeCall(async () =>  {
-        //     await Applicant.createApplicant(payload)
+        await safeCall(async () =>  {
+            await Applicant.createApplicant(payload)
 
-        //     if(resumeFile) {
-        //         const resumePayload = new FormData()
-        //         resumePayload.append("file", resumeFile)
-        //         await Applicant.uploadApplicantResume(resumePayload)
-        //     }
-        //     router.replace(`/applicant/detail`)
-        // })
+            if(resumeFile) {
+                const resumePayload = new FormData()
+                resumePayload.append("file", resumeFile)
+                await Applicant.uploadApplicantResume(resumePayload)
+            }
+            router.replace(`/applicant/detail`)
+        })
 
         setIsSaving(false)
     }
@@ -351,7 +352,7 @@ export default function ApplicantCreateComponent() {
                             <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
                                 <div className="flex items-center gap-2">
                                     <Target className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Career Roles</h2>
+                                    <h2 className="text-base font-semibold">Interested Career Roles</h2>
                                 </div>
                                 <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={appendCareerRole}>
                                     <Plus className="size-4" />
@@ -362,7 +363,7 @@ export default function ApplicantCreateComponent() {
                             <div className="grid gap-3 md:grid-cols-2">
                                 {careerRolesFieldArray.fields.map((field, index) => (
                                     <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
-                                        <FormsInput control={form.control} path={`careerRoles.${index}.roleName`} placeHolder="Frontend Developer" />
+                                        <FormsInput control={form.control} path={`careerRoles.${index}.roleName`} placeHolder="Fill Your Interested Career Roles" />
                                         <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-zinc-950 hover:bg-zinc-100" onClick={() => removeCareerRole(index)}>
                                             <Trash className="size-4" />
                                         </Button>
@@ -569,7 +570,8 @@ export default function ApplicantCreateComponent() {
 
                                         return (
                                             <button key={field.id} type="button" onClick={() => setLanguageDialogIndex(index)} className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:border-zinc-900 hover:bg-white">
-                                                {value.name || "Unnamed language"}
+                                                <span className="font-medium text-zinc-950">{value.languageName}</span>
+                                                {value.languageLevel && <span className="ms-1 text-xs text-zinc-500">({value.languageLevel})</span>}
                                             </button>
                                         )
                                     })}
@@ -595,9 +597,8 @@ export default function ApplicantCreateComponent() {
 
                         {educationDialogIndex !== null && (
                          <div className="space-y-8">
-                            <FormSelect control={form.control} path={`educations.${educationDialogIndex}.qualificationType`} label="Qualification Type" options={QualificationType} className="w-full"/> 
+                            <FormSelect control={form.control} path={`educations.${educationDialogIndex}.qualificationType`} label="Qualification Type" placeHolder="Enter Qualification Type" options={QualificationType} className="w-full"/> 
                             <FormsInput control={form.control} path={`educations.${educationDialogIndex}.qualificationName`} label="Qualification Name" placeHolder="Enter Qualification Name" className="w-full"/> 
-                            
                             <FormsInput control={form.control} path={`educations.${educationDialogIndex}.institutionName`} label="Institution Name" placeHolder="Enter Institution Name" />
                             <FormsInput control={form.control} type="date" path={`educations.${educationDialogIndex}.completionDate`} label="Completion Date" />
                          </div>)}
@@ -632,9 +633,9 @@ export default function ApplicantCreateComponent() {
                         }}>
                         
                         {skillDialogIndex !== null && (
-                        <div className="grid gap-4">
-                            <FormSelect control={form.control} path={`skills.${skillDialogIndex}.skillType`} label="Skill Type" options={SkillType} />
-                            <FormsInput control={form.control} path={`skills.${skillDialogIndex}.skillName`} label="Skill Name" placeHolder="React, Communication, SQL..." />
+                        <div className="grid gap-5">
+                            <FormSelect control={form.control} path={`skills.${skillDialogIndex}.skillType`} label="Skill Type" placeHolder="Enter Skill Type" options={SkillType} />
+                            <FormsInput control={form.control} path={`skills.${skillDialogIndex}.skillName`} label="Skill Name" placeHolder="Enter Skill Name" />
                         </div>
                         )}
                     </DialogComponent>
@@ -646,7 +647,12 @@ export default function ApplicantCreateComponent() {
                                     removeLanguage(languageDialogIndex)
                              }
                          }}>
-                        {languageDialogIndex != null &&  <FormsInput control={form.control} path={`languages.${languageDialogIndex}.name`} label="Language" placeHolder="English, Japanese, Myanmar..." />}
+                        {languageDialogIndex != null &&  
+                           <div className="grid gap-5">
+                                <FormsInput control={form.control} path={`languages.${languageDialogIndex}.languageName`} label="Language" placeHolder="Enter Language Name" />
+                                <FormSelect control={form.control} path={`languages.${languageDialogIndex}.languageLevel`} label="Language Level" placeHolder="Enter Language Level" options={LanguageLevel} />
+                           </div>
+                        }
                     </DialogComponent>
                 </form>
             </Form>

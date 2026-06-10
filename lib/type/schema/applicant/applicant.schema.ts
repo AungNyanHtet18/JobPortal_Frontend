@@ -1,7 +1,5 @@
 import z from "zod"
 import { PageSearch } from "../.."
-import { OptionItem } from "../../type"
-
 
 export const ExperienceSchema = z.object({
     companyName: z.string().nonempty("Please fill your previous company name"),
@@ -34,12 +32,13 @@ export const SkillSchema = z.object({
 })
 
 export const LanguageSchema = z.object({
-     name: z.string().nonempty("Please fill your platform")
+     languageName: z.string().nonempty("Please fill your language name."),
+     languageLevel: z.string().nonempty("Please enter your language level.")
 })
 
 
 export  const ApplicantSchema = z.object({
-    applicantName: z.string().nonempty("Please enter your applicant name."),
+    applicantName: z.string(),
     gender: z.string().nonempty("Please select gender."),
     professionalSummary: z.string().optional(),
     contactDetail: z.string().nonempty("Please fill your contact detail.").min(10).max(200),
@@ -53,30 +52,7 @@ export  const ApplicantSchema = z.object({
     file: z.instanceof(File).optional()
 })
 
-
 export type ApplicantForm = z.infer<typeof ApplicantSchema>
-
-
-export const QualificationType: OptionItem[] =[
-	{key: "DOCTORATE", value: "DOCTORATE"},
-	{key: "PHD", value: "PHD"},
-	{key: "MASTER", value: "MASTER"},
-	{key: "DEGREE", value: "DEGREE"},
-    {key: "DIPLOMA", value: "DIPLOMA"},
-    {key: "POSTGRADUATE_DIPLOMA", value: "POSTGRADUATE_DIPLOMA"},
-    {key: "HIGH_SCHOOL", value: "HIGH_SCHOOL"},
-    {key: "FOUNDATION_PROGRAM", value: "FOUNDATION_PROGRAM"},
-    {key: "COURSE", value: "COURSE"},
-    {key: "CERTIFICATE", value: "CERTIFICATE"},
-    {key: "BOOTCAMP", value: "BOOTCAMP"},
-    {key: "PROFESSIONAL_TRAINING", value: "PROFESSIONAL_TRAINING"},
-    {key: "VOCATIONAL", value: "VOCATIONAL"},
-    {key: "TECHNICAL_CERTIFICATION", value: "TECHNICAL_CERTIFICATION"}]
-
-export const SkillType: OptionItem[] = [
-    {key: "SoftSkill", value: "SoftSkill"},
-    {key: "HardSkill", value: "HardSkill"}]
-
 
 export type JobSearch = {
    jobLevel?: string,
@@ -111,7 +87,6 @@ export type ApplicantDetails = {
      profileImage: string | null
      resume: string | null
 }
-
 
 export type Experience = {
      id: number,
