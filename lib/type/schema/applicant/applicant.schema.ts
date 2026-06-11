@@ -78,19 +78,58 @@ export type ApplicantDetails = {
      name: string
      email: string
      gender: 'Male' | 'Female' | null
-     skills: string[]
-     experience: Experience[],
-     highestEducationalAttainment: string
      professionalSummary: string,
-     contactDetail: string
-     address: string
-     profileImage: string | null
-     resume: string | null
+     contactDetail: string,
+     address: string,
+     experience?: ApplicantExperienceDetails[],
+     socialLink?: ApplicantSocialLinkDetails[],
+     education?:  ApplicantEducationDetails[],
+     careerRole: ApplicantCareerRoleDetails[],
+     skill?: ApplicantSkillDetails[],
+     language?: ApplicantLanguageDetails[],
+     profileImage: string | null,
+     resume: string | null,
+     cvForm: string | null,
 }
 
-export type Experience = {
+
+export type ApplicantExperienceDetails = {
      id: number,
      companyName: string,
      position: string,
-     years: number
+     joinedDate: string,
+     leftDate: string | null,
+     currentlyWorking: boolean,
+     experienceDescription: string
 }
+
+export type ApplicantSocialLinkDetails = {
+     platform: string,
+     url: string
+}
+
+export type ApplicantEducationDetails = {
+     qualificationType: 'DOCTORATE' | 'PHD' | 'MASTER' | 
+                        'DEGREE' | 'DIPLOMA' | 'POSTGRADUATE_DIPLOMA' | 
+                        'HIGH_SCHOOL' | 'FOUNDATION_PROGRAM' | 'COURSE' | 
+                        'CERTIFICATE' | 'BOOTCAMP' | 'PROFESSIONAL_TRAINING' | 
+                        'VOCATIONAL' | 'TECHNICAL_CERTIFICATION',
+     qualificationName: string,
+     institutionName: string,
+     completionDate: string
+}
+
+export type ApplicantCareerRoleDetails = {
+      roleName: string
+}
+
+export type ApplicantSkillDetails = {
+      skillType: 'SoftSkill' | 'HardSkill',
+      skillName: string
+}
+
+export type ApplicantLanguageDetails = {
+      languageName: string,
+      languageLevel: 'Begineer' | 'Elementary' | 'PreIntermediate' | 'Intermediate' | 'UpperIntermediate' | 'Advanced' | 'Native'
+}
+

@@ -53,7 +53,7 @@ export const SkillType: OptionItem[] = [
     {key: "HardSkill", value: "HardSkill"}]
 
 export const LanguageLevel : OptionItem[] = [
-     {key: "Begineer", value: "Begineer"},
+     {key: "Beginer", value: "Beginer"},
      {key: "Elementary", value: "Elementary"},
      {key: "PreIntermediate", value: "PreIntermediate"},
      {key: "Intermediate", value: "Intermediate"},
