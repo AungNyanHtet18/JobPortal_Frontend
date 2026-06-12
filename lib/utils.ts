@@ -65,3 +65,17 @@ export function getFileName(fileName: string | null) {
 export function getCompanyPhotoForJobList(profileImage: string):  string  {
    return `http://localhost:8081/companyprofile/${encodeURIComponent(profileImage)}`
 }
+
+export  function formatDate(value: string | null): string {
+    if (value === null) {
+        return "Not added"
+    }
+
+    const dateValue = value as string //eg. date value = 2022-01-01 
+    const date: Date = new Date(dateValue) // date = Sat Jan 01 2022 06:30:00 GMT+0630
+
+    return new Intl.DateTimeFormat("en", {
+        month: "short",
+        year: "numeric"
+    }).format(date)  //format date = Jan 2022
+  }

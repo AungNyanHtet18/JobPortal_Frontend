@@ -31,7 +31,6 @@ export const DEFAULT_PAGE_RESULT: PageResult<any> = {
     }
 }
 
-
 export const DummyPage: PageInfo = {
     page: 1,
     size: 20,

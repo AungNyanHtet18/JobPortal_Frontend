@@ -109,11 +109,7 @@ export type ApplicantSocialLinkDetails = {
 }
 
 export type ApplicantEducationDetails = {
-     qualificationType: 'DOCTORATE' | 'PHD' | 'MASTER' | 
-                        'DEGREE' | 'DIPLOMA' | 'POSTGRADUATE_DIPLOMA' | 
-                        'HIGH_SCHOOL' | 'FOUNDATION_PROGRAM' | 'COURSE' | 
-                        'CERTIFICATE' | 'BOOTCAMP' | 'PROFESSIONAL_TRAINING' | 
-                        'VOCATIONAL' | 'TECHNICAL_CERTIFICATION',
+     qualificationType: string,
      qualificationName: string,
      institutionName: string,
      completionDate: string
@@ -124,12 +120,12 @@ export type ApplicantCareerRoleDetails = {
 }
 
 export type ApplicantSkillDetails = {
-      skillType: 'SoftSkill' | 'HardSkill',
+      skillType: string,
       skillName: string
 }
 
 export type ApplicantLanguageDetails = {
       languageName: string,
-      languageLevel: 'Begineer' | 'Elementary' | 'PreIntermediate' | 'Intermediate' | 'UpperIntermediate' | 'Advanced' | 'Native'
+      languageLevel: string
 }
 
