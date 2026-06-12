@@ -11,7 +11,7 @@ import { getInitials, safeCall } from "@/lib/utils"
 import { Globe, GraduationCap, Layers, Layers2, Pencil, Phone, Users } from "lucide-react"
 import * as Job from "@/lib/actions/job/job.action"
 import * as Company from "@/lib/actions/company/company.action"
-import PageDetailComponent from "@/components/widgets/page-detail.component"
+import PageDetailComponent from "@/components/widgets/page-detail-component"
 
 export default function JobDetailsComponent({jobId}: {jobId: string}) {
     const [companyId, setCompanyId] = useState<string | undefined>(undefined)

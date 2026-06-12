@@ -8,7 +8,7 @@ import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
 import { ArrowRightIcon, Globe, MapPin, Phone } from "lucide-react"
-import PageDetailComponent from "@/components/widgets/page-detail.component"
+import PageDetailComponent from "@/components/widgets/page-detail-component"
 import Link from "next/link"
 
 export default function CompanyDetailsComponent() {

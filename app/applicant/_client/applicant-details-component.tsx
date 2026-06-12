@@ -9,7 +9,7 @@ import { formatDate, getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicantClient from "@/lib/actions/applicant/applicant.action"
 import * as authClient from "@/lib/actions/auth.action"
 import { Calendar, ExternalLink, FileText, Mail, MapPin, Phone } from "lucide-react"
-import PageDetailComponent from "@/components/widgets/page-detail.component"
+import PageDetailComponent from "@/components/widgets/page-detail-component"
 import { IconType } from "@/lib/type/type"
 
 export default function ApplicantDetailsComponent({ applicantId }: { applicantId?: string }) {
@@ -30,7 +30,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                             id: 'undefined',
                             name: loginUser.name,
                             email: loginUser.email,
-                            gender: null,
+                            gender: undefined,
                             professionalSummary: 'undefined',
                             contactDetail: 'undefined',
                             address: 'undefined',

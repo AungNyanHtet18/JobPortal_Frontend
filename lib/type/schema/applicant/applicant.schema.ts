@@ -54,30 +54,84 @@ export  const ApplicantSchema = z.object({
 
 export type ApplicantForm = z.infer<typeof ApplicantSchema>
 
-export type JobSearch = {
-   jobLevel?: string,
-   jobType?: string,
-   deleted?: string,
-   keyword?: string
-} & PageSearch
 
-export type JobListItem = {
-   jobId: number
-   positionName: string
-   salary: number
-   jobLevel: string
-   jobType: string
-   companyName: string
-   profilePhoto: string
-   location: string
-   createAt: string
+export const emptyExperience = {
+    companyName: "",
+    position: "",
+    joinedDate: "",
+    leftDate: "",
+    currentlyWorking: false,
+    experienceDescription: "",
 }
+
+export const emptyEducation = {
+    qualificationType: "",
+    qualificationName: "",
+    institutionName: "",
+    completionDate: "",
+}
+
+export const emptySocialLink = {
+    platform: "",
+    url: "",
+}
+
+export const emptySkill = {
+    skillType: "",
+    skillName: "",
+}
+
+export const emptyLanguage = {
+    languageName: "",
+    languageLevel: ""
+}
+
+export const ApplicantPayload = (form: ApplicantForm) => {
+     
+     return {
+          applicantName: form.applicantName.trim(),
+          gender: form.gender,
+          professionalSummary: form.professionalSummary?.trim() || "",
+          contactDetail: form.contactDetail.trim(),
+          address: form.address.trim(),
+          experiences: form.experiences.map(item => ({
+               companyName: item.companyName.trim(),
+               position: item.position.trim(),
+               joinedDate: item.joinedDate,
+               leftDate: item.currentlyWorking ? "" : item.leftDate,
+               currentlyWorking: item.currentlyWorking,
+               experienceDescription: item.experienceDescription?.trim() || "",
+          })),
+          socialLinks: form.socialLinks.map(item => ({
+               platform: item.platform.trim(),
+               url: item.url.trim(),
+          })),
+          educations: form.educations.map(item => ({
+               qualificationType: item.qualificationType,
+               qualificationName: item.qualificationName.trim(),
+               institutionName: item.institutionName.trim(),
+               completionDate: item.completionDate,
+          })),
+          careerRoles: form.careerRoles.map(item => ({
+               roleName: item.roleName.trim(),
+          })),
+          skills: form.skills.map(item => ({
+               skillType: item.skillType,
+               skillName: item.skillName.trim(),
+          })),
+          languages: form.languages.map(item => ({
+               languageName: item.languageName.trim(),
+               languageLevel: item.languageLevel.trim()
+          })),
+     }
+}
+
 
 export type ApplicantDetails = {
      id: number | string
      name: string
      email: string
-     gender: 'Male' | 'Female' | null
+     gender: string | undefined
      professionalSummary: string,
      contactDetail: string,
      address: string,
@@ -129,3 +183,22 @@ export type ApplicantLanguageDetails = {
       languageLevel: string
 }
 
+
+export type JobSearch = {
+   jobLevel?: string,
+   jobType?: string,
+   deleted?: string,
+   keyword?: string
+} & PageSearch
+
+export type JobListItem = {
+   jobId: number
+   positionName: string
+   salary: number
+   jobLevel: string
+   jobType: string
+   companyName: string
+   profilePhoto: string
+   location: string
+   createAt: string
+}

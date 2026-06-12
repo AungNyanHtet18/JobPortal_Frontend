@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { BriefcaseBusiness, FileText, GraduationCap, ImagePlus, Languages, LinkIcon, Loader2, Pencil, Plus, Save, Sparkles, Target, Trash, Upload, UserRound,X } from "lucide-react"
-import { ApplicantForm, ApplicantSchema } from "@/lib/type/schema/applicant/applicant.schema"
+import { FileText, ImagePlus, Loader2, Pencil, Plus, Save, Trash, Upload, UserRound,X } from "lucide-react"
+import { ApplicantForm, ApplicantPayload, ApplicantSchema, emptyEducation, emptyExperience, emptyLanguage, emptySkill, emptySocialLink } from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
 import { Form } from "@/components/ui/form"
 import FormsInput from "@/components/fields/form-input"
@@ -23,37 +23,7 @@ import FormsDate from "@/components/fields/form.date"
 import DialogComponent from "@/components/widgets/dialog-widget"
 import FormsCheckBox from "@/components/fields/form-checkbox"
 import { LanguageLevel, QualificationType, SkillType } from "@/lib/type/type"
-
-const emptyExperience = {
-    companyName: "",
-    position: "",
-    joinedDate: "",
-    leftDate: "",
-    currentlyWorking: false,
-    experienceDescription: "",
-}
-
-const emptyEducation = {
-    qualificationType: "",
-    qualificationName: "",
-    institutionName: "",
-    completionDate: "",
-}
-
-const emptySocialLink = {
-    platform: "",
-    url: "",
-}
-
-const emptySkill = {
-    skillType: "",
-    skillName: "",
-}
-
-const emptyLanguage = {
-    languageName: "",
-    languageLevel: ""
-}
+import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
 
 export default function ApplicantCreateComponent() {
 
@@ -65,6 +35,7 @@ export default function ApplicantCreateComponent() {
     const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
     const [skillDialogIndex, setSkillDialogIndex] = useState<number | null>(null)
     const [languageDialogIndex, setLanguageDialogIndex] = useState<number | null>(null)
+    
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
 
     const form = useForm<ApplicantForm>({
@@ -112,6 +83,11 @@ export default function ApplicantCreateComponent() {
     const languagesFieldArray = useFieldArray({
         control: form.control,
         name: "languages"
+    })
+
+    const currentExperience = useWatch({  //When checkbox  is checked, usewatch returns true 
+        control: form.control,
+        name: experienceDialogIndex !== null ? `experiences.${experienceDialogIndex}.currentlyWorking` : "experiences.0.currentlyWorking",
     })
 
     useEffect(() => {
@@ -178,46 +154,6 @@ export default function ApplicantCreateComponent() {
         careerRolesFieldArray.remove(index)
     }
 
-    const ApplicantPayload = (form: ApplicantForm) => {
-        
-        return {
-            applicantName: form.applicantName.trim(),
-            gender: form.gender,
-            professionalSummary: form.professionalSummary?.trim() || "",
-            contactDetail: form.contactDetail.trim(),
-            address: form.address.trim(),
-            experiences: form.experiences.map(item => ({
-                companyName: item.companyName.trim(),
-                position: item.position.trim(),
-                joinedDate: item.joinedDate,
-                leftDate: item.currentlyWorking ? "" : item.leftDate,
-                currentlyWorking: item.currentlyWorking,
-                experienceDescription: item.experienceDescription?.trim() || "",
-            })),
-            socialLinks: form.socialLinks.map(item => ({
-                platform: item.platform.trim(),
-                url: item.url.trim(),
-            })),
-            educations: form.educations.map(item => ({
-                qualificationType: item.qualificationType,
-                qualificationName: item.qualificationName.trim(),
-                institutionName: item.institutionName.trim(),
-                completionDate: item.completionDate,
-            })),
-            careerRoles: form.careerRoles.map(item => ({
-                roleName: item.roleName.trim(),
-            })),
-            skills: form.skills.map(item => ({
-                skillType: item.skillType,
-                skillName: item.skillName.trim(),
-            })),
-            languages: form.languages.map(item => ({
-                languageName: item.languageName.trim(),
-                languageLevel: item.languageLevel.trim()
-            })),
-        }
-    }
-
     async function save(form: ApplicantForm) {
         setIsSaving(true)
         
@@ -242,11 +178,6 @@ export default function ApplicantCreateComponent() {
         setIsSaving(false)
     }
 
-    const currentExperience = useWatch({  //When checkbox  is checked, usewatch returns true 
-        control: form.control,
-        name: experienceDialogIndex !== null ? `experiences.${experienceDialogIndex}.currentlyWorking` : "experiences.0.currentlyWorking",
-    })
-
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
             <PageTitle icon="User" title="Applicant Create" description="Create a complete candidate profile" />
@@ -256,23 +187,24 @@ export default function ApplicantCreateComponent() {
                     <aside className="space-y-4">
                         <ContentLayout title="Profile" icon={<UserRound className="size-5 text-zinc-900" />}>
                             <div className="space-y-3">
-                                <div
-                                    className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
-                                    style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}>
+                                <div className="flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50">
+                                    {profilePreview && (
+                                        <img
+                                            src={profilePreview}
+                                            alt="Applicant profile"
+                                            className="size-full object-cover"/>
+                                    )}
+
                                     {!profilePreview && (
                                         <div className="flex flex-col items-center gap-2 text-zinc-500">
                                             <ImagePlus className="size-8" />
-                                            <span className="text-sm font-medium">Profile image</span>
+                                            <span className="text-sm font-medium">Current profile</span>
                                         </div>
                                     )}
                                 </div>
 
-                                <Input
-                                    id="profile-image"
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)}/>
+                                <Input id="profile-image" type="file" accept="image/*"
+                                    className="hidden" onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)}/>
 
                                 <div className="flex gap-2">
                                     <Button type="button" variant="outline" className="flex-1 border-zinc-900 bg-white text-zinc-950 hover:bg-zinc-100" asChild>
@@ -299,18 +231,14 @@ export default function ApplicantCreateComponent() {
 
                         <ContentLayout title="Resume" icon={<FileText className="size-5 text-zinc-900" />}>
                             <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-                                <Input
-                                    id="resume-file"
-                                    type="file"
-                                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                    className="hidden"
-                                    onChange={(event) => setResumeFile(event.target.files?.[0] ?? null)}
-                                />
+                                <Input id="resume-file" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    className="hidden" onChange={(event) => setResumeFile(event.target.files?.[0] ?? null)}/>
 
                                 <div className="flex items-start gap-3">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                         <FileText className="size-5" />
                                     </div>
+
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate text-sm font-medium text-zinc-950">
                                             {resumeFile?.name || "No resume selected"}
@@ -348,18 +276,7 @@ export default function ApplicantCreateComponent() {
                             <FormsTextAreaInput control={form.control} path="professionalSummary" label="Professional Summary" placeHolder="Write a short profile summary" rowHeight="min-h-[120px] md:col-span-2" />
                         </InputComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <Target className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Interested Career Roles</h2>
-                                </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={appendCareerRole}>
-                                    <Plus className="size-4" />
-                                    Add
-                                </Button>
-                            </div>
-
+                        <DialogDetailComponent title="Interested Career Roles" titleIcon="Target" onClickAction={appendCareerRole}>
                             <div className="grid gap-3 md:grid-cols-2">
                                 {careerRolesFieldArray.fields.map((field, index) => (
                                     <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
@@ -370,20 +287,9 @@ export default function ApplicantCreateComponent() {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </DialogDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <LinkIcon className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Social Links</h2>
-                                </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => socialLinksFieldArray.append(emptySocialLink)}>
-                                    <Plus className="size-4" />
-                                    Add
-                                </Button>
-                            </div>
-
+                        <DialogDetailComponent title="Social" titleIcon="LinkIcon" onClickAction={() => socialLinksFieldArray.append(emptySocialLink)}>
                             <div className="space-y-3">
                                 {socialLinksFieldArray.fields.length === 0 && (
                                     <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
@@ -401,21 +307,9 @@ export default function ApplicantCreateComponent() {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </DialogDetailComponent>
                     
-                    
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <GraduationCap className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Education</h2>
-                                </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={() => openNewEducation()}>
-                                    <Plus className="size-4" />
-                                    Add
-                                </Button>
-                            </div>
-
+                        <DialogDetailComponent title="Education" titleIcon="GraduationCap" onClickAction={openNewEducation}>
                             <div className="space-y-4">
                                  {educationsFieldArray.fields.length === 0 && (
                                     <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500">
@@ -431,8 +325,7 @@ export default function ApplicantCreateComponent() {
                                         <span className="text-sm font-medium">Add Education</span>
                                     </button> 
 
-                                  {educationsFieldArray.fields.map((field, index) => {  
-                                
+                                  { educationsFieldArray.fields.map((field, index) => {  
                                     const value = form.getValues(`educations.${index}`)
                                     
                                     return (
@@ -463,20 +356,9 @@ export default function ApplicantCreateComponent() {
                                     )})}  
                                 </div>
                             </div>
-                        </div>
+                        </DialogDetailComponent>
 
-                        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                            <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <BriefcaseBusiness className="size-5 text-zinc-900" />
-                                    <h2 className="text-base font-semibold">Experience</h2>
-                                </div>
-                                <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewExperience}>
-                                    <Plus className="size-4" />
-                                    New Role
-                                </Button>
-                            </div>
-
+                        <DialogDetailComponent title="Experience" titleIcon="BriefcaseBusiness" onClickAction={openNewExperience}>
                             <div className="grid gap-3 md:grid-cols-2">
                                 <button type="button" onClick={openNewExperience} className="min-h-36 flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 text-center text-zinc-600 transition-colors hover:border-zinc-900 hover:bg-white hover:text-zinc-950">
                                     <div className="flex size-10 items-center justify-center rounded-md bg-white shadow-sm">
@@ -485,7 +367,7 @@ export default function ApplicantCreateComponent() {
                                     <span className="text-sm font-medium">Add experience</span>
                                 </button>
 
-                                {experiencesFieldArray.fields.map((field, index) => {
+                                { experiencesFieldArray.fields.map((field, index) => {
                                     const value = form.getValues(`experiences.${index}`)
                                     
                                     return (
@@ -515,21 +397,10 @@ export default function ApplicantCreateComponent() {
                                     )
                                 })}
                             </div>
-                        </div>
+                        </DialogDetailComponent>
 
-                        <div className="grid gap-6 xl:grid-cols-2">
-                            <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                                <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                    <div className="flex items-center gap-2">
-                                        <Sparkles className="size-5 text-zinc-900" />
-                                        <h2 className="text-base font-semibold">Skills</h2>
-                                    </div>
-                                    <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewSkill}>
-                                        <Plus className="size-4" />
-                                        Add
-                                    </Button>
-                                </div>
-
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <DialogDetailComponent title="Skills" titleIcon="Sparkles" onClickAction={openNewSkill}>
                                 <div className="flex flex-wrap gap-2">
                                     {skillsFieldArray.fields.length === 0 && (
                                         <p className="text-sm text-zinc-500">Add technical and soft skills.</p>
@@ -546,20 +417,9 @@ export default function ApplicantCreateComponent() {
                                         )
                                     })}
                                 </div>
-                            </div>
-
-                            <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-                                <div className="mb-5 flex items-center justify-between gap-3 border-b border-zinc-100 pb-4">
-                                    <div className="flex items-center gap-2">
-                                        <Languages className="size-5 text-zinc-900" />
-                                        <h2 className="text-base font-semibold">Languages</h2>
-                                    </div>
-                                    <Button type="button" variant="outline" size="sm" className="border-zinc-900 text-zinc-950 hover:bg-zinc-100" onClick={openNewLanguage}>
-                                        <Plus className="size-4" />
-                                        Add
-                                    </Button>
-                                </div>
-
+                            </DialogDetailComponent>
+                            
+                            <DialogDetailComponent title="Languages" titleIcon="Languages" onClickAction={openNewLanguage} >
                                 <div className="flex flex-wrap gap-2">
                                     {languagesFieldArray.fields.length === 0 && (
                                         <p className="text-sm text-zinc-500">Add languages you can use professionally.</p>
@@ -576,7 +436,7 @@ export default function ApplicantCreateComponent() {
                                         )
                                     })}
                                 </div>
-                            </div>
+                            </DialogDetailComponent>
                         </div>
 
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">

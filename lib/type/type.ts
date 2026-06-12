@@ -39,7 +39,7 @@ export const QualificationType: OptionItem[] =[
     {key: "DEGREE", value: "DEGREE"},
     {key: "DIPLOMA", value: "DIPLOMA"},
     {key: "POSTGRADUATE_DIPLOMA", value: "POSTGRADUATE DIPLOMA"},
-    {key: "HIGH_SCHOOL", value: "HIGH_SCHOOL"},
+    {key: "HIGH_SCHOOL", value: "HIGH SCHOOL"},
     {key: "FOUNDATION_PROGRAM", value: "FOUNDATION PROGRAM"},
     {key: "COURSE", value: "COURSE"},
     {key: "CERTIFICATE", value: "CERTIFICATE"},
