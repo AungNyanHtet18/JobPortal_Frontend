@@ -41,42 +41,33 @@ export default async function ApplicantNavigation() {
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
 
-                  
                     <NavigationMenuItem>
                       <NavigationMenuLink asChild>
                         <Link className="text-[14px] font-semibold text-zinc-100" href='/applicant/detail'>Profile</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   
-
                   { !UserisLogin && 
+                    <>
                      <NavigationMenuItem>
                       <NavigationMenuLink className="text-[14px] font-semibold text-zinc-100" asChild>
-                        <Link href={'/signup'}>signup</Link>
+                        <Link href={'/signup'}>SignUp</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>  
 
-                  }
-
-
-                  { !UserisLogin && 
                     <NavigationMenuItem>
                       <NavigationMenuLink className="text-[14px] font-semibold text-zinc-100" asChild>
-                        <Link href={'/signin'}>signin</Link>
+                        <Link href={'/signin'}>Sign In</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem> 
+                    </>
                   }
-
-
-                  { UserisLogin && 
                     <NavigationMenuItem>
                         <Button onClick={signOutAction} className="flex items-center  gap-2 hover:bg-slate-700">
                             <Lock/> Sign Out
                         </Button>
-                    </NavigationMenuItem> 
-                  }
-
-
+                    </NavigationMenuItem>
+                  
               </NavigationMenuList>
           </NavigationMenu>
         </div>

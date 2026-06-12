@@ -58,20 +58,36 @@ export async function updateApplicant(id: string | number, formData: FormData): 
      await setApplicantId(result.id.toString())
 
      return result
-
 }
 
-export async function uploadApplicantResume(formData: FormData): Promise<ModificationResult<string>> {
-     const file = formData.get("file")
+export async function uploadApplicantResume(resumeFile: File): Promise<ModificationResult<string>> {
 
-     if(!(file instanceof File) || file.size === 0) {
+     if(!(resumeFile instanceof File) || resumeFile.size === 0) {
           throw new Error("Please select a resume file.")
      }
 
      const payload = new FormData()
-     payload.append("file", file)
+     payload.append("file", resumeFile)
 
      const response = await secureRequest('applicant/uploadresume',{
+          method: "PATCH",
+          body: payload
+     })
+
+     return await response.json()
+}
+
+
+export async function uploadApplicantCvForm(cvFormFile: File): Promise<ModificationResult<string>> {
+     
+     if(!(cvFormFile instanceof File) || cvFormFile.size === 0) {
+          throw new Error("Please select a CV Form file.")
+     }
+
+     const payload = new FormData()
+     payload.append("file", cvFormFile)
+
+     const response = await secureRequest('applicant/uploadcv',{
           method: "PATCH",
           body: payload
      })

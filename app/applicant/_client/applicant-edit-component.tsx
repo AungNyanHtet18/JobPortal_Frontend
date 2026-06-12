@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { BriefcaseBusiness, FileText, GraduationCap, ImagePlus, Loader2, Pencil, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
+import { FileText, ImagePlus, Loader2, PaperclipIcon, Pencil, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
@@ -13,7 +13,7 @@ import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PageTitle from "@/components/widgets/page-title"
-import { formatFileSize, safeCall } from "@/lib/utils"
+import { formatFileSize, getFileName, safeCall } from "@/lib/utils"
 import { ApplicantForm, ApplicantPayload, ApplicantSchema, emptyEducation, emptyExperience, emptyLanguage, emptySkill, emptySocialLink } from "@/lib/type/schema/applicant/applicant.schema"
 import * as Applicant from "@/lib/actions/applicant/applicant.action"
 import InputComponent from "@/components/widgets/input-component"
@@ -24,17 +24,21 @@ import DialogComponent from "@/components/widgets/dialog-widget"
 import FormsDate from "@/components/fields/form.date"
 import FormsCheckBox from "@/components/fields/form-checkbox"
 import { LanguageLevel, QualificationType, SkillType } from "@/lib/type/type"
+import Loading from "@/components/widgets/loading"
+import { resume } from "react-dom/server"
 
 export default function ApplicantEditComponent({id} : {id: string}) {
 
     const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [resumeFile, setResumeFile] = useState<File | null>(null)
+    const [cvFormFile, setCvFormFile] = useState<File | null>(null)
+    const [resumeDummy, setResumeDummy] = useState<string | null>(null)
+    const [cvFormDummy, setCvFormDummy] = useState<string | null>(null)
     const [isSaving, setIsSaving] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
-    
     const [educationDialogIndex, setEducationDialogIndex] = useState<number | null>(null)
     const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
     const [skillDialogIndex, setSkillDialogIndex] = useState<number | null>(null)
@@ -59,7 +63,6 @@ export default function ApplicantEditComponent({id} : {id: string}) {
             languages: [emptyLanguage]
         }
     })
-
 
     const experiencesFieldArray = useFieldArray({
         control: form.control,
@@ -107,6 +110,9 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
     useEffect(() => {
         async function load() {
+
+            setIsLoading(true)
+
             await safeCall(async () => {
                 const result = await Applicant.findByApplicantName()
 
@@ -161,6 +167,15 @@ export default function ApplicantEditComponent({id} : {id: string}) {
                              languageLevel: lang.languageLevel
                           })) : []
                     })
+
+                    if(result.resume) {
+                         setResumeDummy(result.resume)
+                    }
+
+                    if(result.cvForm) {
+                        setCvFormDummy(result.cvForm)
+                    }
+
                 }
             })
 
@@ -169,6 +184,18 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
         load()
     }, [id, form])
+
+
+    const openNewExperience = () => {
+        const nextIndex = experiencesFieldArray.fields.length
+        experiencesFieldArray.append(emptyExperience)
+        setExperienceDialogIndex(nextIndex)
+    }
+
+    const removeExperience = (index: number) => {
+        experiencesFieldArray.remove(index)
+        setExperienceDialogIndex(null)
+    }
 
     const openNewEducation = () => {
             const nextIndex = educationsFieldArray.fields.length
@@ -181,15 +208,16 @@ export default function ApplicantEditComponent({id} : {id: string}) {
             setEducationDialogIndex(null)
     }
 
-    const openNewExperience = () => {
-        const nextIndex = experiencesFieldArray.fields.length
-        experiencesFieldArray.append(emptyExperience)
-        setExperienceDialogIndex(nextIndex)
+    const appendCareerRole = () => {
+        careerRolesFieldArray.append({ roleName: "" })
     }
 
-    const removeExperience = (index: number) => {
-        experiencesFieldArray.remove(index)
-        setExperienceDialogIndex(null)
+    const removeCareerRole = (index: number) => {
+        if(careerRolesFieldArray.fields.length === 1) {
+            form.setValue("careerRoles.0.roleName", "")
+            return
+        }
+        careerRolesFieldArray.remove(index)
     }
 
     const openNewSkill = () => {
@@ -214,18 +242,6 @@ export default function ApplicantEditComponent({id} : {id: string}) {
         setLanguageDialogIndex(null)
     }
 
-    const appendCareerRole = () => {
-        careerRolesFieldArray.append({ roleName: "" })
-    }
-
-    const removeCareerRole = (index: number) => {
-        if(careerRolesFieldArray.fields.length === 1) {
-            form.setValue("careerRoles.0.roleName", "")
-            return
-        }
-        careerRolesFieldArray.remove(index)
-    }
-
     async function save(form: ApplicantForm) {
         setIsSaving(true)
 
@@ -240,15 +256,21 @@ export default function ApplicantEditComponent({id} : {id: string}) {
             await Applicant.updateApplicant(id, payload)
 
             if(resumeFile) {
-                const resumePayload = new FormData()
-                resumePayload.append("file", resumeFile)
-                await Applicant.uploadApplicantResume(resumePayload)
+               await Applicant.uploadApplicantResume(resumeFile)
+            }
+
+            if(cvFormFile) {
+                await Applicant.uploadApplicantCvForm(cvFormFile)
             }
 
             router.replace("/applicant/detail")
         })
 
         setIsSaving(false)
+    }
+
+    if(isLoading) {
+         return <Loading/>
     }
 
     return ( 
@@ -307,13 +329,24 @@ export default function ApplicantEditComponent({id} : {id: string}) {
                         <ContentLayout title="Resume" icon={<FileText className="size-5 text-zinc-900" />}>
                             <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                                 <Input id="resume-file" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                    className="hidden" onChange={(event) => setResumeFile(event.target.files?.[0] ?? null)}/>
+                                    className="hidden" onChange={(event) => {
+                                            setResumeDummy(null)
+                                            setResumeFile(event.target.files?.[0] ?? null)}}/>
 
                                 <div className="flex items-start gap-3">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                         <FileText className="size-5" />
                                     </div>
 
+                                    {resumeDummy ? 
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-zinc-950">
+                                            {resumeDummy}
+                                        </p>
+                                        <p className="text-xs text-zinc-500">
+                                            PDF, DOC, or DOCX
+                                        </p>
+                                    </div> :
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate text-sm font-medium text-zinc-950">
                                             {resumeFile?.name || "No resume selected"}
@@ -321,7 +354,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
                                         <p className="text-xs text-zinc-500">
                                             {resumeFile ? formatFileSize(resumeFile.size) : "PDF, DOC, or DOCX"}
                                         </p>
-                                    </div>
+                                    </div>}
                                 </div>
 
                                 <div className="mt-4 flex gap-2">
@@ -334,6 +367,53 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
                                     {resumeFile && (
                                         <Button type="button" variant="outline" size="icon" className="border-zinc-300" onClick={() => setResumeFile(null)}>
+                                            <X className="size-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        </ContentLayout>
+
+                        <ContentLayout title="CV Form" icon={<PaperclipIcon className="size-5 text-zinc-900" />}>
+                            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                <Input id="cv-form" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    className="hidden" onChange={(event) => {
+                                        setCvFormDummy(null)
+                                        setCvFormFile(event.target.files?.[0] ?? null)}}/>
+
+                                <div className="flex items-start gap-3">
+                                    <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
+                                        <PaperclipIcon className="size-5" />
+                                    </div>
+
+                                    { cvFormDummy ?
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-zinc-950">
+                                            {cvFormDummy}
+                                        </p>
+                                        <p className="text-xs text-zinc-500">PDF, DOC, or DOCX</p>
+                                    </div>  :
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-zinc-950">
+                                            {cvFormFile?.name || "No CV Form selected"}
+                                        </p>
+                                        <p className="text-xs text-zinc-500">
+                                            {cvFormFile ? formatFileSize(cvFormFile.size) : "PDF, DOC, or DOCX"}
+                                        </p>
+                                    </div>}
+                                </div>
+
+                                <div className="mt-4 flex gap-2">
+                                    <Button type="button" className="flex-1 bg-zinc-950 text-white hover:bg-zinc-800" asChild>
+                                        <Label htmlFor="cv-form" className="cursor-pointer">
+                                            <Upload className="size-4" />
+                                            Upload
+                                        </Label>
+                                    </Button>
+
+                                    {cvFormFile && (
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300" onClick={() => setCvFormFile(null)}>
                                             <X className="size-4" />
                                         </Button>
                                     )}

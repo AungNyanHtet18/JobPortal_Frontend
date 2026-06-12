@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FileText, ImagePlus, Loader2, Pencil, Plus, Save, Trash, Upload, UserRound,X } from "lucide-react"
+import { FileText, ImagePlus, Loader2, Paperclip, PaperclipIcon, Pencil, Plus, Save, Trash, Upload, UserRound,X } from "lucide-react"
 import { ApplicantForm, ApplicantPayload, ApplicantSchema, emptyEducation, emptyExperience, emptyLanguage, emptySkill, emptySocialLink } from "@/lib/type/schema/applicant/applicant.schema"
 import PageTitle from "@/components/widgets/page-title"
 import { Form } from "@/components/ui/form"
@@ -30,6 +30,7 @@ export default function ApplicantCreateComponent() {
     const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [resumeFile, setResumeFile] = useState<File | null>(null)
+    const [cvFormFile,setCvFormFile] = useState<File | null>(null)
     const [isSaving, setIsSaving] = useState(false)
     const [educationDialogIndex, setEducationDialogIndex] = useState<number | null>(null)
     const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
@@ -120,6 +121,18 @@ export default function ApplicantCreateComponent() {
         setExperienceDialogIndex(null)
     }
 
+    const appendCareerRole = () => {
+        careerRolesFieldArray.append({ roleName: "" })
+    }
+
+    const removeCareerRole = (index: number) => {
+        if(careerRolesFieldArray.fields.length === 1) {
+            form.setValue("careerRoles.0.roleName", "")
+            return
+        }
+        careerRolesFieldArray.remove(index)
+    }
+
     const openNewSkill = () => {
         const nextIndex = skillsFieldArray.fields.length
         skillsFieldArray.append(emptySkill)
@@ -142,18 +155,6 @@ export default function ApplicantCreateComponent() {
         setLanguageDialogIndex(null)
     }
 
-    const appendCareerRole = () => {
-        careerRolesFieldArray.append({ roleName: "" })
-    }
-
-    const removeCareerRole = (index: number) => {
-        if(careerRolesFieldArray.fields.length === 1) {
-            form.setValue("careerRoles.0.roleName", "")
-            return
-        }
-        careerRolesFieldArray.remove(index)
-    }
-
     async function save(form: ApplicantForm) {
         setIsSaving(true)
         
@@ -168,10 +169,13 @@ export default function ApplicantCreateComponent() {
             await Applicant.createApplicant(payload)
 
             if(resumeFile) {
-                const resumePayload = new FormData()
-                resumePayload.append("file", resumeFile)
-                await Applicant.uploadApplicantResume(resumePayload)
+                await Applicant.uploadApplicantResume(resumeFile)
             }
+
+            if(cvFormFile) {
+                 await Applicant.uploadApplicantCvForm(cvFormFile)
+            }
+
             router.replace(`/applicant/detail`)
         })
 
@@ -259,6 +263,43 @@ export default function ApplicantCreateComponent() {
 
                                     {resumeFile && (
                                         <Button type="button" variant="outline" size="icon" className="border-zinc-300" onClick={() => setResumeFile(null)}>
+                                            <X className="size-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        </ContentLayout>
+                        
+                        <ContentLayout title="CV Form" icon={<PaperclipIcon className="size-5 text-zinc-900" />}>
+                            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                                <Input id="cv-form" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    className="hidden" onChange={(event) => setCvFormFile(event.target.files?.[0] ?? null)}/>
+
+                                <div className="flex items-start gap-3">
+                                    <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
+                                        <PaperclipIcon className="size-5" />
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-zinc-950">
+                                            {cvFormFile?.name || "No CV Form selected"}
+                                        </p>
+                                        <p className="text-xs text-zinc-500">
+                                            {cvFormFile ? formatFileSize(cvFormFile.size) : "PDF, DOC, or DOCX"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 flex gap-2">
+                                    <Button type="button" className="flex-1 bg-zinc-950 text-white hover:bg-zinc-800" asChild>
+                                        <Label htmlFor="cv-form" className="cursor-pointer">
+                                            <Upload className="size-4" />
+                                            Upload
+                                        </Label>
+                                    </Button>
+
+                                    {cvFormFile && (
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300" onClick={() => setCvFormFile(null)}>
                                             <X className="size-4" />
                                         </Button>
                                     )}
