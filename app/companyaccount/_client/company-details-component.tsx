@@ -28,6 +28,7 @@ export default function CompanyDetailsComponent() {
                         id: 'undefined',
                         companyName: loginUser.name,
                         companyEmail: loginUser.email,
+                        industryType: 'undefined',
                         phone: 'undefined',
                         websiteUrl: 'undefined',
                         location: 'undefined',
@@ -81,6 +82,7 @@ export default function CompanyDetailsComponent() {
 
                         <div className="mt-5 space-y-2">
                             <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
+                            <p className="text-sm text-zinc-500">{details.industryType}</p>
                             <div className="flex flex-wrap gap-2">
                                 <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
                                     {details.companyEmail} 

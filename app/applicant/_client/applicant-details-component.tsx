@@ -130,10 +130,6 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                 </div>
                             </div>
                         </div>
-
-                        <DocumentCard title="Resume" fileName={resumeFileName} description="Uploaded resume file" icon="FileText" />
-                        <DocumentCard title="CV Form" fileName={cvFormFileName} description="Uploaded CV form file" icon="FilePen" />
-                    
                     </aside>
 
                     <div className="space-y-6">
@@ -145,18 +141,23 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
 
                         <ExperienceSection experience={details.experience} />
 
-                        <div className="grid gap-6 lg:grid-cols-2">
+                        <div className="grid lg:grid-cols-2 gap-6">
                             <CareerRoleSection careerRole={details.careerRole} />
                             <SocialLinkSection socialLink={details.socialLink } />
                         </div>
 
-                        <div className="grid gap-6 lg:grid-cols-2">
+                        <div className="grid lg:grid-cols-2 gap-6">
                             <SkillSection skill={details.skill} />
                             <LanguageSection language={details.language} />
                         </div>
 
                         <EducationSection education={details.education} />
-                    </div>
+
+                        <div className="grid  lg:grid-cols-2 gap-6">
+                            <DocumentCard title="Resume" fileName={resumeFileName} description="Uploaded resume file" icon="FileText" />
+                            <DocumentCard title="CV Form" fileName={cvFormFileName} description="Uploaded CV form file" icon="FilePen" />
+                        </div>
+                    </div>                    
                 </div>
             </section>
         )

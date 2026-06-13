@@ -65,9 +65,7 @@ export default function JobSearchComponent() {
    }
 
     async function saveJob (jobId: number) {
-      
       safeCall(async() => {
-
         const result = savedJobs.includes(jobId) ? await jobSavedClient.unsavedJob(jobId) :  await jobSavedClient.savedJob(jobId)
         console.log(`result ${result.id}`);
         setSavedJobs(prev => prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId])
@@ -165,7 +163,7 @@ export default function JobSearchComponent() {
                       <img
                           src={job.profilePhoto ? `${getCompanyPhotoForJobList(job.profilePhoto)}` : '/images/signin.jpg' }
                           alt={job.positionName}
-                          className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"/>
+                          className="h-full w-full object-cover transition-all duration-500 hover:scale-110"/>
                       
                       {applicant && 
                         <button

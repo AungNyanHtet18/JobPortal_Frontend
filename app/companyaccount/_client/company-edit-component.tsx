@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form"
 import * as Company from "@/lib/actions/company/company.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
+import FormSelect from "@/components/fields/form-select"
+import { IndustryType } from "@/lib/type/type"
 
 export default function CompanyEditComponent({id} : {id: string}) {
      
@@ -32,6 +34,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
     const form = useForm<CompanyForm>({
             resolver: zodResolver(CompanySchema),
             defaultValues: {
+                industryType: "",
                 companyName: "",
                 location: "",
                 phone: "",
@@ -53,20 +56,20 @@ export default function CompanyEditComponent({id} : {id: string}) {
          async function load() {
              await safeCall(async () => {
                  const result = await Company.findByCompanyName()
-              
+                 console.log(result);
                  if(result) {
                      setUploadedProfileUrl(await Company.getCompanyProfileImageUrl(result.profileImage))
                      setProfileImageFailed(false)
 
                      form.reset({
-                        companyName: result.companyName ?? "",
-                        location: result.location ?? "",
-                        phone: result.phone ?? "",
-                        websiteUrl: result.websiteUrl ?? "",
-                        description: result.description ?? ""
+                        industryType: result.industryType,
+                        companyName: result.companyName,
+                        location: result.location,
+                        phone: result.phone || "",
+                        websiteUrl: result.websiteUrl || "",
+                        description: result.description
                      })
                  }
-             
             })
 
             setIsLoading(false)
@@ -75,9 +78,9 @@ export default function CompanyEditComponent({id} : {id: string}) {
          load()
     },[id, form])
 
-
     const CompanyPayload = (form: CompanyForm) => {
         return {
+            industryType: form.industryType,
             companyName: form.companyName.trim(),
             location: form.location.trim(),
             phone: form.phone.trim(),
@@ -165,6 +168,7 @@ export default function CompanyEditComponent({id} : {id: string}) {
                     <div className="space-y-6">
                         
                         <InputComponent title="Company Information" icon={<Building2 className="size-5 text-zinc-900" />} >
+                            <FormSelect control={form.control} path="industryType" label="Industry Type" placeHolder="Enter Industry Type" options={IndustryType} />
                             <FormsInput control={form.control} path="companyName" label="Company Name" placeHolder="Enter your company name" />
                             <FormsTextAreaInput control={form.control} path="description" label="Description" placeHolder="Please fill your company description" rowHeight="min-h-[140px]" />
                         </InputComponent>

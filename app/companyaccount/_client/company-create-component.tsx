@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import InputComponent from "@/components/widgets/input-component";
 import ContentLayout from "@/components/widgets/content-layout";
+import { IndustryType, QualificationType } from "@/lib/type/type";
+import FormSelect from "@/components/fields/form-select";
 
 export default function CompanyCreateComponent() {
      
@@ -28,6 +30,7 @@ export default function CompanyCreateComponent() {
     const form = useForm<CompanyForm>({
          resolver: zodResolver(CompanySchema),
          defaultValues: {
+             industryType: "",
              companyName: "",
              location: "",
              phone: "",
@@ -44,9 +47,9 @@ export default function CompanyCreateComponent() {
         }
     }, [profilePreview])
 
-
     const CompanyPayload = (form: CompanyForm) => {
         return {
+            industryType: form.industryType,
             companyName: form.companyName.trim(),
             location: form.location.trim(),
             phone: form.phone.trim(),
@@ -54,7 +57,6 @@ export default function CompanyCreateComponent() {
             description: form.description.trim()
         }
    }
-
 
     async function save(form: CompanyForm) {
         setIsSaving(true)
@@ -125,13 +127,14 @@ export default function CompanyCreateComponent() {
 
                     <div className="space-y-6">
                         <InputComponent title="Company Information" icon={<Building2 className="size-5 text-zinc-900" />} >
+                            <FormSelect control={form.control} path="industryType" label="Industry Type" placeHolder="Enter Industry Type" options={IndustryType} />
                             <FormsInput control={form.control} path="companyName" label="Company Name" placeHolder="Enter your company name" />
-                            <FormsTextAreaInput control={form.control} path="description" label="Description" placeHolder="Please fill your company description" rowHeight="min-h-[140px]" />
+                            <FormsTextAreaInput control={form.control} path="description" label="Company Aim and Vision" placeHolder="Fill your company aim and goals" rowHeight="min-h-[140px]" />
                         </InputComponent>
 
                         <InputComponent className="md:grid-cols-2" title="Website" icon={<Globe className="size-5 text-zinc-900" />}>
                             <FormsInput control={form.control} path="websiteUrl" label="Website URL" placeHolder="https://example.com" />
-                            <FormsInput control={form.control} path="phone" label="Phone" placeHolder="Enter 10 digit phone number" />
+                            <FormsInput control={form.control} path="phone" label="Phone" placeHolder="Enter your company phone number" />
                        </InputComponent>
 
                         <InputComponent className="md:grid-cols-2" title="Location And Contact" icon={<MapPin className="size-5 text-zinc-900" />} >
