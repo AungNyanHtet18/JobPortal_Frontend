@@ -9,11 +9,11 @@ export type ApplicantionStatus =  'APPLIED' |
                                   'REJECTED' 
 
 export const JobDescriptionSchema = z.object({
-     description: z.string().nonempty("Job description point cannot be blank.").max(20, "You cannot add more than 20 description points.")
+     description: z.string().nonempty("Job description point cannot be blank.").max(200, "You cannot add more than 200 description points.")
 })
 
 export const JobRequirementSchema = z.object({
-      requirement: z.string().nonempty("Job requirement point cannt be blank.").max(20, "You cannot add more than 20 requirement points.")
+      requirement: z.string().nonempty("Job requirement point cannt be blank.").max(200, "You cannot add more than 200 requirement points.")
 })
 
 export const JobSchema = z.object({
@@ -30,20 +30,16 @@ export const JobSchema = z.object({
 
 export type JobForm = z.infer<typeof JobSchema>
 
-export const JobPayload = (form: JobForm): JobForm => {
+export const JobPayload = (form: JobForm): any => {
         return {
-            jobPost: form.jobPost,
+            jobPost: form.jobPost ? Number(form.jobPost) : null,
             clientName: form.clientName?.trim() || "",
             positionName: form.positionName.trim(),
-            jobDescriptions: form.jobDescriptions.map(item => ({
-                description: item.description.trim() 
-            })),
-            jobRequirements: form.jobRequirements.map(item => ({
-                requirement: item.requirement.trim() 
-            })),
+            jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
+            jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
             jobLevel: form.jobLevel,
             jobType: form.jobType,
-            salary: form.salary.trim(),
+            salary: Number(form.salary.trim()),
             deleted: form.deleted ?? false
         }
     }
@@ -51,14 +47,18 @@ export const JobPayload = (form: JobForm): JobForm => {
 
 export type JobDetails = {
      jobId: number,
+     jobCategory: string,
      companyName: string,
      companyLocation: string,
      companyPhone: string,
      companyWebsite: string,
      companyImage: string | null,
      positionName: string,
-     jobDescription: string,
+     clientName: string | null,
+     jobDescription: string[],
+     jobRequirement: string[],
      salary: number,
+     jobPost: number | null,
      jobLevel: string,
      jobType: string
 }

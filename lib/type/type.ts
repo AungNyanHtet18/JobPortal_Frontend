@@ -13,11 +13,11 @@ export const RoleOptions: OptionItem[] = [
 ] 
 
 export const JobLevel: OptionItem[] = [
-     {key: "Intern", value: "Intern Level"},
-     {key: "Entry", value: "Entry Level"},
-     {key: "Junior", value: "Junior Level"},
-     {key: "Senior", value: "Senior Level"},
-     {key: "Lead", value: "Lead"}
+     {key: "Intern Level", value: "Intern Level"},
+     {key: "Entry Level", value: "Entry Level"},
+     {key: "Junior Level", value: "Junior Level"},
+     {key: "Senior Level", value: "Senior Level"},
+     {key: "Lead Level", value: "Lead Level"}
 ]
 
 export const JobType: OptionItem[] = [
@@ -64,44 +64,45 @@ export const LanguageLevel : OptionItem[] = [
 
 
 //Company
+
 export const IndustryType: OptionItem[] = [
   // Corporate, Finance & Business Services
-  { key: "STAFFING_RECRUITMENT_AGENCY", value: "Staffing & Recruitment Agency" },
-  { key: "FINANCE_BANKING", value: "Finance, Banking & Fintech" },
-  { key: "INSURANCE", value: "Insurance Services" },
-  { key: "HUMAN_RESOURCES", value: "Human Resources & Recruiting" },
-  { key: "MARKETING_ADVERTISING", value: "Marketing, Advertising & PR" },
-  { key: "MANAGEMENT_CONSULTING", value: "Management Consulting" },
-  { key: "LEGAL_SERVICES", value: "Legal Services" },
+  { key: "Staffing & Recruitment Agency", value: "Staffing & Recruitment Agency" },
+  { key: "Finance, Banking & Fintech", value: "Finance, Banking & Fintech" },
+  { key: "Insurance Services", value: "Insurance Services" },
+  { key: "Human Resources & Recruiting", value: "Human Resources & Recruiting" },
+  { key: "Marketing, Advertising & PR", value: "Marketing, Advertising & PR" },
+  { key: "Management Consulting", value: "Management Consulting" },
+  { key: "Legal Services", value: "Legal Services" },
 
   // Tech, Media & Telecom
-  { key: "INFORMATION_TECHNOLOGY", value: "Information Technology" },
-  { key: "SOFTWARE_DEVELOPMENT", value: "Software Development & AI" },
-  { key: "TELECOMMUNICATIONS", value: "Telecommunications" },
-  { key: "CYBERSECURITY", value: "Cybersecurity & Network Security" },
-  { key: "ENTERTAINMENT_MEDIA", value: "Entertainment, Media & Gaming" },
+  { key: "Information Technology", value: "Information Technology" },
+  { key: "Software Development & AI", value: "Software Development & AI" },
+  { key: "Telecommunications", value: "Telecommunications" },
+  { key: "Cybersecurity & Network Security", value: "Cybersecurity & Network Security" },
+  { key: "Entertainment, Media & Gaming", value: "Entertainment, Media & Gaming" },
 
   // Healthcare, Science & Pharmacy
-  { key: "HEALTHCARE_MEDICAL", value: "Healthcare, Hospitals & Medical" },
-  { key: "PHARMACEUTICALS", value: "Pharmaceuticals & Biotech" },
-  { key: "MEDICAL_DEVICES", value: "Medical Devices & Equipment" },
+  { key: "Healthcare, Hospitals & Medical", value: "Healthcare, Hospitals & Medical" },
+  { key: "Pharmaceuticals & Biotech", value: "Pharmaceuticals & Biotech" },
+  { key: "Medical Devices & Equipment", value: "Medical Devices & Equipment" },
 
   // Commerce, Goods & Hospitality
-  { key: "RETAIL_ECOMMERCE", value: "Retail & E-Commerce" },
-  { key: "WHOLESALE_DISTRIBUTION", value: "Wholesale & Distribution" },
-  { key: "FOOD_BEVERAGE", value: "Food & Beverage Services" },
-  { key: "HOSPITALITY_TOURISM", value: "Hospitality, Travel & Tourism" },
+  { key: "Retail & E-Commerce", value: "Retail & E-Commerce" },
+  { key: "Wholesale & Distribution", value: "Wholesale & Distribution" },
+  { key: "Food & Beverage Services", value: "Food & Beverage Services" },
+  { key: "Hospitality, Travel & Tourism", value: "Hospitality, Travel & Tourism" },
 
   // Infrastructure, Industry & Logistics
-  { key: "CONSTRUCTION_REAL_ESTATE", value: "Construction & Real Estate" },
-  { key: "LOGISTICS_SUPPLY_CHAIN", value: "Logistics, Supply Chain & Freight" },
-  { key: "MANUFACTURING_PRODUCTION", value: "Manufacturing & Production" },
-  { key: "AUTOMOTIVE", value: "Automotive & Aerospace" },
-  { key: "ENERGY_UTILITIES", value: "Energy, Oil, Gas & Utilities" },
+  { key: "Construction & Real Estate", value: "Construction & Real Estate" },
+  { key: "Logistics, Supply Chain & Freight", value: "Logistics, Supply Chain & Freight" },
+  { key: "Manufacturing & Production", value: "Manufacturing & Production" },
+  { key: "Automotive & Aerospace", value: "Automotive & Aerospace" },
+  { key: "Energy, Oil, Gas & Utilities", value: "Energy, Oil, Gas & Utilities" },
 
   // Education, Public & Non-Profit
-  { key: "EDUCATION_ELEARNING", value: "Education & E-Learning" },
-  { key: "NON_PROFIT_NGO", value: "Non-Profit & NGO" },
-  { key: "GOVERNMENT_PUBLIC_SECTOR", value: "Government & Public Sector" },
-  { key: "AGRICULTURE", value: "Agriculture & Farming" }
+  { key: "Education & E-Learning", value: "Education & E-Learning" },
+  { key: "Non-Profit & NGO", value: "Non-Profit & NGO" },
+  { key: "Government & Public Sector", value: "Government & Public Sector" },
+  { key: "Agriculture & Farming", value: "Agriculture & Farming" }
 ];

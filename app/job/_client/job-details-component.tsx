@@ -70,8 +70,11 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </div>
 
                         <div className="mt-5 space-y-1">
-                            <p className="text-sm font-medium text-zinc-500">Open Position</p>
+                            <p className="text-sm font-medium text-zinc-500">Open Position {details.jobPost ? `(${details.jobPost} openings)` : ''}</p>
                             <h1 className="flex items-center gap-1 text-2xl font-semibold tracking-tight text-zinc-950"><Layers2 size="33" /> {details.positionName}</h1>
+                            {details.clientName && (
+                                <p className="mt-2 text-sm text-zinc-600">Client: <span className="font-medium text-zinc-900">{details.clientName}</span></p>
+                            )}
                         </div>
 
                         <div className="mt-5 flex flex-wrap gap-2">
@@ -104,12 +107,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                 </aside>
 
                 <div className="space-y-6">
-                    <PageDetailComponent title="Job Description" icon="Briefcase">
-                        <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
-                            {details.jobDescription || "No job description added."}
-                        </p>
-                    </PageDetailComponent>
-
+          
                     <div className="grid gap-4 xl:grid-cols-3">
                         <PageDetailComponent title="Level" icon="Layers">
                             <p className="text-2xl font-semibold text-zinc-950">{details.jobLevel}</p>
@@ -126,7 +124,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                             <p className="mt-1 text-sm text-zinc-500">Compensation</p>
                         </PageDetailComponent>
                     </div>
-    
+
                     <PageDetailComponent title="Company Information" icon="Building2">
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
@@ -141,6 +139,31 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </div>
                     </PageDetailComponent>
 
+                    <PageDetailComponent title="Job Description" icon="Briefcase">
+                        {details.jobDescription && details.jobDescription.length > 0 ? (
+                            <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
+                                {details.jobDescription.map((desc, idx) => (
+                                    <li key={idx}>{desc}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-sm text-zinc-500">No job description added.</p>
+                        )}
+                    </PageDetailComponent>
+
+                    <PageDetailComponent title="Job Requirements" icon="GraduationCap">
+                        {details.jobRequirement && details.jobRequirement.length > 0 ? (
+                            <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
+                                {details.jobRequirement.map((req, idx) => (
+                                    <li key={idx}>{req}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-sm text-zinc-500">No job requirement added.</p>
+                        )}
+                    </PageDetailComponent>
+    
+          
                     <div className="grid gap-4 md:grid-cols-2">  
                         <PageDetailComponent title="Location" icon="MapPin">
                             <p className="text-sm leading-7 text-zinc-700">

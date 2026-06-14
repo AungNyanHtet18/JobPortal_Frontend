@@ -2,21 +2,22 @@
 
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
-import FormsTextAreaInput from "@/components/fields/form-textarea"
 import { Button } from "@/components/ui/button"
-import { Form } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 import PageTitle from "@/components/widgets/page-title"
 import { JobForm, JobPayload, JobSchema } from "@/lib/type/schema/job/job.schema"
 import { JobLevel, JobType } from "@/lib/type/type"
 import { safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { BriefcaseBusiness, ClipboardList, DollarSign, Layers, Loader2, MapPin, Save } from "lucide-react"
+import { BriefcaseBusiness, ClipboardList, DollarSign, Layers, Loader2, MapPin, Save, Plus, Trash2, ListChecks, Briefcase, GraduationCap } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useFieldArray } from "react-hook-form"
 import * as Job from "@/lib/actions/job/job.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
+import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
 
 export default function JobCreateComponent() {
     
@@ -29,14 +30,52 @@ export default function JobCreateComponent() {
              jobPost: "",
              clientName: "",
              positionName: "",
-             jobDescriptions: [],
-             jobRequirements: [],
+             jobDescriptions: [{ description: "" }],
+             jobRequirements: [{ requirement: "" }],
              jobLevel: "",
              jobType: "",
              salary: "",
              deleted: false
          }
     })
+
+    const jobDescriptionsFieldArray = useFieldArray({
+        control: form.control,
+        name: "jobDescriptions"
+    })
+
+    const jobRequirementsFieldArray = useFieldArray({
+        control: form.control,
+        name: "jobRequirements"
+    })
+
+    const appendJobDescription = () => {
+        jobDescriptionsFieldArray.append({ description: "" })
+    }
+
+    const removeJobDescription = (index: number) => {
+         if(jobDescriptionsFieldArray.fields.length === 1) {
+            form.setValue("jobDescriptions.0.description", "")
+            return
+         }
+         jobDescriptionsFieldArray.remove(index)
+    }
+
+    const appendJobRequirement = () => {
+        jobRequirementsFieldArray.append({ requirement: "" })
+    }
+
+    const removeJobRequirement =(index: number) => {
+        if(jobRequirementsFieldArray.fields.length === 1) {
+             form.setValue("jobRequirements.0.requirement", "")
+             return 
+        }
+        
+        jobRequirementsFieldArray.remove(index)
+    }
+
+
+
 
     async function save(values: JobForm) {
         setIsSaving(true)
@@ -85,8 +124,43 @@ export default function JobCreateComponent() {
 
                         <InputComponent title="Position Information" icon={<ClipboardList className="size-5 text-zinc-900" />} >
                             <FormsInput control={form.control} path="positionName" label="Position Name" placeHolder="Enter job position name" />
-                            <FormsTextAreaInput control={form.control} path="jobDescription" label="Job Description" placeHolder="Please fill job description" rowHeight="min-h-[160px]" />
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <FormsInput control={form.control} path="clientName" label="Client Name (Optional)" placeHolder="Enter client name if applicable" className="col-span-2" />
+                                <FormsInput control={form.control} path="jobPost" label="Job Post Amount (Optional)" placeHolder="Number of open positions" />
+                            </div>
                         </InputComponent>
+
+                        <DialogDetailComponent title="Job Description" titleIcon="Briefcase" onClickAction={appendJobDescription}>
+                            <div className="grid gap-3">
+                                {jobDescriptionsFieldArray.fields.map((field, index) => (
+                                    <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                                        <FormsInput control={form.control} path={`jobDescriptions.${index}.description`} placeHolder="e.g., Lead the development of modern web applications" />
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-red-500 hover:bg-zinc-50 hover:text-red-600" onClick={() => removeJobDescription(index)}>
+                                            <Trash2 className="size-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                            {form.formState.errors.jobDescriptions?.root && (
+                                <p className="mt-2 text-sm font-medium text-red-500">{form.formState.errors.jobDescriptions.root.message}</p>
+                            )}
+                        </DialogDetailComponent>
+
+                        <DialogDetailComponent title="Job Requirements" titleIcon="GraduationCap" onClickAction={appendJobRequirement}>
+                            <div className="grid gap-3">
+                                {jobRequirementsFieldArray.fields.map((field, index) => (
+                                    <div key={field.id} className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                                        <FormsInput control={form.control} path={`jobRequirements.${index}.requirement`} placeHolder="e.g., 3+ years of experience with React and TypeScript" />
+                                        <Button type="button" variant="outline" size="icon" className="border-zinc-300 text-red-500 hover:bg-zinc-50 hover:text-red-600" onClick={() => removeJobRequirement(index)}>
+                                            <Trash2 className="size-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                            {form.formState.errors.jobRequirements?.root && (
+                                <p className="mt-2 text-sm font-medium text-red-500">{form.formState.errors.jobRequirements.root.message}</p>
+                            )}
+                        </DialogDetailComponent>
 
                         <InputComponent title="Job Classification" className={"md:grid-cols-2"} icon={<Layers className="size-5 text-zinc-900" />}>
                             <FormSelect control={form.control} path="jobLevel" label="Job Level" placeHolder="Select job level" options={JobLevel} />
