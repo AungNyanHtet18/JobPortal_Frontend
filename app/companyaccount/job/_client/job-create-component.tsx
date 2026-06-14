@@ -6,7 +6,7 @@ import FormsTextAreaInput from "@/components/fields/form-textarea"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import PageTitle from "@/components/widgets/page-title"
-import { JobForm, JobSchema } from "@/lib/type/schema/job/job.schema"
+import { JobForm, JobPayload, JobSchema } from "@/lib/type/schema/job/job.schema"
 import { JobLevel, JobType } from "@/lib/type/type"
 import { safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -26,25 +26,17 @@ export default function JobCreateComponent() {
     const form = useForm<JobForm>({
          resolver: zodResolver(JobSchema),
          defaultValues: {
+             jobPost: "",
+             clientName: "",
              positionName: "",
-             jobDescription: "",
-             salary: "",
+             jobDescriptions: [],
+             jobRequirements: [],
              jobLevel: "",
              jobType: "",
+             salary: "",
              deleted: false
          }
     })
-
-    const JobPayload = (form: JobForm): JobForm => {
-        return {
-            positionName: form.positionName.trim(),
-            jobDescription: form.jobDescription.trim(),
-            salary: form.salary.trim(),
-            jobLevel: form.jobLevel,
-            jobType: form.jobType,
-            deleted: form.deleted ?? false
-        }
-    }
 
     async function save(values: JobForm) {
         setIsSaving(true)

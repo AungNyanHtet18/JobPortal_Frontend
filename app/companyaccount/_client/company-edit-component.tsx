@@ -8,7 +8,7 @@ import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PageTitle from "@/components/widgets/page-title"
-import { CompanyForm, CompanySchema } from "@/lib/type/schema/company/company.schema"
+import { CompanyForm, CompanyPayload, CompanySchema } from "@/lib/type/schema/company/company.schema"
 import { formatFileSize, safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Building2, Globe, ImagePlus, Loader2, MapPin, Phone, Save, Upload, X } from "lucide-react"
@@ -77,17 +77,6 @@ export default function CompanyEditComponent({id} : {id: string}) {
 
          load()
     },[id, form])
-
-    const CompanyPayload = (form: CompanyForm) => {
-        return {
-            industryType: form.industryType,
-            companyName: form.companyName.trim(),
-            location: form.location.trim(),
-            phone: form.phone.trim(),
-            websiteUrl: form.websiteUrl?.trim() || "",
-            description: form.description.trim()
-        }
-   }
 
     async function  save(form: CompanyForm) {
         setIsSaving(true)

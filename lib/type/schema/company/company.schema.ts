@@ -12,6 +12,17 @@ export const CompanySchema = z.object({
 
 export type CompanyForm = z.infer<typeof CompanySchema>
 
+export const CompanyPayload = (form: CompanyForm) => {
+      return {
+      industryType: form.industryType,
+      companyName: form.companyName.trim(),
+      location: form.location.trim(),
+      phone: form.phone.trim(),
+      websiteUrl: form.websiteUrl?.trim() || "",
+      description: form.description.trim()
+      }
+}
+
 export type UploadedJob = {
       postionName : string,
       salary : number,
