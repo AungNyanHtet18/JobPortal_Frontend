@@ -68,7 +68,9 @@ export type JobApplicationListItem= {
       applicantId: number
       applicantName: string
       applicantEmail: string
-      gender: 'Male' | 'Female',
+      applicantResume: string
+      applicantCVForm: string
+      gender: 'Male' | 'Female'
       status: ApplicantionStatus
 }
 

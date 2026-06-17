@@ -110,6 +110,17 @@ export async function downloadApplicantResume(id: number): Promise<Blob>{
       return await response.blob()
 }
 
+export async function downloadApplicantCVForm(id: number): Promise<Blob>{
+      
+     const response = await secureSearch(`applicant/cvForm/${id}/download`)
+
+      if(!response.ok) {
+           throw new Error("Failed to download CV Form file.")
+      }
+
+      return await response.blob()
+}
+
 export async function getApplicantById(id: string | number): Promise<ApplicantDetails | null> {
      const response = await secureSearch(`applicant/id/${id}`)
      return await response.json().catch(() => null)

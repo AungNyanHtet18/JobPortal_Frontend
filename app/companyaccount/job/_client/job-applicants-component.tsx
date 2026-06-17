@@ -13,7 +13,7 @@ import * as jobClient from "@/lib/actions/job/job.action"
 import * as jobApplyClient from "@/lib/actions/job/job-apply.action"
 import * as applicantClient from "@/lib/actions/applicant/applicant.action"
 import { JobApplicationListItem, JobDetails } from "@/lib/type/schema/job/job.schema"
-import { Calendar, Download, Eye,Layers2, MapPin, Star, Users, X } from "lucide-react"
+import { Calendar, Download, Eye,FileDown,Layers2, Layers3, MapPin, Star, Users, X } from "lucide-react"
 import { toast } from "sonner"
 
 export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string }) {
@@ -39,7 +39,6 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
    const downloadResume = async (applicantId: number, applicantName: string)=> {
 
      try {
-
         //The browser receives the file as binary data and stores it in a Blob.
         const fileBlob = await applicantClient.downloadApplicantResume(applicantId);
 
@@ -62,10 +61,35 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
     } catch (error) {
         toast.message("Download Resume Failed")
     }
-
   }
 
+    const downloadCVForm = async (applicantId: number, applicantName: string)=> {
 
+    try {
+        //The browser receives the file as binary data and stores it in a Blob.
+        const fileBlob = await applicantClient.downloadApplicantCVForm(applicantId);
+
+        //Create a temporary URL because a blob cannot be downloaded directly,
+        const blobUrl = window.URL.createObjectURL(fileBlob)
+
+        //Create an invisible link and Tell the link where the file is
+        const hiddenAnchor = document.createElement('a')
+        hiddenAnchor.href = blobUrl;
+        
+        hiddenAnchor.setAttribute('download', `cvform_applicant_${applicantId}_${applicantName}.pdf`);
+        
+        //Append to document, trigger the download action, and clean up memory
+        document.body.appendChild(hiddenAnchor)
+        hiddenAnchor.click();
+        
+        document.body.removeChild(hiddenAnchor)
+        window.URL.revokeObjectURL(blobUrl); 
+
+    } catch (error) {
+        toast.message("Download CV Form Failed")
+    }
+
+  }
 
   if (loading || !details) {
       return <Loading />
@@ -92,7 +116,7 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
           
             <div className="mt-6 grid gap-3">
               <div className="overflow-hidden rounded-xl flex items-center justify-between border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex items-center gap-2 text-base font-semibold text-zinc-900">
+                <div className="flex items-center gap-2 font-bold text-zinc-900">
                   <Layers2 className="size-4" />
                   Job Level
                 </div>
@@ -100,15 +124,15 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
               </div>
 
                <div className="overflow-hidden rounded-xl flex items-center justify-between gap-2 border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex items-center gap-2 text-base font-semibold text-zinc-900">
-                  <MapPin className="size-4" />
+                <div className="flex items-center gap-2 font-bold text-zinc-900">
+                  <Layers3 className="size-4" />
                   Job Type
                 </div>
                 <p className="text-base tracking-widest truncate font-medium text-zinc-950">{details.jobType}</p>
               </div>
 
-              <div className="overflow-hidden rounded-xl flex items-center justify-between gap-2 border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex items-center gap-2 text-base font-semibold text-zinc-900">
+              <div className="overflow-hidden rounded-xl flex items-center justify-between gap-2 border border-zinc-200 bg-zinc-50  font-bold p-3">
+                <div className="flex items-center gap-2 text-base text-zinc-900">
                   <MapPin className="size-4" />
                   Apply
                 </div>
@@ -163,38 +187,28 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => downloadResume(applicant.applicantId,applicant.applicantName )}
-                            title="Download resume"
-                          >
-                            <Download className="size-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => toast("Marked shortlisted (UI only).")}
-                            title="Shortlist candidate"
-                          >
+                          {applicant.applicantResume &&
+                            <Button variant="outline" size="icon" onClick={() => downloadResume(applicant.applicantId,applicant.applicantName )} title="Download Resume">
+                              <Download className="size-4" />
+                            </Button>}
+
+                          {applicant.applicantCVForm && 
+                            <Button variant="outline" size="icon" onClick={() => downloadCVForm(applicant.applicantId,applicant.applicantName )} title="Download CV Form">
+                              <FileDown className="size-4" />
+                            </Button>}
+                          
+                          <Button variant="outline" size="icon" onClick={() => toast("Marked shortlisted (UI only).")} title="Shortlist candidate">
                             <Star className="size-4" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => toast("Marked rejected (UI only).")}
-                            title="Reject candidate"
-                          >
+
+                          <Button variant="outline" size="icon" onClick={() => toast("Marked rejected (UI only).")} title="Reject candidate">
                             <X className="size-4" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => toast("Scheduled interview (UI only).")}
-                            title="Interview candidate"
-                          >
+                          
+                          <Button variant="outline" size="icon" onClick={() => toast("Scheduled interview (UI only).")} title="Interview candidate">
                             <Calendar className="size-4" />
                           </Button>
+
                           {applicant.applicantId ? (
                             <Link href={`/job/applicant/${applicant.applicantId}`}>
                               <Button variant="outline" size="icon" title="View applicant details">
@@ -219,13 +233,21 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
             <div className="col-span-2">
               <PageDetailComponent title="Job description" icon="FileText">
                 <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
-                  {details.jobDescription || "No job description provided."} 
+                    {details.jobDescription && details.jobDescription.length > 0 ? (
+                          <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
+                              {details.jobDescription.map((desc, idex) => (
+                                  <li key={idex}>{desc}</li>
+                              ))}
+                          </ul>
+                      ) : (
+                          <p className="text-sm text-zinc-500">No job description added.</p>
+                    )}
                 </p>
               </PageDetailComponent>
             </div>
             
             <PageDetailComponent title="Company Website" icon="Globe">
-              <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
+              <p className="truncate whitespace-pre-line text-sm leading-7 text-zinc-700">
                 {details.companyWebsite || "No job description provided."}
               </p>
             </PageDetailComponent>

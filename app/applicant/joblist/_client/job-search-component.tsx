@@ -113,8 +113,6 @@ export default function JobSearchComponent() {
             const applicant = await applicantClient.findByApplicant()
             const savedJobs = await jobSavedClient.getSavedJobList()
 
-            console.log(`Save Jobs ${savedJobs.id.map(item => item.jobId)}`);
-
             if(applicant) {
                 setApplicant(applicant)
 
