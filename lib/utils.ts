@@ -79,3 +79,40 @@ export  function formatDate(value: string | null): string {
         year: "numeric"
     }).format(date)  //format date = Jan 2022
   }
+
+export  function formatDateTime(value: string | null): string {
+    if (value === null) {
+        return "Not added"
+    }
+
+    const dateValue = value as string //eg. date value = 2022-01-01 
+    const date: Date = new Date(dateValue) // date = Sat Jan 01 2022 06:30:00 GMT+0630
+    const day = getOrdinal(date.getDate())
+
+    const month = new Intl.DateTimeFormat("en", {
+        month: "short",
+    }).format(date)  //format date = Jan 2022
+  
+    const year = date.getFullYear()
+
+    return `${day} ${month} ${year}`
+  }
+
+
+
+function getOrdinal(day: number): string {
+   if(day > 3 && day <21) return `${day}th`
+   
+   switch(day % 10) {
+     case 1: 
+          return `${day}st`
+     case 2:
+          return `${day}nd`
+     case 3:
+          return `${day}rd`
+     default:
+          return `${day}th` 
+    }
+
+   
+}

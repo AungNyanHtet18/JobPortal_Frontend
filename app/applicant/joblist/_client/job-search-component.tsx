@@ -9,8 +9,8 @@ import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import { getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
-import { ArrowRight, Heart, Search } from "lucide-react"
+import { formatDate, formatDateTime, getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
+import { ArrowRight, Briefcase, Building2, Calendar, DollarSign, Eye, EyeIcon, Heart, MapPin, Search } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -173,40 +173,64 @@ export default function JobSearchComponent() {
                         </button>
                       }
 
-                      <div className="absolute bottom-3 left-3">
-                        <Badge className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">
-                          {job.jobType}
-                        </Badge>
+                      <div className="absolute bottom-3 left-2">
+                        <div className="flex flex-wrap gap-1">
+                          <Badge className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">
+                            {job.jobType}
+                          </Badge>
+
+                          <Badge className="ms-1 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">
+                            {job.jobLevel}
+                          </Badge>
+
+                          <Badge className="ms-1 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-zinc-900 backdrop-blur">
+                            ${job.minSalaryRange } - ${job.maxSalaryRange} 
+                          </Badge>
+                        </div>
                       </div>
                     </div>
 
                     <CardHeader>
-                      <CardTitle className="text-base font-semibold text-zinc-900">
-                        {job.positionName} <span className="text-zinc-500">({job.jobLevel})</span>
-                      </CardTitle>
+                        <CardTitle className="text-lg font-semibold">
+                          {job.positionName}
+                        </CardTitle>
 
-                      <CardDescription className="text-sm font-medium text-zinc-700">
-                        {job.companyName}
-                      </CardDescription>
+                        <p className="text-sm text-zinc-600 flex items-center gap-1">
+                           <Building2 className="size-4 text-zinc-600"/> {job.companyName}
+                        </p>
+
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          {job.clientName && (
+                            <Badge variant="outline" className="bg-zinc-800 text-zinc-200 py-1 text-xs">
+                              <Briefcase className="mr-1 size-3" />
+                              {job.clientName}
+                            </Badge>
+                          )}
+
+                          <Badge variant="secondary" className="py-1 text-xs">
+                            <MapPin className="mr-1 size-3" />
+                            {job.jobLocation}
+                          </Badge>
+                        </div>
                     </CardHeader>
-
+                      
                     <CardFooter className="flex flex-col gap-3">
                       <div className="w-full flex items-center justify-center">
                         <Button
-                          className="rounded-none rounded-l-lg  h-10 w-2/3  bg-zinc-900 text-white transition hover:bg-zinc-800"
+                          className="tracking-wide text-lg font-medium rounded-none rounded-l-sm  h-10 w-4/5  bg-zinc-100 border-zinc-200 shadow-md text-black transition hover:bg-zinc-200"
                           disabled={isApplied || isApplying}
                           onClick={() => setConfirmJob(job)}>
                           {isApplied ? "Applied" : "Apply Now"}
                         </Button>
-                        <Button className="rounded-none rounded-r-lg  h-10 w-1/3 bg-zinc-200 transition hover:bg-zinc-300 text-black">
-                          <Link className="flex justify-center items-center gap-1" href={`/job/${job.jobId}`}>
-                            <span className="font-semibold">Detail</span><ArrowRight className="size-4" />
+                        <Button className="rounded-none rounded-r-sm  h-10 w-1/5 bg-zinc-800 transition border-zinc-200 shadow-md hover:bg-zinc-900">
+                          <Link href={`/job/${job.jobId}`}>
+                            <Eye className="shrink-0 text-zinc-200 size-6"/>
                           </Link>
                         </Button>
                       </div>
                       
                       <div className="flex w-full justify-end gap-2">
-                         <span className="text-xs text-zinc-400">Posted {job.createAt}</span>                          
+                         <span className="flex items-center gap-1 text-xs text-zinc-400"><Calendar className="size-4"/> {formatDateTime(job.createAt)}</span>                          
                       </div>
                     </CardFooter>
                   </Card>

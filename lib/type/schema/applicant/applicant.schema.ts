@@ -194,11 +194,13 @@ export type JobSearch = {
 export type JobListItem = {
    jobId: number
    positionName: string
-   salary: number
+   maxSalaryRange: number,
+   minSalaryRange: number,
    jobLevel: string
    jobType: string
    companyName: string
+   clientName: string
+   jobLocation: string
    profilePhoto: string
-   location: string
    createAt: string
 }
