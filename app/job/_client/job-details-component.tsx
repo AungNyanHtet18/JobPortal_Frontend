@@ -8,7 +8,7 @@ import Loading from "@/components/widgets/loading"
 import PageTitle from "@/components/widgets/page-title"
 import { JobDetails } from "@/lib/type/schema/job/job.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { Globe, Layers2, Pencil, Phone, Users } from "lucide-react"
+import { BadgeCheck, BadgeX, Globe, Layers2, MarsStrokeIcon, Pencil, Phone, Users } from "lucide-react"
 import * as Job from "@/lib/actions/job/job.action"
 import * as Company from "@/lib/actions/company/company.action"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
@@ -66,18 +66,23 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                     </div>
                                 )}
                             </div>
-                           
                         </div>
 
                         <div className="mt-5 space-y-1">
-                            <p className="text-sm font-medium text-zinc-500">Open Position {details.jobPost ? `(${details.jobPost} openings)` : ''}</p>
+                            <p className="text-sm font-medium text-zinc-500">Open Position {details.jobPost ? `(${details.jobPost} Openings)` : ''}</p>
                             <h1 className="flex items-center gap-1 text-2xl font-semibold tracking-tight text-zinc-950"><Layers2 size="33" /> {details.positionName}</h1>
+                            <h2 className="tracking-wide text-zinc-800">{details.companyName}</h2>
                             {details.clientName && (
                                 <p className="mt-2 text-sm text-zinc-600">Client: <span className="font-medium text-zinc-900">{details.clientName}</span></p>
                             )}
                         </div>
 
                         <div className="mt-5 flex flex-wrap gap-2">
+                            <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
+                                {details.deleted ?  
+                                 <><BadgeCheck/> Verifed</> :  <><BadgeX className="size-4"/>Not Verifed</>
+                                 }
+                            </Badge>
                             <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
                                 {details.jobLevel}
                             </Badge>
@@ -120,7 +125,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         </PageDetailComponent>
 
                         <PageDetailComponent title="Salary" icon="DollarSign">
-                            <p className="text-2xl font-semibold text-zinc-950">{details.salary || "Not added"}</p>
+                            <p className="text-lg font-semibold text-zinc-950">{`${details.maxSalaryRange} MMK - ${details.minSalaryRange} MMK ` || "Not added"}</p>
                             <p className="mt-1 text-sm text-zinc-500">Compensation</p>
                         </PageDetailComponent>
                     </div>
@@ -167,7 +172,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                     <div className="grid gap-4 md:grid-cols-2">  
                         <PageDetailComponent title="Location" icon="MapPin">
                             <p className="text-sm leading-7 text-zinc-700">
-                                {details.companyLocation || "No location added."}
+                                {details.jobLocation || "No location added."}
                             </p>
                         </PageDetailComponent>
 

@@ -151,7 +151,11 @@ export default function CompanyDetailsComponent() {
                                     <div key={`${job.postionName}-${index}`} className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
                                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                             <div className="space-y-2">
-                                                <h3 className="font-semibold text-zinc-950">{job.postionName}</h3>
+                                                <h3 className="font-semibold text-zinc-950">{job.postionName}
+                                                    <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer ms-2">
+                                                        {`${job.minSalary.toLocaleString()} MMK  -  ${job.maxSalary.toLocaleString()}`} MMK
+                                                    </Badge>
+                                                </h3>
                                                 
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-sm text-zinc-600">{job.jobLevel}</p>
@@ -159,8 +163,8 @@ export default function CompanyDetailsComponent() {
                                                         <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900 cursor-pointer">
                                                             {job.jobType}
                                                         </Badge>
-                                                        <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer">
-                                                            {job.salary.toLocaleString()} MMK
+                                                        <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer ms-2">
+                                                            {job.jobLocation}
                                                         </Badge>
                                                     </div>
                                                 </div>

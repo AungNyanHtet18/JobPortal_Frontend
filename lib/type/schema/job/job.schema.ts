@@ -19,12 +19,14 @@ export const JobRequirementSchema = z.object({
 export const JobSchema = z.object({
      jobPost : z.string().optional(),
      clientName : z.string().optional(),
+     location : z.string().nonempty("Please enter location for job."),
      positionName : z.string().nonempty("Please enter job position name."),
      jobDescriptions : z.array(JobDescriptionSchema).min(1, "Please provide at least one job description bullect point."),
      jobRequirements : z.array(JobRequirementSchema).min(1, "Please provide at least one job requirement bullect point."),
      jobLevel : z.string().nonempty("Please enter job level."),
      jobType : z.string().nonempty("Please enter job type."),
-     salary : z.string().nonempty("Please enter salary."),
+     minSalaryRange : z.string().nonempty("Please enter minimum salary range."),
+     maxSalaryRange: z.string().nonempty("Please enter maximum salary range."),
      deleted : z.boolean().optional()
 })
 
@@ -34,33 +36,36 @@ export const JobPayload = (form: JobForm): any => {
         return {
             jobPost: form.jobPost ? Number(form.jobPost) : null,
             clientName: form.clientName?.trim() || "",
+            location: form.location.trim(),
             positionName: form.positionName.trim(),
             jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
             jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
             jobLevel: form.jobLevel,
             jobType: form.jobType,
-            salary: Number(form.salary.trim()),
-            deleted: form.deleted ?? false
+            minSalaryRange: Number(form.minSalaryRange),
+            maxSalaryRange: Number(form.maxSalaryRange),
+            deleted: form.deleted
         }
     }
-
 
 export type JobDetails = {
      jobId: number,
      jobCategory: string,
      companyName: string,
-     companyLocation: string,
      companyPhone: string,
      companyWebsite: string,
      companyImage: string | null,
      positionName: string,
      clientName: string | null,
+     jobLocation: string,
      jobDescription: string[],
      jobRequirement: string[],
-     salary: number,
+     minSalaryRange: number,
+     maxSalaryRange: number,
      jobPost: number | null,
      jobLevel: string,
-     jobType: string
+     jobType: string,
+     deleted: boolean
 }
 
 

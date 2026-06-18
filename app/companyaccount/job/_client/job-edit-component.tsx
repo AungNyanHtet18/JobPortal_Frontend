@@ -18,6 +18,7 @@ import * as Job from "@/lib/actions/job/job.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
 import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
+import FormsCheckBox from "@/components/fields/form-checkbox"
 
 export default function JobEditComponent({jobId} : {jobId: string}) {
 
@@ -30,12 +31,14 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
          defaultValues: {
              jobPost: "",
              clientName: "",
+             location : "",
              positionName: "",
              jobDescriptions: [{ description: "" }],
              jobRequirements: [{ requirement: "" }],
              jobLevel: "",
              jobType: "",
-             salary: "",
+             minSalaryRange: "",
+             maxSalaryRange: "",
              deleted: false
          }
     })
@@ -80,11 +83,10 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
             await safeCall(async () => {
                 const result = await Job.findJobById(jobId)
 
-                console.log(result);
-
                 form.reset({
                     jobPost: result.jobPost?.toString() ?? "",
                     clientName: result.clientName ?? "",
+                    location: result.jobLocation ?? "",
                     positionName: result.positionName ?? "",
                     jobDescriptions: result.jobDescription && result.jobDescription.length > 0 
                         ? result.jobDescription.map(desc => ({ description: desc })) 
@@ -92,10 +94,11 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                     jobRequirements: result.jobRequirement && result.jobRequirement.length > 0
                         ? result.jobRequirement.map(req => ({ requirement: req }))
                         : [{ requirement: "" }],
-                    salary: result.salary?.toString() ?? "",
                     jobLevel: result.jobLevel ?? "",
                     jobType: result.jobType ?? "",
-                    deleted: false
+                    minSalaryRange: result.minSalaryRange?.toString() ?? "",
+                    maxSalaryRange: result.maxSalaryRange?.toString() ?? "",
+                    deleted: result.deleted
                 })
             })
 
@@ -118,23 +121,23 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
      
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle icon="BriefcaseBusiness" title="Job Edit" description="Review and update your job post" />
+            <PageTitle icon="BriefcaseBusiness" title="Job Create" description="Create a clear job post for applicants" />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
                     <aside className="space-y-4">
-                        <ContentLayout title="Job Summary" icon={<BriefcaseBusiness className="size-5 text-zinc-900" />}>
+                        <ContentLayout title="Summary" icon={<BriefcaseBusiness className="size-5 text-zinc-900"/>}>
                             <div className="space-y-4">
                                 <div className="flex aspect-[4/5] w-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center">
-                                    <div className="flex size-10 items-center justify-center rounded-lg bg-zinc-950 text-white">
+                                    <div className="flex size-10  items-center justify-center rounded-lg bg-zinc-950 text-white">
                                         <BriefcaseBusiness className="size-8" />
                                     </div>
-                                    <p className="mt-4 text-sm font-medium text-zinc-950">Published job post</p>
-                                    <p className="mt-1 text-xs leading-5 text-zinc-500">Keep the role details accurate so applicants understand the opportunity.</p>
+                                    <p className="mt-4 text-sm font-medium text-zinc-950">New company job post</p>
+                                    <p className="mt-1 text-xs leading-5 text-zinc-500">Add the position, level, work type, salary, and description applicants need.</p>
                                 </div>
 
                                 <div className="flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
-                                    <div className="flex gap-3">
+                                    <div className="flex items-center gap-3">
                                         <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                             <MapPin className="size-5" />
                                         </div>
@@ -149,6 +152,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                     </aside>
 
                     <div className="space-y-6">
+
                         <InputComponent title="Position Information" icon={<ClipboardList className="size-5 text-zinc-900" />} >
                             <FormsInput control={form.control} path="positionName" label="Position Name" placeHolder="Enter job position name" />
                             <div className="grid gap-4 md:grid-cols-3">
@@ -189,14 +193,16 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                             )}
                         </DialogDetailComponent>
 
-                        <InputComponent title="Job Classification" className="md:grid-cols-2" icon={<Layers className="size-5 text-zinc-900"/>}>
+                        <InputComponent title="Job Classification" className={"md:grid-cols-2"} icon={<Layers className="size-5 text-zinc-900" />}>
                             <FormSelect control={form.control} path="jobLevel" label="Job Level" placeHolder="Select job level" options={JobLevel} />
                             <FormSelect control={form.control} path="jobType" label="Job Type" placeHolder="Select job type" options={JobType} />
                         </InputComponent>
 
-                        <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
-                            <FormsInput control={form.control} path="salary" label="Salary" placeHolder="Enter salary amount" />
-                            <div className="mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
+                        <InputComponent title="Salary" className="md:grid-cols-4" icon={<DollarSign className="size-5 text-zinc-900" />}>
+                            <FormsInput control={form.control} path="minSalaryRange" label="Manimum Salary" placeHolder="Enter Manimum Salary Range." />
+                            <FormsInput control={form.control} path="maxSalaryRange" label="Maximum Salary" placeHolder="Enter Maximum Salary Range." />
+                            
+                            <div className="col-span-2 mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
                                 <div className="flex gap-3">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                         <DollarSign className="size-5" />
@@ -209,8 +215,13 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                             </div>
                         </InputComponent>
 
+                        <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
+                            <FormsInput control={form.control} path="location" label="Location For Job" placeHolder="Enter Location for Job."/>
+                            <FormsCheckBox control={form.control} path="deleted" label="Verified Stauts" description="Mark this job posting as verified and approved." className="mt-4"  />
+                        </InputComponent>
+
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">
-                            <Button type="submit" disabled={isSaving || isLoading} className="bg-zinc-950 px-6 text-white hover:bg-zinc-800">
+                            <Button type="submit" disabled={isSaving} className="bg-zinc-950 px-6 text-white hover:bg-zinc-800">
                                 {isSaving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
                                 {isSaving ? "Saving" : "Save Job"}
                             </Button>

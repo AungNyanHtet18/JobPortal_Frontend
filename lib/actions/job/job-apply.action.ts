@@ -4,7 +4,6 @@ import { secureRequest, secureSearch } from "@/lib"
 import { ModificationResult } from "@/lib/type"
 import { ApplicantAppliedJobListItem, JobApplicationListItem } from "@/lib/type/schema/job/job.schema"
 
-
 export async function applyJob(jobId: number) : Promise<ModificationResult<string>> {
      const response = await secureSearch(`apply/position/${jobId}`)
      return await response.json()

@@ -8,7 +8,7 @@ type FormsCheckBoxProps<T extends FieldValues> = {
     label?: string
     description?: string
     className?: string
-    action: () => void
+    action?: () => void
 }
 
 export default function FormsCheckBox<T extends FieldValues>({control, path, label, description, className, action}: FormsCheckBoxProps<T>) {
@@ -23,7 +23,8 @@ export default function FormsCheckBox<T extends FieldValues>({control, path, lab
                                 onCheckedChange={(checked) => {
                                     field.onChange(checked)
                                     if(checked) {
-                                       action()
+                                         action?.()
+                                       
                                     }
                                 }}
                             />

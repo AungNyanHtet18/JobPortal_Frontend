@@ -18,6 +18,7 @@ import * as Job from "@/lib/actions/job/job.action"
 import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
 import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
+import FormsCheckBox from "@/components/fields/form-checkbox"
 
 export default function JobCreateComponent() {
     
@@ -29,12 +30,14 @@ export default function JobCreateComponent() {
          defaultValues: {
              jobPost: "",
              clientName: "",
+             location : "",
              positionName: "",
              jobDescriptions: [{ description: "" }],
              jobRequirements: [{ requirement: "" }],
              jobLevel: "",
              jobType: "",
-             salary: "",
+             minSalaryRange: "",
+             maxSalaryRange: "",
              deleted: false
          }
     })
@@ -74,14 +77,11 @@ export default function JobCreateComponent() {
         jobRequirementsFieldArray.remove(index)
     }
 
-
-
-
-    async function save(values: JobForm) {
+    async function save(jobForm: JobForm) {
         setIsSaving(true)
-         
+        
         await safeCall(async () => {
-            const result = await Job.createJob(JobPayload(values))
+            const result = await Job.createJob(JobPayload(jobForm))
              router.replace(`/job/${result.id}`)
         })
 
@@ -167,9 +167,11 @@ export default function JobCreateComponent() {
                             <FormSelect control={form.control} path="jobType" label="Job Type" placeHolder="Select job type" options={JobType} />
                         </InputComponent>
 
-                        <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
-                            <FormsInput control={form.control} path="salary" label="Salary" placeHolder="Enter salary amount" />
-                            <div className="mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
+                        <InputComponent title="Salary" className="md:grid-cols-4" icon={<DollarSign className="size-5 text-zinc-900" />}>
+                            <FormsInput control={form.control} path="minSalaryRange" label="Manimum Salary" placeHolder="Enter Manimum Salary Range." />
+                            <FormsInput control={form.control} path="maxSalaryRange" label="Maximum Salary" placeHolder="Enter Maximum Salary Range." />
+                            
+                            <div className="col-span-2 mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
                                 <div className="flex gap-3">
                                     <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                         <DollarSign className="size-5" />
@@ -180,6 +182,11 @@ export default function JobCreateComponent() {
                                     </div>
                                 </div>
                             </div>
+                        </InputComponent>
+
+                        <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
+                            <FormsInput control={form.control} path="location" label="Location For Job" placeHolder="Enter Location for Job."/>
+                            <FormsCheckBox control={form.control} path="deleted" label="Verified Stauts" description="Mark this job posting as verified and approved." className="mt-4"  />
                         </InputComponent>
 
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">

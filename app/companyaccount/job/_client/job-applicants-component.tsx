@@ -103,51 +103,50 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
         description={`Review candidates who applied for ${details.positionName}`}
       />
 
-
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="space-y-4">
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
               <div>
                 <p className="text-center text-sm uppercase tracking-[0.2em] text-zinc-500">Job summary</p>
-                <h2 className="mt-5 font-semibold text-zinc-950">{details.positionName}</h2>
-                <p className="mt-2 text-sm  leading-6 text-zinc-600">{details.companyName}</p>
+                <h2 className="mt-2 text-lg font-semibold text-zinc-950">{details.positionName}</h2>
+                <p className="mt-1 text-sm  leading-6 text-zinc-600">{details.companyName}</p>
             
               </div>
           
             <div className="mt-6 grid gap-3">
               <div className="overflow-hidden rounded-xl flex items-center justify-between border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex items-center gap-2 font-bold text-zinc-900">
+                <div className="flex items-center gap-2 font-bold text-zinc-600  tracking-wider">
                   <Layers2 className="size-4" />
                   Job Level
                 </div>
-                <p className="text-base tracking-widest truncate font-medium text-zinc-950">{details.jobLevel}</p>
+                <p className="text-base tracking-widest truncate font-medium text-zinc-700">{details.jobLevel}</p>
               </div>
 
                <div className="overflow-hidden rounded-xl flex items-center justify-between gap-2 border border-zinc-200 bg-zinc-50 p-3">
-                <div className="flex items-center gap-2 font-bold text-zinc-900">
+                <div className="flex items-center gap-2 font-bold text-zinc-600  tracking-wider">
                   <Layers3 className="size-4" />
                   Job Type
                 </div>
-                <p className="text-base tracking-widest truncate font-medium text-zinc-950">{details.jobType}</p>
+                <p className="text-base tracking-widest truncate font-medium text-zinc-700">{details.jobType}</p>
               </div>
 
               <div className="overflow-hidden rounded-xl flex items-center justify-between gap-2 border border-zinc-200 bg-zinc-50  font-bold p-3">
-                <div className="flex items-center gap-2 text-base text-zinc-900">
+                <div className="flex items-center gap-2 text-base text-zinc-600 tracking-wider">
                   <MapPin className="size-4" />
                   Apply
                 </div>
-                <p className="text-base tracking-widest truncate font-medium text-zinc-950">{applicants.length} Applicants</p>
+                <p className="text-base tracking-widest truncate font-medium text-zinc-700">{applicants.length} Applicants</p>
               </div>
       
             </div>
 
             <div className="mt-6 grid gap-3">
-              <Button asChild className="w-full bg-zinc-950 text-white hover:bg-zinc-800">
-                <Link href={`/companyaccount/job/edit?jobId=${details.jobId}`}>Edit job</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={`/job/${details.jobId}`}>View public job</Link>
-              </Button>
+                <Button asChild className="w-full bg-zinc-950 text-white hover:bg-zinc-800">
+                  <Link href={`/companyaccount/job/edit?jobId=${details.jobId}`}>Edit Job</Link>
+                </Button>
+                <Button asChild variant="outline" className="w-full">
+                  <Link href={`/job/${details.jobId}`}>View Public Job</Link>
+                </Button>
             </div>
           </div>
 
@@ -179,7 +178,7 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
                       </TableCell>
                       <TableCell>{details.jobLevel || "-"}</TableCell>
                       <TableCell>{details.jobType || "-"}</TableCell>
-                      <TableCell>{details.salary ? details.salary.toLocaleString() : 'Negotiable'}</TableCell>
+                      <TableCell>{details.minSalaryRange ? details.minSalaryRange.toLocaleString() : 'Negotiable'}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-950">
                           {applicant.status || "Pending"}
@@ -229,29 +228,46 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
             </div>
           </PageDetailComponent>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="col-span-2">
+          <div className="grid gap-6 md:grid-cols-2">
               <PageDetailComponent title="Job description" icon="FileText">
-                <p className="whitespace-pre-line text-sm leading-7 text-zinc-700">
-                    {details.jobDescription && details.jobDescription.length > 0 ? (
-                          <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
-                              {details.jobDescription.map((desc, idex) => (
-                                  <li key={idex}>{desc}</li>
-                              ))}
-                          </ul>
-                      ) : (
-                          <p className="text-sm text-zinc-500">No job description added.</p>
-                    )}
-                </p>
+                  {details.jobDescription && details.jobDescription.length > 0 ? (
+                        <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
+                            {details.jobDescription.map((desc, idex) => (
+                                <li key={idex}>{desc}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-zinc-500">No job description added.</p>
+                  )}
               </PageDetailComponent>
-            </div>
             
-            <PageDetailComponent title="Company Website" icon="Globe">
-              <p className="truncate whitespace-pre-line text-sm leading-7 text-zinc-700">
-                {details.companyWebsite || "No job description provided."}
-              </p>
-            </PageDetailComponent>
+              <PageDetailComponent title="Job Requirement" icon="GraduationCap">
+                  {details.jobRequirement && details.jobRequirement.length > 0 ? (
+                        <ul className="list-inside list-disc space-y-2 text-sm leading-7 text-zinc-700">
+                            {details.jobRequirement.map((desc, idex) => (
+                                <li key={idex}>{desc}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-zinc-500">No job requirement added.</p>
+                  )}
+              </PageDetailComponent>
+           
           </div>
+
+            <PageDetailComponent title="Company Information" icon="Building2">
+                <div className="grid gap-4 md:grid-cols-2">
+                    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                        <p className="text-xs font-medium uppercase text-zinc-500">Company</p>
+                        <p className="mt-1 text-sm font-medium text-zinc-950">{details.companyName}</p>
+                    </div>
+
+                    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+                        <p className="text-xs font-medium uppercase text-zinc-500">Website</p>
+                        <p className="mt-1 truncate text-sm font-medium text-zinc-950">{details.companyWebsite || "No website added"}</p>
+                    </div>
+                </div>
+            </PageDetailComponent>
 
         </div>
       </div>
