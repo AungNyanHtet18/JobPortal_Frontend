@@ -64,7 +64,6 @@ export const LanguageLevel : OptionItem[] = [
 
 
 //Company
-
 export const IndustryType: OptionItem[] = [
   // Corporate, Finance & Business Services
   { key: "Staffing & Recruitment Agency", value: "Staffing & Recruitment Agency" },
@@ -105,4 +104,14 @@ export const IndustryType: OptionItem[] = [
   { key: "Non-Profit & NGO", value: "Non-Profit & NGO" },
   { key: "Government & Public Sector", value: "Government & Public Sector" },
   { key: "Agriculture & Farming", value: "Agriculture & Farming" }
+];
+
+export const ApplicationStatusType: OptionItem[] = [
+   {key: "APPLIED", value: "APPLIED"},
+   {key: "REVIEWING", value: "REVIEWING"},
+   {key: "SHORTLISTED", value: "SHORTLISTED"},
+   {key: "INTERVIEW", value: "INTERVIEW"},
+   {key: "OFFERED", value: "OFFERED"},
+   {key: "HIRED", value: "HIRED"},
+   {key: "REJECTED", value: "REJECTED"}
 ];

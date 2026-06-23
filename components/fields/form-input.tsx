@@ -10,19 +10,24 @@ type FormsInputProps<T extends FieldValues> = {
      type?: HTMLInputTypeAttribute
      className?: string
      placeHolder?: string
+     hidden?: boolean
 }
 
-export default function FormsInput<T extends FieldValues>({control, path, label, type, className, placeHolder}: FormsInputProps<T>) {
+export default function FormsInput<T extends FieldValues>({control, path, label, type, className, placeHolder, hidden}: FormsInputProps<T>) {
      return (
         <FormField control={control} name={path} render={({field}) =>
             <FormItem className={className}>
                {label && <FormLabel>{label}</FormLabel>}
 
                 <FormControl>
-                    <Input {...field} type={type} placeholder={placeHolder || `Enter ${label || "input"}`} className="bg-white"/>
+                    {hidden ? (
+                     <input type="hidden" {...field} />
+                    ):(
+                     <Input {...field} type={type} placeholder={placeHolder || `Enter ${label || "input"}`} className="bg-white"/>
+                    )}
                 </FormControl>
 
-                <FormMessage/>
+                {!hidden && <FormMessage/> }
             </FormItem>
         }/> 
      )

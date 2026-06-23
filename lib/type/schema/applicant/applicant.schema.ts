@@ -54,7 +54,6 @@ export  const ApplicantSchema = z.object({
 
 export type ApplicantForm = z.infer<typeof ApplicantSchema>
 
-
 export const emptyExperience = {
     companyName: "",
     position: "",
@@ -201,6 +200,7 @@ export type JobListItem = {
    companyName: string
    clientName: string
    jobLocation: string
+   deleted: boolean
    profilePhoto: string
    createAt: string
 }

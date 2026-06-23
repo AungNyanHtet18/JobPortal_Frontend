@@ -488,7 +488,7 @@ export default function ApplicantCreateComponent() {
                         </div>
                     </div>
 
-                    <DialogComponent diaLogIndex={educationDialogIndex} diaLogTitle="Education Details" diaLogDescription="  Add education history with qualification type, name, and completion date." 
+                    <DialogComponent diaLogIndex={educationDialogIndex} diaLogTitle="Education Details" diaLogDescription=" Add education history with qualification type, name, and completion date." 
                         onOpenChange={()=> {setEducationDialogIndex(null)}}
                         onRemoveChange={(educationDialogIndex) => {
                              if(educationDialogIndex !== null) {

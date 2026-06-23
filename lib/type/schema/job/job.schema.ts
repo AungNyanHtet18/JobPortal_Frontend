@@ -33,20 +33,28 @@ export const JobSchema = z.object({
 export type JobForm = z.infer<typeof JobSchema>
 
 export const JobPayload = (form: JobForm): any => {
-        return {
-            jobPost: form.jobPost ? Number(form.jobPost) : null,
-            clientName: form.clientName?.trim() || "",
-            location: form.location.trim(),
-            positionName: form.positionName.trim(),
-            jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
-            jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
-            jobLevel: form.jobLevel,
-            jobType: form.jobType,
-            minSalaryRange: Number(form.minSalaryRange),
-            maxSalaryRange: Number(form.maxSalaryRange),
-            deleted: form.deleted
-        }
-    }
+      return {
+      jobPost: form.jobPost ? Number(form.jobPost) : null,
+      clientName: form.clientName?.trim() || "",
+      location: form.location.trim(),
+      positionName: form.positionName.trim(),
+      jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
+      jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
+      jobLevel: form.jobLevel,
+      jobType: form.jobType,
+      minSalaryRange: Number(form.minSalaryRange),
+      maxSalaryRange: Number(form.maxSalaryRange),
+      deleted: form.deleted
+      }
+}
+
+export const ApplicationStatusSchema = z.object({
+       applicantId : z.string().nonempty("Please enter application id."),
+       status: z.string().nonempty("Please enter application status."),
+       note: z.string().optional()
+})
+
+export type ApplicationStatusForm = z.infer<typeof ApplicationStatusSchema  >
 
 export type JobDetails = {
      jobId: number,
@@ -67,7 +75,6 @@ export type JobDetails = {
      jobType: string,
      deleted: boolean
 }
-
 
 export type JobApplicationListItem= {
       applicantId: number

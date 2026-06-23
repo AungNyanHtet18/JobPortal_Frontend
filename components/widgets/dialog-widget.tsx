@@ -9,9 +9,10 @@ type DialogProps = {
      children: React.ReactNode
      onOpenChange: () => void
      onRemoveChange: (index: number | null) => void
+     saved?:boolean
 }
 
-export default function DialogComponent({diaLogIndex, diaLogTitle, diaLogDescription, children, onOpenChange, onRemoveChange} : DialogProps) {
+export default function DialogComponent({diaLogIndex, diaLogTitle, diaLogDescription, children, onOpenChange, onRemoveChange, saved} : DialogProps) {
      
     return (
         <Dialog open={diaLogIndex !== null} onOpenChange={(open) => !open &&  onOpenChange()}>
@@ -30,9 +31,13 @@ export default function DialogComponent({diaLogIndex, diaLogTitle, diaLogDescrip
                                 <Trash className="size-4" />
                                 Remove
                             </Button>
-                            <DialogClose asChild>
+                            
+                            {saved ? 
+                            (<Button type="submit" className="bg-zinc-950 text-white hover:bg-zinc-800">Submit</Button>
+                            ): (
+                              <DialogClose asChild>
                                 <Button type="button" className="bg-zinc-950 text-white hover:bg-zinc-800">Done</Button>
-                            </DialogClose>
+                              </DialogClose> )}
                         </DialogFooter>
                     </>
                 )}

@@ -10,7 +10,7 @@ import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
 import { formatDate, formatDateTime, getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
-import { ArrowRight, Briefcase, Building2, Calendar, DollarSign, Eye, EyeIcon, Heart, MapPin, Search } from "lucide-react"
+import { ArrowRight, Briefcase, Building2, Calendar, Check, CheckCheck, CheckCircle2, CheckCircle2Icon, DollarSign, Eye, EyeIcon, Heart, MapPin, Search, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -229,7 +229,17 @@ export default function JobSearchComponent() {
                         </Button>
                       </div>
                       
-                      <div className="flex w-full justify-end gap-2">
+                      <div className="flex w-full justify-between items-center gap-2">
+                        {job.deleted ? 
+                          <Badge variant="secondary" className="mt-1 text-xs py-1">
+                            <XCircle className="mr-1 size-3" />
+                            Applications Closed
+                          </Badge>
+                           :
+                           <Badge className="mt-1 bg-slate-600 text-white text-xs py-1">
+                            <CheckCircle2Icon className="mr-1 size-3" />Open to Apply
+                          </Badge>}
+                  
                          <span className="flex items-center gap-1 text-xs text-zinc-400"><Calendar className="size-4"/> {formatDateTime(job.createAt)}</span>                          
                       </div>
                     </CardFooter>

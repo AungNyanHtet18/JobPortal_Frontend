@@ -1,8 +1,8 @@
 'use server'
 
-import { secureRequest, secureSearch } from "@/lib"
+import { PUT_CONFIG, secureRequest, secureSearch } from "@/lib"
 import { ModificationResult } from "@/lib/type"
-import { ApplicantAppliedJobListItem, JobApplicationListItem } from "@/lib/type/schema/job/job.schema"
+import { ApplicantAppliedJobListItem, ApplicationStatusForm, JobApplicationListItem } from "@/lib/type/schema/job/job.schema"
 
 export async function applyJob(jobId: number) : Promise<ModificationResult<string>> {
      const response = await secureSearch(`apply/position/${jobId}`)
@@ -24,4 +24,12 @@ export async function getApplicantListByJob(jobId: string) : Promise<Modificatio
 export async function getAppliedJobList() : Promise<ModificationResult<ApplicantAppliedJobListItem[]>> {
    const response = await secureSearch(`apply/joblist`)
    return await response.json()
+}
+
+export async function updateApplicationStatus(jobId: string, form: ApplicationStatusForm) : Promise<ModificationResult<number>> {
+     const response = await secureRequest(`apply/updatestatus/${jobId}`,{ 
+          ...PUT_CONFIG,
+          body: JSON.stringify(form)
+          })
+     return await response.json() as ModificationResult<number>
 }
