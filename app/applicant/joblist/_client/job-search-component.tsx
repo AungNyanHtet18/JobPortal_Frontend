@@ -9,16 +9,17 @@ import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import { formatDate, formatDateTime, getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
-import { ArrowRight, Briefcase, Building2, Calendar, Check, CheckCheck, CheckCircle2, CheckCircle2Icon, DollarSign, Eye, EyeIcon, Heart, MapPin, Search, XCircle } from "lucide-react"
+import {  formatDateTime, getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
+import { Briefcase, Building2, Calendar,  CheckCircle2Icon, DollarSign, Eye, EyeIcon, Heart, MapPin, Search, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as applicantClient from '@/lib/actions/applicant/applicant.action'
 import * as jobApplyClient from '@/lib/actions/job/job-apply.action'
 import * as jobSavedClient from '@/lib/actions/job/job-saved.action'
+import * as jobClient from '@/lib/actions/job/job.action'
 import PagerWidget from "@/components/widgets/pager-widget"
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import Loading from "@/components/widgets/loading"
 
@@ -67,8 +68,7 @@ export default function JobSearchComponent() {
     async function saveJob (jobId: number) {
       safeCall(async() => {
         const result = savedJobs.includes(jobId) ? await jobSavedClient.unsavedJob(jobId) :  await jobSavedClient.savedJob(jobId)
-        console.log(`result ${result.id}`);
-        setSavedJobs(prev => prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId])
+        setSavedJobs(prev => prev.includes(jobId) ? prev.filter((id) => id !== result.id) : [...prev, result.id])
       })
     }
 
@@ -109,7 +109,7 @@ export default function JobSearchComponent() {
          }
 
          await safeCall(async () => {
-            const result = await applicantClient.searchJobs(formValues)
+            const result = await jobClient.searchJobs(formValues)
             const applicant = await applicantClient.findByApplicant()
             const savedJobs = await jobSavedClient.getSavedJobList()
 
@@ -217,7 +217,7 @@ export default function JobSearchComponent() {
                     <CardFooter className="flex flex-col gap-3">
                       <div className="w-full flex items-center justify-center">
                         <Button
-                          className="tracking-wide text-lg font-medium rounded-none rounded-l-sm  h-10 w-4/5  bg-zinc-100 border-zinc-200 shadow-md text-black transition hover:bg-zinc-200"
+                          className="tracking-wide text-lg font-medium rounded-none rounded-l-sm  h-10 w-4/5  bg-zinc-100 border-1 border-zinc-900 shadow-md text-zinc-700 font-semibold transition hover:bg-zinc-200"
                           disabled={isApplied || isApplying}
                           onClick={() => setConfirmJob(job)}>
                           {isApplied ? "Applied" : "Apply Now"}
@@ -236,11 +236,10 @@ export default function JobSearchComponent() {
                             Applications Closed
                           </Badge>
                            :
-                           <Badge className="mt-1 bg-slate-600 text-white text-xs py-1">
+                           <Badge className="mt-1 bg-slate-800 text-white text-xs py-1">
                             <CheckCircle2Icon className="mr-1 size-3" />Open to Apply
                           </Badge>}
-                  
-                         <span className="flex items-center gap-1 text-xs text-zinc-400"><Calendar className="size-4"/> {formatDateTime(job.createAt)}</span>                          
+                         <span className="flex items-center gap-1 text-xs text-zinc-500"><Calendar className="size-4"/> {formatDateTime(job.createAt)}</span>                          
                       </div>
                     </CardFooter>
                   </Card>

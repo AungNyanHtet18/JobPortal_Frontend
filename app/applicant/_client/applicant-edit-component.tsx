@@ -25,7 +25,6 @@ import FormsDate from "@/components/fields/form.date"
 import FormsCheckBox from "@/components/fields/form-checkbox"
 import { LanguageLevel, QualificationType, SkillType } from "@/lib/type/type"
 import Loading from "@/components/widgets/loading"
-import { resume } from "react-dom/server"
 
 export default function ApplicantEditComponent({id} : {id: string}) {
 
@@ -117,7 +116,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
                 const result = await Applicant.findByApplicantName()
 
                 if(result) {
-                    setUploadedProfileUrl(await Applicant.getApplicantProfileImageUrl(result.profileImage))
+                    setUploadedProfileUrl(await  Applicant.getApplicantProfileImageUrl(result.profileImage))
                     setProfileImageFailed(false)
 
                     form.reset({

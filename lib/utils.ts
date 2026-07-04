@@ -13,7 +13,7 @@ export async function safeCall(action: () => Promise<void>) {
      if(e.message == "NEXT_REDIRECT") {
        return 
      }
-     toast("Message", {
+     toast.error("Message", {
   description: (() => {
     if (e instanceof Error) {
       try { 
@@ -62,8 +62,12 @@ export function getFileName(fileName: string | null) {
     }
 }
 
-export function getCompanyPhotoForJobList(profileImage: string):  string  {
+export function getCompanyPhotoForJobList(profileImage: string) :  string  {
    return `http://localhost:8081/companyprofile/${encodeURIComponent(profileImage)}`
+}
+
+export function getPostPhotoForPostList(postImage: string) : string {
+   return `http://localhost:8081/postphoto/${encodeURIComponent(postImage)}`
 }
 
 export  function formatDate(value: string | null): string {

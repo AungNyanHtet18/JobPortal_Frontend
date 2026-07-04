@@ -2,10 +2,10 @@
 
 import { secureRequest, secureSearch } from "@/lib";
 import { getApplicantId, getLoginUser, setApplicantId } from "@/lib/login-users";
-import { ModificationResult, PageResult } from "@/lib/type";
-import { ApplicantDetails, JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema";
+import { ModificationResult} from "@/lib/type";
+import { ApplicantDetails } from "@/lib/type/schema/applicant/applicant.schema";
 
-export async function createApplicant(formData: FormData): Promise<ModificationResult<number>> {
+export async function createApplicant(formData: FormData) : Promise<ModificationResult<number>> {
      
      const formValue = formData.get("form")
 
@@ -92,11 +92,6 @@ export async function uploadApplicantCvForm(cvFormFile: File): Promise<Modificat
           body: payload
      })
 
-     return await response.json()
-}
-
-export async function searchJobs(form: JobSearch):Promise<PageResult<JobListItem>> {
-     const response = await secureSearch('job',form)
      return await response.json()
 }
 

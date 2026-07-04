@@ -1,6 +1,5 @@
 import ApplicantNavigation from "@/components/widgets/applicant-navigation";
 import CompanyNavigation from "@/components/widgets/company-navigation";
-import { findByCompany } from "@/lib/actions/company/company.action";
 import { getCompanyId } from "@/lib/login-users";
 import { Metadata } from "next";
 
@@ -9,8 +8,7 @@ export const metadata: Metadata = {
     description: "Job List Features  of Job Portal Page"
 };
 
-
-export default async function JobLayout({children} : {children: React.ReactNode}) {
+export default async function NetworkLayout({children} : {children: React.ReactNode}) {
     
     const companyId = await getCompanyId()
 

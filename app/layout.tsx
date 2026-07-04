@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Roboto } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./global.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -37,7 +37,7 @@ export default function RootLayout({
 
         <main className="w-full">
           {children}
-          <Toaster position="bottom-right" />
+          <Toaster position="bottom-right"/>
         </main>
       </body>
     </html>

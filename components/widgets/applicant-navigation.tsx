@@ -13,8 +13,14 @@ export default async function ApplicantNavigation() {
 
     return (
       <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">
-        <h2 className="text-2xl text-white font-bold flex justify-between items-center gap-2">
-          <Briefcase size={20} />Job Portal
+        <h2 className="text-2xl flex justify-between items-center gap-2 text-zinc-50">
+          <div className="p-2 rounded-lg bg-zinc-900">
+            <Briefcase size={26} className="text-zinc-50" />
+          </div>
+          <span className="font-semibold space-x-2 text-shadow-md space-x-2">
+            <span className="tracking-wider">J<span className="text-zinc-900">O</span>B</span>
+            <span className="tracking-wider">P<span className="text-zinc-900">O</span>RTAL</span>
+          </span> 
         </h2>
       
         <div >
