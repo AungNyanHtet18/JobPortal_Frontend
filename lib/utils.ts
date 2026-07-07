@@ -61,8 +61,11 @@ export function getFileName(fileName: string | null) {
         return normalized
     }
 }
+export function getAccountPhoto(postImage: string) : string {
+   return `http://localhost:8081/profile/${encodeURIComponent(postImage)}`
+}
 
-export function getCompanyPhotoForJobList(profileImage: string) :  string  {
+export function getCompanyPhoto(profileImage: string) :  string  {
    return `http://localhost:8081/companyprofile/${encodeURIComponent(profileImage)}`
 }
 

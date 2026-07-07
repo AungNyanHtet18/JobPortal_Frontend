@@ -86,7 +86,6 @@ export async function secureSearch(path: string, search? : {[key:string] : any})
         return secureRequest(path, {}, search)
 }
 
-
 function url(path: string, search?: {[key:string]: any}) {
     const url = new URL(`${process.env.BACKEND_URL}/${path}`)
 

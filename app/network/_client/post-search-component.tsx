@@ -13,7 +13,7 @@ import DialogComponent from "@/components/widgets/dialog-widget"
 import Loading from "@/components/widgets/loading"
 import { searchPost, createPost, updatePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
-import {  getPostPhotoForPostList, safeCall } from "@/lib/utils"
+import {  getAccountPhoto, getPostPhotoForPostList, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -34,17 +34,14 @@ export default function PostSearchComponent() {
     })
 
     useEffect(() => {
-      search()
+      searchPostList(searchKeyword)
     }, [])
-
-    async function search() {
-       await searchPostList(searchKeyword)
-    }
 
     async function searchPostList (keyword?: string) {
         setLoading(true)
         await safeCall(async () => {
             const data = await searchPost(keyword)
+            console.log(data);
             setPosts(data || [])
         })
         setLoading(false)
@@ -104,10 +101,10 @@ export default function PostSearchComponent() {
             <div className="flex md:flex-row flex-col gap-4 justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-zinc-100">
                 <form onSubmit={(e) => {
                         e.preventDefault()
-                        search()}} className="flex w-full relative">
+                        searchPostList(searchKeyword)}} className="flex w-full relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 size-4" />
                     <Input 
-                        placeholder="Search posts..." 
+                        placeholder="Search posts" 
                         className="pl-9 bg-zinc-50  focus-visible:ring-zinc-200"
                         value={searchKeyword}
                         onChange={(e) => setSearchKeyword(e.target.value)}
@@ -127,16 +124,16 @@ export default function PostSearchComponent() {
                         <p className="text-sm text-zinc-500 mt-1">Try adjusting your search or create a new post.</p>
                     </div>
                 )}
-                
+                 
                 {posts.map((post) => (
                     <Card key={post.id} className="overflow-hidden border-zinc-200 shadow-sm">
                         <CardHeader className="px-3 flex flex-row items-start gap-3">
                             <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
-                                <AvatarImage src={post.accountPhoto ? getPostPhotoForPostList(post.accountPhoto) : ""} alt={post.accountName} />
+                                <AvatarImage src={post.accountPhoto ? getAccountPhoto(post.accountPhoto) : ""} alt={post.accountName} />
                                 <AvatarFallback className="bg-zinc-100 text-zinc-600">
                                     {post.accountName.substring(0, 2).toUpperCase()}
                                 </AvatarFallback>
-                            </Avatar>
+                            </Avatar> 
                             <div className="flex-1">
                                 <p className="text-sm font-semibold text-zinc-900 truncate">
                                     {post.accountName}
@@ -149,7 +146,7 @@ export default function PostSearchComponent() {
                                 <Pencil className="size-4" />
                                 <span className="sr-only">Edit post</span>
                             </Button>
-                        </CardHeader>
+                        </CardHeader> 
                         
                         <CardContent className="p-4 pt-2">
                             <p className="text-sm text-zinc-800 whitespace-pre-wrap leading-relaxed">
@@ -186,7 +183,7 @@ export default function PostSearchComponent() {
                             </Button>
                         </CardFooter>
                     </Card>
-                ))}
+                ))} 
 
             </div>
 

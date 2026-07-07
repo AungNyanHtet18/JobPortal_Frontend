@@ -9,7 +9,6 @@ import { signOutAction } from "@/lib/actions/auth.action";
 export default async function ApplicantNavigation() {
 
    const UserisLogin: boolean = await isLogin()
-   const applicantId: string | undefined = await getApplicantId() 
 
     return (
       <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">

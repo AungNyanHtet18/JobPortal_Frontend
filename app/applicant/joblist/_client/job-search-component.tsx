@@ -9,7 +9,7 @@ import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import {  formatDateTime, getCompanyPhotoForJobList, safeCall } from "@/lib/utils"
+import {  formatDateTime, getCompanyPhoto, safeCall } from "@/lib/utils"
 import { Briefcase, Building2, Calendar,  CheckCircle2Icon, DollarSign, Eye, EyeIcon, Heart, MapPin, Search, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -159,7 +159,7 @@ export default function JobSearchComponent() {
                     <div className="relative h-40 w-full overflow-hidden">
 
                       <img
-                          src={job.profilePhoto ? `${getCompanyPhotoForJobList(job.profilePhoto)}` : '/images/signin.jpg' }
+                          src={job.profilePhoto ? `${getCompanyPhoto(job.profilePhoto)}` : '/images/signin.jpg' }
                           alt={job.positionName}
                           className="h-full w-full object-cover transition-all duration-500 hover:scale-110"/>
                       
