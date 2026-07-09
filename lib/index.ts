@@ -75,15 +75,15 @@ export async function secureRequest(path: string, options: RequestInit = {}, sea
     }
 
     if(response.status === 400 || response.status === 500) {
-         const message = await response.json()
-         throw JSON.stringify(message)
+        const message = await response.json()
+        throw JSON.stringify(message)
     }
 
     return response
 }
 
 export async function secureSearch(path: string, search? : {[key:string] : any}) {
-        return secureRequest(path, {}, search)
+    return secureRequest(path, {}, search)
 }
 
 function url(path: string, search?: {[key:string]: any}) {

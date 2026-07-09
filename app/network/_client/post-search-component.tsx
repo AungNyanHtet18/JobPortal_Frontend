@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Heart, MessageCircle, MoreHorizontal, Pencil, Search, Send, Share2, Trash2 } from "lucide-react"
+import { Heart, MessageCircle, MoreHorizontal, Pencil, Search, Send, Share2, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -11,11 +11,13 @@ import { Input } from "@/components/ui/input"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
 import DialogComponent from "@/components/widgets/dialog-widget"
 import Loading from "@/components/widgets/loading"
-import { searchPost, createPost, updatePost } from "@/lib/actions/post/post.action"
+import { searchPost, createPost, updatePost, deletePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
 import {  getAccountPhoto, getPostPhotoForPostList, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import IconComponent from "@/components/widgets/icon-component"
+import PageTitle from "@/components/widgets/page-title"
 
 export default function PostSearchComponent() {
     const [posts, setPosts] = useState<PostListItem[]>([])
@@ -36,6 +38,14 @@ export default function PostSearchComponent() {
     useEffect(() => {
       searchPostList(searchKeyword)
     }, [])
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0]
+            setSelectedImage(file)
+            setPreviewImage(URL.createObjectURL(file))
+        }
+    }
 
     async function searchPostList (keyword?: string) {
         setLoading(true)
@@ -63,14 +73,6 @@ export default function PostSearchComponent() {
         setDialogOpen(true)
     }
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0]
-            setSelectedImage(file)
-            setPreviewImage(URL.createObjectURL(file))
-        }
-    }
-
     async function save(form: PostForm) {
         await safeCall(async () => {
             const formData = new FormData()
@@ -81,10 +83,10 @@ export default function PostSearchComponent() {
 
             if (editingPostId) {
                 await updatePost(editingPostId, formData)
-                toast.success("Post updated successfully")
+                toast.success("Post is updated successfully")
             } else {
                 await createPost(formData)
-                toast.success("Post created successfully")
+                toast.success("Post is created successfully")
             }
             
             setDialogOpen(false)
@@ -92,28 +94,48 @@ export default function PostSearchComponent() {
         })
     }
 
+
+    async function deleteDialog (postId: number | null){
+        if(postId != null) {
+            await safeCall(async () => {
+                const result = await deletePost(postId)
+                toast.success(result.id)
+            })
+        }
+
+        setDialogOpen(false)
+        searchPostList(searchKeyword)
+    }
+
     if (loading && posts.length === 0) {
         return <Loading />
     }
 
     return (
-        <div className="mx-auto max-w-2xl space-y-6 pb-10">
-            <div className="flex md:flex-row flex-col gap-4 justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-zinc-100">
-                <form onSubmit={(e) => {
-                        e.preventDefault()
-                        searchPostList(searchKeyword)}} className="flex w-full relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 size-4" />
-                    <Input 
-                        placeholder="Search posts" 
-                        className="pl-9 bg-zinc-50  focus-visible:ring-zinc-200"
-                        value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                    />
-                    <Button type="submit" variant="ghost" className="ml-2">Search</Button>
-                </form>
-                <Button onClick={openCreateDialog} className="w-full sm:w-auto shrink-0 bg-zinc-900 hover:bg-zinc-800 text-white">
-                    <Pencil className="size-4 mr-2" /> Create Post
-                </Button>
+        <div className="mx-auto max-w-3xl space-y-6 pb-10">
+            
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-zinc-100 space-y-3">
+                <div className="flex md:flex-row flex-col gap-4 justify-between items-center">
+                    <PageTitle icon="Podcast" title="Post List" description="Share your thoughts with the community.What's on your mind?"/>
+                </div>
+                
+                <div className=" flex md:flex-row flex-col gap-4 justify-between items-center">
+                    <form onSubmit={(e) => {
+                            e.preventDefault()
+                            searchPostList(searchKeyword)}} className="flex w-full relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 size-4" />
+                        <Input 
+                            placeholder="Search posts" 
+                            className="pl-9 bg-zinc-50  focus-visible:ring-zinc-200"
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                        />
+                        <Button type="submit" variant="ghost" className="ml-2 font-medium  hover:bg-zinc-400 hover:text-zinc-50">Search</Button>
+                    </form>
+                    <Button onClick={openCreateDialog} className="w-full sm:w-auto shrink-0 bg-zinc-900 hover:bg-zinc-800 text-white">
+                        <SquarePen className="size-4" /> Create Post
+                    </Button>
+                </div>
             </div>
 
             <div className="space-y-6">
@@ -194,7 +216,8 @@ export default function PostSearchComponent() {
                         diaLogTitle={editingPostId ? "Edit Post" : "Create a Post"} 
                         diaLogDescription={editingPostId ? "Update your post content and image." : "Share what's on your mind with your network."}
                         onOpenChange={() => setDialogOpen(false)}
-                        onRemoveChange={() => setDialogOpen(false)}
+                        onRemoveChange={() => {
+                         deleteDialog(editingPostId)}}
                         saved={true}>
                         <div className="space-y-2 py-4">
                             <FormsTextAreaInput 

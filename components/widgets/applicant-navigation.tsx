@@ -18,7 +18,7 @@ export default async function ApplicantNavigation() {
           </div>
           <span className="font-semibold space-x-2 text-shadow-md space-x-2">
             <span className="tracking-wider">J<span className="text-zinc-900">O</span>B</span>
-            <span className="tracking-wider">P<span className="text-zinc-900">O</span>RTAL</span>
+            <span className="tracking-wider">PORTAL</span>
           </span> 
         </h2>
       

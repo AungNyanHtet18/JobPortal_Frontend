@@ -7,7 +7,7 @@ import * as companyClient from "@/lib/actions/company/company.action"
 import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { ArrowRightIcon, Globe, MapPin, Phone } from "lucide-react"
+import { ArrowRightIcon, Globe, LocateFixed, MapPin, MapPinned, Phone, PhoneCall } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import Link from "next/link"
 
@@ -113,7 +113,7 @@ export default function CompanyDetailsComponent() {
                         <PageDetailComponent title="Contact" icon="Phone">
                             <div className="space-y-4 text-sm">
                                 <div className="flex gap-3">
-                                    <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                                    <PhoneCall className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.phone}</span>
                                 </div>
                             </div>
@@ -122,8 +122,8 @@ export default function CompanyDetailsComponent() {
 
                     <div className="grid md:grid-cols-2 gap-4">
                         <PageDetailComponent title="Location" icon="MapPin">
-                            <div className="flex gap-2">
-                                 <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
+                            <div className="flex gap-2 items-center">
+                                 <MapPinned className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                  <p className="text-sm leading-7 text-zinc-700">
                                     {details.location || "No location added."}
                                 </p>
@@ -160,10 +160,10 @@ export default function CompanyDetailsComponent() {
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-sm text-zinc-600">{job.jobLevel}</p>
                                                     <div className="flex flex-wrap gap-1">
-                                                        <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900 cursor-pointer">
+                                                        <Badge variant="outline" className="bg-zinc-900 text-white hover:bg-zinc-800 cursor-pointer">
                                                             {job.jobType}
                                                         </Badge>
-                                                        <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer ms-2">
+                                                        <Badge className="border-zinc-300 bg-white text-zinc-900 cursor-pointer ms-2">
                                                             {job.jobLocation}
                                                         </Badge>
                                                     </div>

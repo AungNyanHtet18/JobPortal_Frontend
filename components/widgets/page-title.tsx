@@ -25,7 +25,7 @@ export default function PageTitle({
                     <IconComponent icon={icon} className="size-7 text-gray-700"/>
                 </div>
                 <div>   
-                    <div className="text-xl font-medium">{title}</div>
+                    <div className="text-zinc-600 text-xl font-semibold tracking-wide">{title}</div>
                     {subTitle.length > 0 && 
                         <div className="flex gap-2">
                             {subTitle.map((item,index) =>
@@ -57,7 +57,7 @@ export default function PageTitle({
                     <IconComponent icon={icon} className="size-7 text-gray-700"/>
                 </div>
                 <div>   
-                    <div className="text-xl font-medium">{title}</div>
+                    <div className="text-zinc-600 text-xl font-semibold tracking-wide">{title}</div>
                     {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
                 </div>
 

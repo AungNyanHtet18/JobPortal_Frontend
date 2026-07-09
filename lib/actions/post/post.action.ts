@@ -57,3 +57,10 @@ export async function updatePost(id: number, formData: FormData) : Promise<Modif
 
     return await response.json() as ModificationResult<number>
 }
+
+export async function deletePost(id: number) : Promise<ModificationResult<string>> {
+    const response = await secureRequest(`post/${id}`, {
+        method: "DELETE"
+    })
+    return await response.json() as ModificationResult<string>
+}
