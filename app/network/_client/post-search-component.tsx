@@ -40,11 +40,12 @@ export default function PostSearchComponent() {
       searchPostList(searchKeyword)
     }, [])
 
-    async function searchPostList (keyword?: string) {
+    async function searchPostList(keyword?: string) {
         setLoading(true)
         await safeCall(async () => {
             const data = await searchPost(keyword)
             setPosts(data || [])
+            console.log(data);
         })
         setLoading(false)
     }
@@ -56,6 +57,7 @@ export default function PostSearchComponent() {
             setPreviewImage(URL.createObjectURL(file))
         }
     }
+
     const openCreateDialog = () => {
         form.reset({ content: "" })
         setEditingPostId(null)
@@ -93,7 +95,6 @@ export default function PostSearchComponent() {
             searchPostList(searchKeyword)
         })
     }
-
 
     async function deleteDialog (postId: number | null){
         if(postId != null) {
@@ -171,7 +172,7 @@ export default function PostSearchComponent() {
                         
                         <CardContent className="pt-2">
                             <p className="text-sm text-zinc-800 whitespace-pre-wrap leading-relaxed">
-                                {post.content}
+                                {post.content} 
                             </p>
                             {post.postPhoto && (
                                 <div className="mx-2 mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
@@ -184,11 +185,9 @@ export default function PostSearchComponent() {
                                 </div>
                             )}
                         </CardContent>
-
-                        <PostInteractionComponent postId={post.id} initialReactionCount={post.reactionCount} />
+                        <PostInteractionComponent postId={post.id} initialReactionCount={post.reactionCount} initialCommentCount={post.commentCount} userReacted={post.reacted}/>
                     </Card>
                 ))} 
-
             </div>
 
             <Form {...form}>

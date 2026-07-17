@@ -19,6 +19,7 @@ import InputComponent from "@/components/widgets/input-component"
 import ContentLayout from "@/components/widgets/content-layout"
 import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
 import FormsCheckBox from "@/components/fields/form-checkbox"
+import Loading from "@/components/widgets/loading"
 
 export default function JobEditComponent({jobId} : {jobId: string}) {
 
@@ -118,6 +119,11 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
 
         setIsSaving(false)
     }
+
+    if(isLoading) {
+        return <Loading />
+    }
+
      
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">

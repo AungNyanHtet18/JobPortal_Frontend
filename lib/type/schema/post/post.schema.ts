@@ -14,8 +14,10 @@ export type PostListItem = {
     accountPhoto: string | null;
     reactionCount: number;
     commentCount: number;
+    reacted: boolean;
 };
 
 export type PostSearch = {
     keyword?: string;
+    username?: string;
 };

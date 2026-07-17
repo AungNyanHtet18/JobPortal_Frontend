@@ -1,11 +1,18 @@
 'use server'
 
 import { secureRequest, secureSearch } from "@/lib"
+import { getLoginUser } from "@/lib/login-users"
 import { ModificationResult } from "@/lib/type"
 import { PostListItem, PostSearch } from "@/lib/type/schema/post/post.schema"
 
 export async function searchPost(keyword?: string) : Promise<PostListItem[]> {
+    const loginUser = await getLoginUser()
     const form: PostSearch = {keyword: keyword}
+    
+    if(loginUser) {
+       form.username = loginUser.email    
+    }
+    
     const response = await secureSearch('post', form)
     return await response.json() 
 }

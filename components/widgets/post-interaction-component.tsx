@@ -1,14 +1,13 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Heart, Loader2, MessageCircle, SendHorizontal, ThumbsUp } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { CardFooter } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
+import { Form } from "@/components/ui/form"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { createCommentPost, findCommentPost } from "@/lib/actions/post/post.comment.action"
 import { reactPost, unreactPost } from "@/lib/actions/post/post.react.action"
@@ -19,9 +18,11 @@ import FormsTextAreaInput from "../fields/form-textarea"
 type PostInteractionComponentProps = {
     postId: number
     initialReactionCount: number
+    initialCommentCount: number
+    userReacted: boolean
 }
 
-export default function PostInteractionComponent({postId, initialReactionCount}: PostInteractionComponentProps) {
+export default function PostInteractionComponent({postId, initialReactionCount, initialCommentCount, userReacted}: PostInteractionComponentProps) {
     const [commentOpen, setCommentOpen] = useState(false)
     const [commentLoading, setCommentLoading] = useState(false)
     const [commentSubmitting, setCommentSubmitting] = useState(false)
@@ -30,12 +31,33 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
     const [reactionCount, setReactionCount] = useState(initialReactionCount || 0)
     const [comments, setComments] = useState<CommentListItem[]>([])
 
+    useEffect(() => {
+       setReacted(userReacted) 
+    }, [])
+
+
     const commentForm = useForm<PostCommentForm>({
         resolver: zodResolver(PostCommentSchema),
         defaultValues: {
             comment: ""
         }
     })
+
+    async function toggleReact() {
+        setReactLoading(true)
+        await safeCall(async () => {
+            if(reacted) {
+                await unreactPost(postId)
+                setReacted(false)
+                setReactionCount(value => Math.max(0, value - 1))
+            } else {
+                await reactPost(postId)
+                setReacted(true)
+                setReactionCount(value => value + 1)
+            }
+        })
+        setReactLoading(false)
+    }
 
     async function toggleCommentBox() {
         //Find Comment List
@@ -55,22 +77,6 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
          if(nextOpen) {
             await loadComments()
         }
-    }
-
-    async function toggleReact() {
-        setReactLoading(true)
-        await safeCall(async () => {
-            if(reacted) {
-                await unreactPost(postId)
-                setReacted(false)
-                setReactionCount(value => Math.max(0, value - 1))
-            } else {
-                await reactPost(postId)
-                setReacted(true)
-                setReactionCount(value => value + 1)
-            }
-        })
-        setReactLoading(false)
     }
 
     async function submitComment(form: PostCommentForm) {
@@ -98,7 +104,12 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
                     type="button"
                     className="text-sm hover:text-zinc-900"
                     onClick={toggleCommentBox}>
-                    {`${comments.length} ${comments.length === 1 ? "comment" : "comments"}`}
+                    {
+                        comments.length > 0 ?
+                        `${comments.length} ${comments.length === 1 ? "comment" : "comments"}` :
+                        `${initialCommentCount} ${initialCommentCount > 1 ? "comments" : "comment"}`
+                    }
+                    
                 </button>
             </div>
 
@@ -112,8 +123,8 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
                         "flex-1 h-10 rounded-md cursor-pointer hover:bg-zinc-100",
                         reacted ? "text-blue-900 hover:text-blue-950" : "text-zinc-600 hover:text-zinc-900"
                     )}>
-                    {reactLoading ? <Loader2 className="size-5 mr-2 animate-spin" /> : <ThumbsUp className={cn("size-5 mr-2", reacted && "fill-blue-600 ")} />}
-                    {reacted ? "Liked" : "Like"}
+                    {reactLoading ? <Loader2 className="size-5 mr-2 animate-spin" /> : <Heart className={cn("size-5 mr-2",  reacted && "fill-blue-600 text-blue-600 ")} />}
+                    {reacted ? "Loved" : "Love"}
                 </Button>
 
                 <Button
@@ -148,7 +159,7 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
                         </form>
                     </Form>
 
-                    <div className="mt-4 space-y-3">
+                    <div className="mt-4 space-y-3 h-[250px] overflow-y-scroll">
                         {commentLoading && (
                             <div className="flex items-center justify-center py-5 text-sm text-zinc-500">
                                 <Loader2 className="mr-2 size-4 animate-spin" />
@@ -168,7 +179,7 @@ export default function PostInteractionComponent({postId, initialReactionCount}:
                                         {getInitials(comment.accountName)}
                                     </AvatarFallback>
                                 </Avatar>
-                                <div className="max-w-[calc(100%-2.5rem)] rounded-2xl border border-zinc-100 bg-white px-3 py-2 shadow-sm">
+                                <div className="max-w-[calc(75%-20px)] rounded-2xl border border-zinc-100 bg-white px-3 py-2 shadow-sm">
                                     <p className="text-xs font-semibold text-zinc-900">{comment.accountName}</p>
                                     <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-700">{comment.comment}</p>
                                 </div>

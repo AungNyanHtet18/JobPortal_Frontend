@@ -33,13 +33,13 @@ export default function RootLayout({
     <html lang="en" className={roboto.className}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
-
         <main className="w-full">
           {children}
         </main>
           <Toaster position="bottom-right"/>
       </body>
     </html>
-  );
+  )
 }
