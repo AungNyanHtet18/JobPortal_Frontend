@@ -129,8 +129,8 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                         <ContentLayout title="Summary" icon={<BriefcaseBusiness className="size-5 text-zinc-900"/>}>
                             <div className="space-y-4">
                                 <div className="flex aspect-[4/5] w-full flex-col items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center">
-                                    <div className="flex size-10  items-center justify-center rounded-lg bg-zinc-950 text-white">
-                                        <BriefcaseBusiness className="size-8" />
+                                    <div className="flex w-50 h-50 items-center justify-center rounded-lg bg-zinc-950 text-white">
+                                        <BriefcaseBusiness className="size-25" />
                                     </div>
                                     <p className="mt-4 text-sm font-medium text-zinc-950">New company job post</p>
                                     <p className="mt-1 text-xs leading-5 text-zinc-500">Add the position, level, work type, salary, and description applicants need.</p>

@@ -12,6 +12,8 @@ export type PostListItem = {
     postPhoto: string | null;
     accountName: string;
     accountPhoto: string | null;
+    reactionCount: number;
+    commentCount: number;
 };
 
 export type PostSearch = {

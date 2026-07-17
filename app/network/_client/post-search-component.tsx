@@ -3,21 +3,22 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Heart, MessageCircle, MoreHorizontal, Pencil, Search, Send, Share2, SquarePen, Trash2 } from "lucide-react"
+import { ImageIcon, MessageCircle, Pencil, Search, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
 import DialogComponent from "@/components/widgets/dialog-widget"
 import Loading from "@/components/widgets/loading"
+import PostInteractionComponent from "@/components/widgets/post-interaction-component"
 import { searchPost, createPost, updatePost, deletePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
 import {  getAccountPhoto, getPostPhotoForPostList, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import IconComponent from "@/components/widgets/icon-component"
 import PageTitle from "@/components/widgets/page-title"
+import { Label } from "@/components/ui/label"
 
 export default function PostSearchComponent() {
     const [posts, setPosts] = useState<PostListItem[]>([])
@@ -39,6 +40,15 @@ export default function PostSearchComponent() {
       searchPostList(searchKeyword)
     }, [])
 
+    async function searchPostList (keyword?: string) {
+        setLoading(true)
+        await safeCall(async () => {
+            const data = await searchPost(keyword)
+            setPosts(data || [])
+        })
+        setLoading(false)
+    }
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0]
@@ -46,17 +56,6 @@ export default function PostSearchComponent() {
             setPreviewImage(URL.createObjectURL(file))
         }
     }
-
-    async function searchPostList (keyword?: string) {
-        setLoading(true)
-        await safeCall(async () => {
-            const data = await searchPost(keyword)
-            console.log(data);
-            setPosts(data || [])
-        })
-        setLoading(false)
-    }
-
     const openCreateDialog = () => {
         form.reset({ content: "" })
         setEditingPostId(null)
@@ -77,6 +76,7 @@ export default function PostSearchComponent() {
         await safeCall(async () => {
             const formData = new FormData()
             formData.append("form", JSON.stringify(form))
+            
             if (selectedImage) {
                 formData.append("file", selectedImage)
             }
@@ -112,8 +112,7 @@ export default function PostSearchComponent() {
     }
 
     return (
-        <div className="mx-auto max-w-3xl space-y-6 pb-10">
-            
+        <div className="mx-auto max-w-2xl space-y-6 pb-10">
             <div className="bg-white p-4 rounded-xl shadow-sm border border-zinc-100 space-y-3">
                 <div className="flex md:flex-row flex-col gap-4 justify-between items-center">
                     <PageTitle icon="Podcast" title="Post List" description="Share your thoughts with the community.What's on your mind?"/>
@@ -170,12 +169,12 @@ export default function PostSearchComponent() {
                             </Button>
                         </CardHeader> 
                         
-                        <CardContent className="p-4 pt-2">
+                        <CardContent className="pt-2">
                             <p className="text-sm text-zinc-800 whitespace-pre-wrap leading-relaxed">
                                 {post.content}
                             </p>
                             {post.postPhoto && (
-                                <div className="mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
+                                <div className="mx-2 mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
                                     <img 
                                         src={getPostPhotoForPostList(post.postPhoto)} 
                                         alt="Post attachment" 
@@ -186,24 +185,7 @@ export default function PostSearchComponent() {
                             )}
                         </CardContent>
 
-                        <div className="px-4 pt-5 border-t border-zinc-100 flex items-center justify-between text-zinc-500">
-                            <div className="flex gap-1 items-center">
-                                <Heart className="size-5 fill-zinc-400 text-zinc-400" />
-                                <span className="text-sm">12</span>
-                            </div>
-                            <div className="flex gap-3 text-sm">
-                                <span>3 comments</span>
-                            </div>
-                        </div>
-
-                        <CardFooter className="p-1 border-t border-zinc-100 flex gap-1">
-                            <Button variant="ghost" className="flex-1 h-10 rounded-md text-zinc-600 cursor-pointer hover:text-zinc-900 hover:bg-zinc-100 ">
-                                <Heart className="size-5 mr-2" /> Like
-                            </Button>
-                            <Button variant="ghost" className="flex-1 text-zinc-600 h-10 rounded-md cursor-pointer hover:text-zinc-900 hover:bg-zinc-100">
-                                <MessageCircle className="size-5 mr-2" /> Comment
-                            </Button>
-                        </CardFooter>
+                        <PostInteractionComponent postId={post.id} initialReactionCount={post.reactionCount} />
                     </Card>
                 ))} 
 
@@ -246,9 +228,11 @@ export default function PostSearchComponent() {
 
                             <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
                                 <div className="flex gap-2">
-                                    <Button type="button" variant="outline" size="sm" className="text-zinc-600 rounded-full" onClick={() => document.getElementById('post-image-upload')?.click()}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                                        Add Photo
+                                    <Button type="button" variant="outline" size="sm" className="text-zinc-600 rounded-full" asChild>
+                                        <Label htmlFor="post-image-upload" className="cursor-pointer">
+                                            <ImageIcon className="size-4" />
+                                             Add Photo
+                                        </Label>
                                     </Button>
                                     <input 
                                         id="post-image-upload" 
