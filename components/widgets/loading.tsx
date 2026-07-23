@@ -1,6 +1,6 @@
 import { BriefcaseBusiness, Building2, Loader2 } from "lucide-react"
 
-export default function Loading() {
+export default function Loading({content} : {content : string}) {
      return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950" aria-busy="true" aria-live="polite">
             <div className="flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
@@ -10,7 +10,7 @@ export default function Loading() {
                     </div>
                     <div>
                         <p className="text-base font-semibold text-zinc-950">Loading workspace</p>
-                        <p className="text-sm text-zinc-500">Preparing your latest profile data.</p>
+                        <p className="text-sm text-zinc-500">{content}</p>
                     </div>
                 </div>
                 <div className="h-9 w-32 animate-pulse rounded-md bg-zinc-100" />

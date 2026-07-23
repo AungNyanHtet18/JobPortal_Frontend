@@ -3,7 +3,7 @@ import * as lucideIcons from 'lucide-react'
 export type IconType =  keyof typeof lucideIcons
 
 export type OptionItem = {
-     key: string
+     key: string 
      value: string
 }
 
@@ -13,11 +13,12 @@ export const RoleOptions: OptionItem[] = [
 ] 
 
 export const JobLevel: OptionItem[] = [
-     {key: "Intern Level", value: "Intern Level"},
-     {key: "Entry Level", value: "Entry Level"},
-     {key: "Junior Level", value: "Junior Level"},
-     {key: "Senior Level", value: "Senior Level"},
-     {key: "Lead Level", value: "Lead Level"}
+     {key: "Intern", value: "Intern"},
+     {key: "Entry", value: "Entry Level"},
+     {key: "Junior", value: "Junior Level"},
+     {key: "Mid", value: "Mid Level"},
+     {key: "Senior", value: "Senior Level"},
+     {key: "Lead", value: "Lead Level"}
 ]
 
 export const JobType: OptionItem[] = [
@@ -115,3 +116,13 @@ export const ApplicationStatusType: OptionItem[] = [
    {key: "HIRED", value: "HIRED"},
    {key: "REJECTED", value: "REJECTED"}
 ];
+
+
+export const months: OptionItem[] = [
+     ...Array.from({ length: 12 }, (_, i) => ({
+        key: String(i + 1),
+        value: new Date(0, i).toLocaleString("default", {
+            month: "long"
+        })
+    }))
+]
