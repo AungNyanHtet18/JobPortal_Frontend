@@ -1,4 +1,5 @@
 import z from "zod";
+import { PageSearch } from "../..";
 
 export type ApplicantionStatus =  'APPLIED' | 
                                   'REVIEWING' | 
@@ -54,7 +55,29 @@ export const ApplicationStatusSchema = z.object({
        note: z.string().optional()
 })
 
-export type ApplicationStatusForm = z.infer<typeof ApplicationStatusSchema  >
+export type ApplicationStatusForm = z.infer<typeof ApplicationStatusSchema >
+
+export type JobSearch = {
+   jobLevel?: string,
+   jobType?: string,
+   deleted?: string,
+   keyword?: string
+} & PageSearch
+
+export type JobListItem = {
+   jobId: number
+   positionName: string
+   maxSalaryRange: number,
+   minSalaryRange: number,
+   jobLevel: string
+   jobType: string
+   companyName: string
+   clientName: string
+   jobLocation: string
+   deleted: boolean
+   profilePhoto: string
+   createAt: string
+}
 
 export type JobDetails = {
      jobId: number,

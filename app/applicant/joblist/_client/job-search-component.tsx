@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
-import { JobListItem, JobSearch } from "@/lib/type/schema/applicant/applicant.schema"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
 import {  formatDateTime, getCompanyPhoto, safeCall } from "@/lib/utils"
-import { Briefcase, Building2, Calendar,  CheckCircle2Icon, DollarSign, Eye, EyeIcon, Heart, MapPin, Search, XCircle } from "lucide-react"
+import { Briefcase, Building2, Calendar,  CheckCircle2Icon, Eye, Heart, MapPin, Search, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -22,6 +21,7 @@ import PagerWidget from "@/components/widgets/pager-widget"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import Loading from "@/components/widgets/loading"
+import { JobListItem, JobSearch } from "@/lib/type/schema/job/job.schema"
 
 export default function JobSearchComponent() {
 
@@ -132,7 +132,7 @@ export default function JobSearchComponent() {
     }
 
     if(loading) {
-       return <Loading/>
+       return <Loading content="Preparing for job lists"/>
     }
 
     return (

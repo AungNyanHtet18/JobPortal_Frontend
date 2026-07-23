@@ -181,26 +181,3 @@ export type ApplicantLanguageDetails = {
       languageName: string,
       languageLevel: string
 }
-
-
-export type JobSearch = {
-   jobLevel?: string,
-   jobType?: string,
-   deleted?: string,
-   keyword?: string
-} & PageSearch
-
-export type JobListItem = {
-   jobId: number
-   positionName: string
-   maxSalaryRange: number,
-   minSalaryRange: number,
-   jobLevel: string
-   jobType: string
-   companyName: string
-   clientName: string
-   jobLocation: string
-   deleted: boolean
-   profilePhoto: string
-   createAt: string
-}
