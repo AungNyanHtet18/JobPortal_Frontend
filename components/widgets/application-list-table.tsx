@@ -29,6 +29,7 @@ const getStatusBadgeColor = (status: ApplicantionStatus) => {
 }
 
 export function ApplicationListTable({ applications, pageInfo, loading, onPageChange }: ApplicationListTableProps) {
+       
     if (loading) {
         return (
             <Card>
@@ -52,9 +53,12 @@ export function ApplicationListTable({ applications, pageInfo, loading, onPageCh
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="size-5"/>
-                     Job Applications
+                <CardTitle>
+                    <div className ="flex items-center gap-2">
+                        <TrendingUp className="size-5"/>
+                         Job Applications
+                    </div>
+        
                 </CardTitle>
             </CardHeader>
 

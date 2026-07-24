@@ -10,12 +10,16 @@ export default function PageTitle({
     title,
     subTitle,
     description,
-    editUrl} :  
+    editUrl,
+    currentRoute,
+    nextRoute} :  
     {icon : IconType,
      title: string,
      subTitle?: string[],
      description?: string,
-     editUrl?: string  
+     editUrl?: string,
+     currentRoute?: string,
+     nextRoute?: string
     }) {
 
     if(subTitle) {
@@ -46,6 +50,18 @@ export default function PageTitle({
                        </Button>
                     </div>
                 }
+
+                {currentRoute && nextRoute &&
+                    <div className="ml-auto flex space-x-1">
+                       <div className="text-indigo-600">
+                         {currentRoute}
+                       </div> 
+                       <div className="text-zinc-8  00">/</div>
+                       <div className="text-zinc-500">
+                         {nextRoute}
+                       </div> 
+                    </div>
+                }
         </header>
         ) 
     }
@@ -70,6 +86,18 @@ export default function PageTitle({
                        </Button>
                     </div>
                 }
+
+                {currentRoute && nextRoute &&
+                    <div className="ml-auto flex space-x-1">
+                       <div className="text-indigo-600">
+                         {currentRoute}
+                       </div> 
+                       <div className="text-zinc-8  00">/</div>
+                       <div className="text-zinc-500">
+                         {nextRoute}
+                       </div> 
+                    </div>
+                } 
         </header>
     )
 }

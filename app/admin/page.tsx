@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { Users, Briefcase, FileText, UserPlus } from 'lucide-react'
+import { Users, Briefcase, FileText, UserPlus, UsersRound, BriefcaseBusiness, FileCheck2, User2, FileArchive, Files, FolderCheck, ContactRound, Building2, Rocket, UserCog, UserCog2, UserCheck } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { getDashboardYears, getJobPostProgressTrends, getUserRegistrationTrends, getApplicationList, getMostAppliedJobs, getDashboardStats } from '@/lib/actions/admin/dashboard.action'
@@ -12,7 +12,7 @@ import { BarChartComponent } from '@/components/widgets/bar-chart-component'
 import Loading from '@/components/widgets/loading'
 import FormSelect from '@/components/fields/form-select'
 import { months } from '@/lib/type/type'
-import { DashboardForm, ApplicationListItem, MostAppliedJobListItem, ApplicationSearch} from '@/lib/type/schema/admin/dashboard.schema'
+import { DashboardForm, ApplicationListItem, MostAppliedJobListItem, ApplicationSearch, DashboardStats} from '@/lib/type/schema/admin/dashboard.schema'
 import { PageInfo } from '@/lib/type'
 import { StatisticCard } from '@/components/widgets/statistic-card'
 import { ApplicationListTable } from '@/components/widgets/application-list-table'
@@ -21,11 +21,11 @@ import { MostAppliedJobs } from '@/components/widgets/most-applied-jobs'
 export default function AdminPage() {
     const [years, setYears] = useState<number[]>([])
     const [jobPostData, setJobPostData] = useState<{ date: string; value: number }[]>([])
-    const [userRegData, setUserRegData] = useState<{ date: string; value: number }[]>([])
+    const [userRegisterData, setUserRegisterData] = useState<{ date: string; value: number }[]>([])
     const [applications, setApplications] = useState<ApplicationListItem[] | undefined>([])
     const [pageInfo, setPageInfo] = useState<PageInfo | undefined>()
     const [mostAppliedJobs, setMostAppliedJobs] = useState<MostAppliedJobListItem[] | undefined>([])
-    const [stats, setStats] = useState({ totalUsers: 0, totalJobs: 0, totalApplications: 0 })
+    const [stats, setStats] = useState<DashboardStats>({ totalUsers: 0, totalJobs: 0, totalApplications: 0,  totalPosts: 0 })
     const [loading, setLoading] = useState(true)
     const [applicationsLoading, setApplicationsLoading] = useState(false)
 
@@ -65,13 +65,13 @@ export default function AdminPage() {
         }
 
         await safeCall(async () => {
-            const [yearsList, jobPostProgress, userRegTrends, applications, mostAppliedJobs, dashboardStats] = await Promise.all([
+            const [dashboardStats, yearsList, jobPostProgress, userRegTrends, applications, mostAppliedJobs] = await Promise.all([
+                getDashboardStats(),
                 getDashboardYears(),
                 getJobPostProgressTrends(requestData),
                 getUserRegistrationTrends(requestData),
                 getApplicationList(applicationForm.getValues()),
-                getMostAppliedJobs(),
-                getDashboardStats()
+                getMostAppliedJobs()
             ])
 
             setYears(yearsList.length ? yearsList : [new Date().getFullYear()])
@@ -81,17 +81,17 @@ export default function AdminPage() {
                 value: Number(value)
             }))
 
-            const userRegArray = Object.entries(userRegTrends).map(([date, value]) => ({
+            const userRegisterArray = Object.entries(userRegTrends).map(([date, value]) => ({
                 date,
                 value: Number(value)
             }))
 
+            setStats(dashboardStats.id)
             setJobPostData(jobPostArray)
-            setUserRegData(userRegArray)
+            setUserRegisterData(userRegisterArray)
             setApplications(applications.list)
             setPageInfo(applications.pageInfo)
             setMostAppliedJobs(mostAppliedJobs)
-            setStats(dashboardStats)
         })
 
         setLoading(false)
@@ -120,10 +120,10 @@ export default function AdminPage() {
     return (
         <div className="space-y-5 pb-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatisticCard title="Total Users"  value={stats.totalUsers}  icon={Users} color="blue" />
-                <StatisticCard title="Total Jobs" value={stats.totalJobs} icon={Briefcase} color="green" />
-                <StatisticCard title="Total Applications" value={stats.totalApplications} icon={FileText} color="purple" />
-                <StatisticCard title="New Registrations" value={userRegData.reduce((acc, curr) => acc + curr.value, 0)} icon={UserPlus} color="orange" />
+                <StatisticCard title="Total Users"  value={stats.totalUsers}  icon={UsersRound} color="blue" />
+                <StatisticCard title="Total Jobs" value={stats.totalJobs} icon={Rocket} color="zinc" />
+                <StatisticCard title="Total Applications" value={stats.totalApplications} icon={FolderCheck} color="purple" />
+                <StatisticCard title="New Registrations" value={stats.totalPosts} icon={ContactRound} color="orange" />
             </div>
 
             <div className='flex justify-end'>
@@ -145,7 +145,7 @@ export default function AdminPage() {
 
                 <Card className="p-6">
                     <CardContent className="p-0">
-                        <BarChartComponent data={userRegData} title="User Registration Trends" />
+                        <BarChartComponent data={userRegisterData} title="User Registration Trends" />
                     </CardContent>
                 </Card>
             </div>

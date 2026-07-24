@@ -62,7 +62,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
         const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if (!details) {
-        return <Loading />
+        return <Loading content="Loading for fetching applicant details " />
     }
         
         return (

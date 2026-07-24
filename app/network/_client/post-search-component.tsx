@@ -109,7 +109,7 @@ export default function PostSearchComponent() {
     }
 
     if (loading && posts.length === 0) {
-        return <Loading />
+        return <Loading content="Initializing post feed" />
     }
 
     return (
@@ -128,8 +128,7 @@ export default function PostSearchComponent() {
                             placeholder="Search posts" 
                             className="pl-9 bg-zinc-50  focus-visible:ring-zinc-200"
                             value={searchKeyword}
-                            onChange={(e) => setSearchKeyword(e.target.value)}
-                        />
+                            onChange={(e) => setSearchKeyword(e.target.value)}/>
                         <Button type="submit" variant="ghost" className="ml-2 font-medium  hover:bg-zinc-400 hover:text-zinc-50">Search</Button>
                     </form>
                     <Button onClick={openCreateDialog} className="w-full sm:w-auto shrink-0 bg-zinc-900 hover:bg-zinc-800 text-white">

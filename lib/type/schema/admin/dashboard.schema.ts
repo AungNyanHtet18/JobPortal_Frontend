@@ -50,9 +50,8 @@ export type DashboardStats = {
     totalUsers: number
     totalJobs: number
     totalApplications: number
+    totalPosts: number
 }
-
-
 
 export const applicationDummyData: PageResult<ApplicationListItem> = {
     list: [

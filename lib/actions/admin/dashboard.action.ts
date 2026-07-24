@@ -1,8 +1,8 @@
 'use server'
 
 import { secureSearch } from "@/lib"
-import { PageResult } from "@/lib/type"
-import { YearMonthData, UserRegistrationTrend, JobPostProgressTrend, ApplicationListItem, MostAppliedJobListItem, ApplicationSearch, Gender, applicationDummyData} from "@/lib/type/schema/admin/dashboard.schema"
+import { ModificationResult, PageResult } from "@/lib/type"
+import { YearMonthData, UserRegistrationTrend, JobPostProgressTrend, ApplicationListItem, MostAppliedJobListItem, ApplicationSearch, Gender, applicationDummyData, DashboardStats} from "@/lib/type/schema/admin/dashboard.schema"
 
 export async function getDashboardYears(): Promise<number[]> {
     const response = await secureSearch('admin/dashboard/job/years')
@@ -20,9 +20,8 @@ export async function getUserRegistrationTrends(data: YearMonthData): Promise<Us
 }
 
 export async function getApplicationList(form: ApplicationSearch): Promise<PageResult<ApplicationListItem>> {
-    // const response = await secureSearch('admin/applicationList', form)
-    // return await response.json() as PageResult<ApplicationListItem>
-    return await applicationDummyData
+     const response = await secureSearch('admin/applicationList', form)
+     return await response.json() as PageResult<ApplicationListItem>
 }
 
 export async function getMostAppliedJobs(): Promise<MostAppliedJobListItem[]> {
@@ -30,13 +29,7 @@ export async function getMostAppliedJobs(): Promise<MostAppliedJobListItem[]> {
     return await response.json() as MostAppliedJobListItem[]
 }
 
-// Get dummy stats
-export async function getDashboardStats(): Promise<{ totalUsers: number, totalJobs: number, totalApplications: number }> {
-    // Since backend might not have this, let's fetch some data and calculate
-    // For now, let's return dummy data, or you can fetch from respective endpoints
-    return {
-        totalUsers: 1234,
-        totalJobs: 567,
-        totalApplications: 8901
-    }
+export async function getDashboardStats(): Promise<ModificationResult<DashboardStats>> {
+   const response = await secureSearch('admin/dashboard/stats')
+   return await response.json() as ModificationResult<DashboardStats>
 }
