@@ -1,7 +1,8 @@
+import AdminNavigation from "@/components/widgets/admin-navigation";
 import ApplicantNavigation from "@/components/widgets/applicant-navigation";
 import CompanyNavigation from "@/components/widgets/company-navigation";
 import { findByCompany } from "@/lib/actions/company/company.action";
-import { getCompanyId } from "@/lib/login-users";
+import { getCompanyId, getLoginUser } from "@/lib/login-users";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,11 +13,13 @@ export const metadata: Metadata = {
 
 export default async function JobLayout({children} : {children: React.ReactNode}) {
     
-    const companyId = await getCompanyId()
-
+    const loginUsers = await getLoginUser()
+    
     return (
         <>
-            {companyId ?  <CompanyNavigation/> : <ApplicantNavigation/> }
+            {loginUsers.role === 'CompanyAccount' ?  
+            <CompanyNavigation/> : <ApplicantNavigation/>}
+            
             <main className="px-4 py-4 bg-gray-50 min-h-screen">
                 {children}
             </main>

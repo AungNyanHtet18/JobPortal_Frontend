@@ -46,7 +46,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                         })
                     } else {
                         const result = applicantId ? await applicantClient.getApplicantById(applicantId) : await applicantClient.findByApplicantName()
-
+                        
                         if (result !== null) {
                             setDetails(result)
                             setProfileImageUrl(await applicantClient.getApplicantProfileImageUrl(result.profileImage))
@@ -59,10 +59,9 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
             load()
         }, [applicantId])
 
-        const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if (!details) {
-        return <Loading content="Loading for fetching applicant details " />
+        return <Loading content="Loading Applicant Details" />
     }
         
         return (
@@ -72,17 +71,15 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                             <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
                                 <div className="flex aspect-[4/5] items-center justify-center bg-zinc-100">
-                                    {visibleProfileImage ? (
-                                        <img
-                                            src={profileImageUrl}
-                                            alt={`${details.name} profile`}
-                                            className="size-full object-cover"
-                                            onError={() => setProfileImageFailed(true)}
-                                        />
-                                    ) : (
+                                    {profileImageFailed ? (
                                         <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
                                             {getInitials(details.name)}
                                         </div>
+                                    ):(<img
+                                        src={profileImageUrl}
+                                        alt={`${details.name} profile`}
+                                        className="size-full object-cover"
+                                        onError={() => setProfileImageFailed(true)}/>
                                     )}
                                 </div>
                             </div>

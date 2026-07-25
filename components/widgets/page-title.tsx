@@ -53,10 +53,10 @@ export default function PageTitle({
 
                 {currentRoute && nextRoute &&
                     <div className="ml-auto flex space-x-1">
-                       <div className="text-indigo-600">
+                       <div className="text-slate-500 font-bold">
                          {currentRoute}
                        </div> 
-                       <div className="text-zinc-8  00">/</div>
+                       <div className="text-zinc-800">/</div>
                        <div className="text-zinc-500">
                          {nextRoute}
                        </div> 
@@ -89,7 +89,7 @@ export default function PageTitle({
 
                 {currentRoute && nextRoute &&
                     <div className="ml-auto flex space-x-1">
-                       <div className="text-indigo-600">
+                       <div className="text-slate-500 font-bold">
                          {currentRoute}
                        </div> 
                        <div className="text-zinc-8  00">/</div>

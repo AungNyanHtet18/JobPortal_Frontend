@@ -45,7 +45,6 @@ export default function PostSearchComponent() {
         await safeCall(async () => {
             const data = await searchPost(keyword)
             setPosts(data || [])
-            console.log(data);
         })
         setLoading(false)
     }
@@ -174,10 +173,8 @@ export default function PostSearchComponent() {
                                 {post.content} 
                             </p>
                             {post.postPhoto && (
-                                <div className="mx-2 mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
-                                    <img 
-                                        src={getPostPhotoForPostList(post.postPhoto)} 
-                                        alt="Post attachment" 
+                                <div className=" mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
+                                    <img src={getPostPhotoForPostList(post.postPhoto)}  alt="Post attachment" 
                                         className="w-full max-h-[500px] object-contain"
                                         onError={(e) => (e.currentTarget.style.display = 'none')}
                                     />

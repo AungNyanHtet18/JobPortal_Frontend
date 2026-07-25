@@ -7,11 +7,11 @@ import * as companyClient from "@/lib/actions/company/company.action"
 import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { ArrowRightIcon, Globe, LocateFixed, MapPin, MapPinned, Phone, PhoneCall } from "lucide-react"
+import { ArrowRightIcon, Globe, MapPinned, Phone, PhoneCall } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import Link from "next/link"
 
-export default function CompanyDetailsComponent() {
+export default function CompanyDetailsComponent({companyId} : {companyId?: string}) {
     const [details, setDetails] = useState<CompanyDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState<boolean>(false)
@@ -38,7 +38,8 @@ export default function CompanyDetailsComponent() {
                         uploadedJob: []
                     })
                 }else {
-                 const result = await companyClient.findByCompanyName()
+
+                 const result = companyId ? await companyClient.getCompanyById(companyId)  : await companyClient.findByCompanyName()
     
                     if(result) {
                         setDetails(result)
@@ -52,10 +53,8 @@ export default function CompanyDetailsComponent() {
         load()
     }, [])
 
-    const visibleProfileImage = profileImageUrl && !profileImageFailed
-
     if(!details) {
-        return <Loading />
+        return <Loading content="Loading Company Details" />
     }
 
     return (
@@ -65,18 +64,18 @@ export default function CompanyDetailsComponent() {
                     <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
                         <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
                             <div className="flex aspect-[4/5] items-center justify-center bg-zinc-100">
-                                {visibleProfileImage ? (
-                                    <img
+                                {profileImageFailed ? 
+                                    (
+                                        <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
+                                            {getInitials(details.companyName)}
+                                        </div>
+                                    ) :
+                                    (<img
                                         src={profileImageUrl}
                                         alt={`${details.companyName} profile`}
                                         className="size-full object-cover"
-                                        onError={() => setProfileImageFailed(true)}
-                                    />
-                                ) : (
-                                    <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
-                                        {getInitials(details.companyName)}
-                                    </div>
-                                )}
+                                        onError={() => setProfileImageFailed(true)}/>
+                                    )}
                             </div>
                         </div>
 

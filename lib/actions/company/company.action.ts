@@ -60,6 +60,11 @@ export async function updateCompany(id: string | number, formData: FormData): Pr
    return result
 }
 
+export async function getCompanyById(id: string | number): Promise<CompanyDetails | null> {
+     const response = await secureSearch(`company/id/${id}`)
+     return await response.json().catch(() => null)
+}
+
 export async function findByCompanyName() : Promise<CompanyDetails | null> {
    const loginUser = await getLoginUser()
    const response = await secureSearch(`company/${loginUser.email}`)

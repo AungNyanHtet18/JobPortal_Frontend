@@ -17,6 +17,7 @@ import { PageInfo } from '@/lib/type'
 import { StatisticCard } from '@/components/widgets/statistic-card'
 import { ApplicationListTable } from '@/components/widgets/application-list-table'
 import { MostAppliedJobs } from '@/components/widgets/most-applied-jobs'
+import PageTitle from '@/components/widgets/page-title'
 
 export default function AdminPage() {
     const [years, setYears] = useState<number[]>([])
@@ -119,6 +120,8 @@ export default function AdminPage() {
 
     return (
         <div className="space-y-5 pb-8">
+            <PageTitle icon="LayoutDashboardIcon" title="Dashboard" currentRoute ="Home" nextRoute="Dashboard"/>
+                  
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatisticCard title="Total Users"  value={stats.totalUsers}  icon={UsersRound} color="blue" />
                 <StatisticCard title="Total Jobs" value={stats.totalJobs} icon={Rocket} color="zinc" />
