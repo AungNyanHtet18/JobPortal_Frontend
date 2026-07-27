@@ -224,7 +224,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
 
                         <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
                             <FormsInput control={form.control} path="location" label="Location For Job" placeHolder="Enter Location for Job."/>
-                            <FormsCheckBox control={form.control} path="deleted" label="Archived Job Posting" description="Mark this job posting as apporved" className="mt-4"  />
+                            <FormsCheckBox control={form.control} path="deleted" label="Archived Job Posting" description="Mark this job posting as approved" className="mt-4"  />
                         </InputComponent>
 
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">

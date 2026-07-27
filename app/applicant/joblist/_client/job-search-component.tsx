@@ -239,7 +239,7 @@ export default function JobSearchComponent() {
                            <Badge className="mt-1 bg-slate-800 text-white text-xs py-1">
                             <CheckCircle2Icon className="mr-1 size-3" />Open to Apply
                           </Badge>}
-                         <span className="flex items-center gap-1 text-xs text-zinc-500"><Calendar className="size-4"/> {formatDateTime(job.createAt)}</span>                          
+                         <span className="flex items-center gap-1 text-xs text-zinc-500"><Calendar className="size-4"/> {formatDateTime(job.createdAt)}</span>                          
                       </div>
                     </CardFooter>
                   </Card>

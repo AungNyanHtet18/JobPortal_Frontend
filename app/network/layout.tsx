@@ -1,6 +1,7 @@
 import ApplicantNavigation from "@/components/widgets/applicant-navigation";
 import CompanyNavigation from "@/components/widgets/company-navigation";
-import { getCompanyId } from "@/lib/login-users";
+import { getCompanyId, getLoginUser } from "@/lib/login-users";
+import { LoginUser } from "@/lib/type/schema/auth.schema";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,13 +11,13 @@ export const metadata: Metadata = {
 
 export default async function NetworkLayout({children} : {children: React.ReactNode}) {
     
-    const companyId = await getCompanyId()
+    const loginUser:LoginUser = await getLoginUser()
 
     return (
         <>
-            {companyId ?  <CompanyNavigation/> : <ApplicantNavigation/> }
+            {loginUser.role === 'Applicant' ? <ApplicantNavigation/> : <CompanyNavigation/> }
             <main className="px-4 py-4 bg-gray-50 min-h-screen">
-                {children}
+               {children}
             </main>
         </>
     )

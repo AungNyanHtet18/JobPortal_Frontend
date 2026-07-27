@@ -19,6 +19,5 @@ export default async function ApplicantDetailsPage({params} : {params: Promise<{
         </div>
         <ApplicantDetailsComponent applicantId={id}/>
        </>
-        
    )
 }

@@ -58,8 +58,9 @@ export default function CompanyCreateComponent() {
         }
 
         await safeCall(async () =>  {
-            await Company.createCompany(payload)
-            router.replace("/companyaccount/detail")
+           await Company.createCompany(payload)
+           console.log("Hello");
+           router.replace("/companyaccount/detail")
         })
 
         setIsSaving(false)

@@ -22,6 +22,8 @@ export async function createCompany(formData: FormData): Promise<ModificationRes
       payload.append("file", file)
    }
 
+   console.log(payload);
+
    const response = await secureRequest("company", {
       method: "POST",
       body: payload
