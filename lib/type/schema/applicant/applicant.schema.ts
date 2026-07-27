@@ -131,40 +131,40 @@ export type ApplicantDetails = {
      name: string
      email: string
      gender: string | undefined
-     professionalSummary: string,
-     contactDetail: string,
-     address: string,
-     experience?: ApplicantExperienceDetails[],
-     socialLink?: ApplicantSocialLinkDetails[],
-     education?:  ApplicantEducationDetails[],
-     careerRole: ApplicantCareerRoleDetails[],
-     skill?: ApplicantSkillDetails[],
-     language?: ApplicantLanguageDetails[],
-     profileImage: string | null,
-     resume: string | null,
-     cvForm: string | null,
+     professionalSummary: string
+     contactDetail: string
+     address: string
+     experience?: ApplicantExperienceDetails[]
+     socialLink?: ApplicantSocialLinkDetails[]
+     education?:  ApplicantEducationDetails[]
+     careerRole: ApplicantCareerRoleDetails[]
+     skill?: ApplicantSkillDetails[]
+     language?: ApplicantLanguageDetails[]
+     profileImage: string | null
+     resume: string | null
+     cvForm: string | null
 }
 
 
 export type ApplicantExperienceDetails = {
-     id: number,
-     companyName: string,
-     position: string,
-     joinedDate: string,
-     leftDate: string | null,
-     currentlyWorking: boolean,
+     id: number
+     companyName: string
+     position: string
+     joinedDate: string
+     leftDate: string | null
+     currentlyWorking: boolean
      experienceDescription: string
 }
 
 export type ApplicantSocialLinkDetails = {
-     platform: string,
+     platform: string
      url: string
 }
 
 export type ApplicantEducationDetails = {
-     qualificationType: string,
-     qualificationName: string,
-     institutionName: string,
+     qualificationType: string
+     qualificationName: string
+     institutionName: string
      completionDate: string
 }
 
@@ -173,7 +173,7 @@ export type ApplicantCareerRoleDetails = {
 }
 
 export type ApplicantSkillDetails = {
-      skillType: string,
+      skillType: string
       skillName: string
 }
 

@@ -24,26 +24,26 @@ export const CompanyPayload = (form: CompanyForm) => {
 }
 
 export type UploadedJob = {
-      postionName : string,
-      maxSalary : number,
-      minSalary: number,
-      jobId: number,
-      jobLevel : string,
-      jobType : string,
+      postionName : string
+      maxSalary : number
+      minSalary: number
+      jobId: number
+      jobLevel : string
+      jobType : string
       jobLocation : string
 }
 
 
 export type CompanyDetails = {
-      id: number | string,
-      companyName : string ,
-      companyEmail: string,
-      industryType: string,
-      location : string,
-      phone : string,
-      websiteUrl : string,
+      id: number | string
+      companyName : string 
+      companyEmail: string
+      industryType: string
+      location : string
+      phone : string
+      websiteUrl : string
       description : string,
-      profileImage?: string | null,
-      totalPostedJobs : number,
+      profileImage?: string | null
+      totalPostedJobs : number
       uploadedJob: UploadedJob[]
 }

@@ -17,14 +17,14 @@ type ApplicationListTableProps = {
 
 const getStatusBadgeColor = (status: ApplicantionStatus) => {
     switch (status) {
-        case "APPLIED": return "bg-blue-200 text-blue-900"
-        case "REVIEWING": return "bg-yellow-200 text-yellow-900"
-        case "SHORTLISTED": return "bg-purple-200 text-purple-900"
-        case "INTERVIEW": return "bg-cyan-200 text-cyan-900"
-        case "OFFERED": return "bg-green-200 text-green-900"
-        case "HIRED": return "bg-emerald-200 text-emerald-900"
-        case "REJECTED": return "bg-red-200 text-red-900"
-        default: return "bg-zinc-200 text-zinc-900"
+        case "APPLIED": return "bg-blue-200 text-blue-900 font-bold"
+        case "REVIEWING": return "bg-yellow-200 text-yellow-900 font-bold"
+        case "SHORTLISTED": return "bg-purple-200 text-purple-900 font-bold"
+        case "INTERVIEW": return "bg-cyan-200 text-cyan-900 font-bold"
+        case "OFFERED": return "bg-green-200 text-green-900 font-bold"
+        case "HIRED": return "bg-emerald-200 text-emerald-900 font-bold"
+        case "REJECTED": return "bg-red-200 text-red-900 font-bold"
+        default: return "bg-zinc-200 text-zinc-900 font-bold"
     }
 }
 

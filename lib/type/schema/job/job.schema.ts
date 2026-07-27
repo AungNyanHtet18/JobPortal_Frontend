@@ -58,17 +58,17 @@ export const ApplicationStatusSchema = z.object({
 export type ApplicationStatusForm = z.infer<typeof ApplicationStatusSchema >
 
 export type JobSearch = {
-   jobLevel?: string,
-   jobType?: string,
-   deleted?: string,
+   jobLevel?: string
+   jobType?: string
+   deleted?: string
    keyword?: string
 } & PageSearch
 
 export type JobListItem = {
    jobId: number
    positionName: string
-   maxSalaryRange: number,
-   minSalaryRange: number,
+   maxSalaryRange: number
+   minSalaryRange: number
    jobLevel: string
    jobType: string
    companyName: string
@@ -76,26 +76,26 @@ export type JobListItem = {
    jobLocation: string
    deleted: boolean
    profilePhoto: string
-   createAt: string
+   createdAt: string
 }
 
 export type JobDetails = {
-     jobId: number,
-     jobCategory: string,
-     companyName: string,
-     companyPhone: string,
+     jobId: number
+     jobCategory: string
+     companyName: string
+     companyPhone: string
      companyWebsite: string,
-     companyImage: string | null,
-     positionName: string,
-     clientName: string | null,
-     jobLocation: string,
-     jobDescription: string[],
-     jobRequirement: string[],
-     minSalaryRange: number,
-     maxSalaryRange: number,
-     jobPost: number | null,
-     jobLevel: string,
-     jobType: string,
+     companyImage: string | null
+     positionName: string
+     clientName: string | null
+     jobLocation: string
+     jobDescription: string[]
+     jobRequirement: string[]
+     minSalaryRange: number
+     maxSalaryRange: number
+     jobPost: number | null
+     jobLevel: string
+     jobType: string
      deleted: boolean
 }
 
@@ -108,7 +108,6 @@ export type JobApplicationListItem= {
       gender: 'Male' | 'Female'
       status: ApplicantionStatus
 }
-
 
 export type ApplicantAppliedJobListItem = {
       positionName: string
@@ -124,4 +123,3 @@ export type ApplicantAppliedJobListItem = {
 export type SavedJobListItem = {
        jobId : number
 }
-

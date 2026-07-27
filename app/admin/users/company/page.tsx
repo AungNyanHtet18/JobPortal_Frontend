@@ -13,10 +13,10 @@ import { formatDateTime, getCompanyPhoto, safeCall } from '@/lib/utils';
 import { DEFAULT_PAGE_RESULT, PageResult } from '@/lib/type';
 import PagerWidget from '@/components/widgets/pager-widget';
 import Loading from '@/components/widgets/loading';
-import { AdminCompanyListItem, AdminCompanySearch } from '@/lib/type/schema/admin/account-management.action';
-import { searchCompanies } from '@/lib/actions/admin/account-management.action';
+import { searchCompanies } from '@/lib/actions/admin/management.action';
 import { Form } from '@/components/ui/form';
 import FormsInput from '@/components/fields/form-input';
+import { AdminCompanyListItem, AdminCompanySearch } from '@/lib/type/schema/admin/management.schema';
 
 export default function CompanyManagementPage() {
     const [result, setResult] = useState<PageResult<AdminCompanyListItem>>(DEFAULT_PAGE_RESULT)
@@ -147,6 +147,7 @@ export default function CompanyManagementPage() {
                                             </TableCell>
                                         </TableRow>
                                     ))}
+
                                     {result.list.length === 0 && (
                                         <TableRow>
                                             <TableCell colSpan={6} className="text-center py-5 text-zinc-500">

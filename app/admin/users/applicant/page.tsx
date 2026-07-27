@@ -13,10 +13,10 @@ import { formatDateTime, getAccountPhoto, safeCall } from '@/lib/utils';
 import { DEFAULT_PAGE_RESULT, PageResult } from '@/lib/type';
 import PagerWidget from '@/components/widgets/pager-widget';
 import Loading from '@/components/widgets/loading';
-import { AdminApplicantListItem, AdminApplicantSearch } from '@/lib/type/schema/admin/account-management.action';
-import { searchApplicants } from '@/lib/actions/admin/account-management.action';
+import { searchApplicants } from '@/lib/actions/admin/management.action';
 import { Form } from '@/components/ui/form';
 import FormsInput from '@/components/fields/form-input';
+import { AdminApplicantListItem, AdminApplicantSearch } from '@/lib/type/schema/admin/management.schema';
 
 export default function ApplicantManagementPage() {
     const [result, setResult] = useState<PageResult<AdminApplicantListItem>>(DEFAULT_PAGE_RESULT)
