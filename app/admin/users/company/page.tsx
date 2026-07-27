@@ -24,6 +24,7 @@ export default function CompanyManagementPage() {
 
     const form = useForm<AdminCompanySearch>({
         defaultValues: {
+            keyword: '',
             page: 0,
             size: 10,
         },
@@ -50,11 +51,11 @@ export default function CompanyManagementPage() {
         form.handleSubmit(search)()
     }
 
-    async function search(formValues: AdminCompanySearch) {
+    async function search(form: AdminCompanySearch) {
         setLoading(true)
 
         await safeCall(async () => {
-            const data = await searchCompanies(formValues)
+            const data = await searchCompanies(form)
             setResult(data)
         })
 
@@ -118,18 +119,23 @@ export default function CompanyManagementPage() {
                                                     </div>
                                                 </div>
                                             </TableCell>
+
                                             <TableCell>
                                                 <Badge variant="secondary">
                                                     {company.industryType}
                                                 </Badge>
                                             </TableCell>
+
                                             <TableCell className='text-center'>{company.jobPostCount}</TableCell>
+                                            
                                             <TableCell>
                                                 <Badge className={company.active ? 'bg-slate-500 text-zinc-100' : 'bg-red-700 text-zinc-100'}>
                                                     {company.active ? 'Active' : 'Inactive'}
                                                 </Badge>
                                             </TableCell>
+                                            
                                             <TableCell className="text-center">{formatDateTime(company.activatedAt)}</TableCell>
+                                            
                                             <TableCell className="text-center">
                                                 <div className="flex justify-center gap-2">
                                                    <Link href={`/admin/users/company/${company.id}`}>
@@ -137,12 +143,12 @@ export default function CompanyManagementPage() {
                                                             <Eye className="size-4" />
                                                         </Button>
                                                    </Link>
-                                                        <Button variant="ghost" size="icon">
-                                                            <Edit className="size-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600">
-                                                            <Trash2 className="size-4" />
-                                                        </Button>
+                                                    <Button variant="ghost" size="icon">
+                                                        <Edit className="size-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600">
+                                                        <Trash2 className="size-4" />
+                                                    </Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>

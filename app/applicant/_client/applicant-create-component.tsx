@@ -31,7 +31,7 @@ export default function ApplicantCreateComponent() {
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [resumeFile, setResumeFile] = useState<File | null>(null)
     const [cvFormFile,setCvFormFile] = useState<File | null>(null)
-    const [isSaving, setIsSaving] = useState(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [educationDialogIndex, setEducationDialogIndex] = useState<number | null>(null)
     const [experienceDialogIndex, setExperienceDialogIndex] = useState<number | null>(null)
     const [skillDialogIndex, setSkillDialogIndex] = useState<number | null>(null)

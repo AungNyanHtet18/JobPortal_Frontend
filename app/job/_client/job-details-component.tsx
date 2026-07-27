@@ -24,7 +24,6 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
             safeCall(async () => {
                 const companyId = await Company.findByCompany()
                 const result = await Job.findJobById(jobId)
-
                 if(result != null) {
                     setCompanyId(companyId)
                     setDetails(result)
@@ -41,7 +40,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
     const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if(!details) {
-        return <Loading />
+        return <Loading content="Loading for Job Details" />
     }
 
     return (
@@ -58,8 +57,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                                         src={profileImageUrl}
                                         alt={`${details.companyName} profile`}
                                         className="size-full object-cover"
-                                        onError={() => setProfileImageFailed(true)}
-                                    />
+                                        onError={() => setProfileImageFailed(true)}/>
                                 ) : (
                                     <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
                                         {getInitials(details.companyName)}
@@ -80,7 +78,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                         <div className="mt-5 flex flex-wrap gap-2">
                             <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
                                 {details.deleted ?  
-                                 <><BadgeCheck/> Verifed</> :  <><BadgeX className="size-4"/>Not Verifed</>
+                                    <><BadgeX className="size-4"/>Not Verified</> : <><BadgeCheck/> Verified</>
                                  }
                             </Badge>
                             <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">

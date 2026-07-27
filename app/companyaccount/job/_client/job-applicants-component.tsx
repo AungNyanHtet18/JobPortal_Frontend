@@ -80,16 +80,12 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
   }
 
   if (loading || !details) {
-      return <Loading />
+      return <Loading content="Loading for Applicant Lists" />
   }
 
   return (
     <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-      <PageTitle
-        icon="Users"
-        title="Applicant List"
-        description={`Review candidates who applied for ${details.positionName}`}
-      />
+      <PageTitle icon="Users" title="Applicant List" description={`Review candidates who applied for ${details.positionName}`}/>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="space-y-4">
@@ -136,7 +132,6 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
                 </Button>
             </div>
           </div>
-
         </aside>
 
         <div className="space-y-6">

@@ -6,26 +6,13 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ApplicationListItem} from "@/lib/type/schema/admin/dashboard.schema"
 import { ChevronLeft, ChevronRight, TrendingUp, Users } from "lucide-react"
 import { PageInfo } from "@/lib/type"
-import { ApplicantionStatus } from "@/lib/type/schema/job/job.schema"
+import {getStatusBadgeColorForApplication } from "@/lib/type/schema/admin/management.schema"
 
 type ApplicationListTableProps = {
     applications: ApplicationListItem[] | undefined
     pageInfo: PageInfo | undefined
     loading: boolean
     onPageChange: (page: number) => void
-}
-
-const getStatusBadgeColor = (status: ApplicantionStatus) => {
-    switch (status) {
-        case "APPLIED": return "bg-blue-200 text-blue-900 font-bold"
-        case "REVIEWING": return "bg-yellow-200 text-yellow-900 font-bold"
-        case "SHORTLISTED": return "bg-purple-200 text-purple-900 font-bold"
-        case "INTERVIEW": return "bg-cyan-200 text-cyan-900 font-bold"
-        case "OFFERED": return "bg-green-200 text-green-900 font-bold"
-        case "HIRED": return "bg-emerald-200 text-emerald-900 font-bold"
-        case "REJECTED": return "bg-red-200 text-red-900 font-bold"
-        default: return "bg-zinc-200 text-zinc-900 font-bold"
-    }
 }
 
 export function ApplicationListTable({ applications, pageInfo, loading, onPageChange }: ApplicationListTableProps) {
@@ -83,7 +70,7 @@ export function ApplicationListTable({ applications, pageInfo, loading, onPageCh
                                     <TableCell>{applicantation.applicantName}</TableCell>
                                     <TableCell>{applicantation.gender}</TableCell>
                                     <TableCell>
-                                        <Badge className={getStatusBadgeColor(applicantation.status)}>
+                                        <Badge className={getStatusBadgeColorForApplication(applicantation.status)}>
                                             {applicantation.status}
                                         </Badge>
                                     </TableCell>

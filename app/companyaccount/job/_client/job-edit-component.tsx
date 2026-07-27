@@ -83,7 +83,6 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
         async function load() {
             await safeCall(async () => {
                 const result = await Job.findJobById(jobId)
-
                 form.reset({
                     jobPost: result.jobPost?.toString() ?? "",
                     clientName: result.clientName ?? "",
@@ -157,7 +156,6 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                     </aside>
 
                     <div className="space-y-6">
-
                         <InputComponent title="Position Information" icon={<ClipboardList className="size-5 text-zinc-900" />} >
                             <FormsInput control={form.control} path="positionName" label="Position Name" placeHolder="Enter job position name" />
                             <div className="grid gap-4 md:grid-cols-3">
@@ -206,7 +204,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
                         </InputComponent>
 
                         <InputComponent title="Salary" className="md:grid-cols-4" icon={<DollarSign className="size-5 text-zinc-900" />}>
-                            <FormsInput control={form.control} path="minSalaryRange" label="Manimum Salary" placeHolder="Enter Manimum Salary Range." />
+                            <FormsInput control={form.control} path="minSalaryRange" label="Minimum Salary" placeHolder="Enter Manimum Salary Range." />
                             <FormsInput control={form.control} path="maxSalaryRange" label="Maximum Salary" placeHolder="Enter Maximum Salary Range." />
                             
                             <div className="col-span-2 mt-5 flex items-center rounded-lg border border-zinc-100 bg-zinc-50 p-3">
@@ -224,7 +222,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
 
                         <InputComponent title="Salary" className="md:grid-cols-2" icon={<DollarSign className="size-5 text-zinc-900" />}>
                             <FormsInput control={form.control} path="location" label="Location For Job" placeHolder="Enter Location for Job."/>
-                            <FormsCheckBox control={form.control} path="deleted" label="Archived Job Posting" description="Mark this job posting as approved" className="mt-4"  />
+                            <FormsCheckBox control={form.control} path="deleted" label="Archived Job Posting" description="Mark this job posting as deleted" className="mt-4"  />
                         </InputComponent>
 
                         <div className="sticky bottom-0 flex justify-end border-t border-zinc-200 bg-gray-50/95 py-4 backdrop-blur">

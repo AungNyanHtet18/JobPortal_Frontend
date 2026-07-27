@@ -9,8 +9,9 @@ import { SignUpForm, SignUpSchema } from "@/lib/type/schema/auth.schema";
 import { RoleOptions } from "@/lib/type/type";
 import { safeCall } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LogIn, UserPlus } from "lucide-react";
+import { Loader2, LogIn, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function SignUpFormComponent() {
@@ -39,7 +40,7 @@ export default function SignUpFormComponent() {
 
                 <div className="space-x-3">
                     <Button type="submit">
-                        <LogIn/>Sign Up
+                         <LogIn/>Sign Up
                     </Button>
                     <Button variant='outline' asChild>
                         <Link href={'/signin'}>

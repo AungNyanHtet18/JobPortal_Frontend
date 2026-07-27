@@ -24,6 +24,7 @@ export default function ApplicantManagementPage() {
 
     const form = useForm<AdminApplicantSearch>({
         defaultValues: {
+            keyword: '',
             page: 0,
             size: 10,
         },
@@ -50,10 +51,10 @@ export default function ApplicantManagementPage() {
         form.handleSubmit(search)()
     }
 
-    async function search(formValues: AdminApplicantSearch) {
+    async function search(form: AdminApplicantSearch) {
         setLoading(true)
         await safeCall(async () => {
-            const data = await searchApplicants(formValues)
+            const data = await searchApplicants(form)
             setResult(data)
         })
         setLoading(false)
@@ -117,18 +118,22 @@ export default function ApplicantManagementPage() {
                                                     </div>
                                                 </div>
                                             </TableCell>
+
                                             <TableCell>
                                                 <Badge variant="secondary">
                                                     {applicant.gender}
                                                 </Badge>
                                             </TableCell>
+                                            
                                             <TableCell className='text-center'>{applicant.jobApplicationCount}</TableCell>
                                             <TableCell>
                                                 <Badge className={applicant.active ? 'bg-slate-500 text-zinc-100' : 'bg-red-700 text-zinc-100'}>
                                                     {applicant.active ? 'Active' : 'Inactive'}
                                                 </Badge>
                                             </TableCell>
+                                            
                                             <TableCell className="text-center">{formatDateTime(applicant.activatedAt)}</TableCell>
+                                            
                                             <TableCell className="text-center">
                                                 <div className="flex justify-center gap-2">
                                                     <Link href={`/admin/users/applicant/${applicant.id}`}>
@@ -159,11 +164,7 @@ export default function ApplicantManagementPage() {
                         </div>
 
                         <div className="p-4 border-t">
-                            <PagerWidget
-                                pager={result.pageInfo}
-                                onPageChange={onPageChange}
-                                onSizeChange={onSizeChange}
-                            />
+                            <PagerWidget pager={result.pageInfo} onPageChange={onPageChange} onSizeChange={onSizeChange}/>
                         </div>
                     </>
                 )}

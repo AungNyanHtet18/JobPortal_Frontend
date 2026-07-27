@@ -13,12 +13,12 @@ export const RoleOptions: OptionItem[] = [
 ] 
 
 export const JobLevel: OptionItem[] = [
-     {key: "Intern", value: "Intern"},
-     {key: "Entry", value: "Entry Level"},
-     {key: "Junior", value: "Junior Level"},
-     {key: "Mid", value: "Mid Level"},
-     {key: "Senior", value: "Senior Level"},
-     {key: "Lead", value: "Lead Level"}
+     {key: "Intern Level", value: "Intern"},
+     {key: "Entry Level", value: "Entry Level"},
+     {key: "Junior Level", value: "Junior Level"},
+     {key: "Mid Level", value: "Mid Level"},
+     {key: "Senior Level", value: "Senior Level"},
+     {key: "Lead Level", value: "Lead Level"}
 ]
 
 export const JobType: OptionItem[] = [
