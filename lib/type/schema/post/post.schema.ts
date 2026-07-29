@@ -11,10 +11,12 @@ export type PostListItem = {
     content: string
     postPhoto: string | null
     accountName: string
+    accountEmail: string
     accountPhoto: string | null
     reactionCount: number
     commentCount: number
-    reacted: boolean
+    reacted: boolean,
+    createdTime: string
 }
 
 export type PostSearch = {

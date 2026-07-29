@@ -87,7 +87,7 @@ export default function CompanyManagementPage() {
 
             <CardContent className="p-0">
                 {loading ? (
-                    <Loading content="Loading companies..." />
+                    <Loading content="Loading Company Data..." />
                 ) : (
                     <>
                         <div className="overflow-x-auto">

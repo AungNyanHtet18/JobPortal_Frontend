@@ -22,7 +22,7 @@ export default function PagerWidget({pager, onPageChange, onSizeChange} : PagerP
             <div className="flex items-center gap-2">
                <div>Page Size</div>
                <NativeSelect onChange={e => onSizeChange(Number.parseInt(e.target.value))}>
-                    <NativeSelectOptGroup>
+                    <NativeSelectOptGroup >
                         <NativeSelectOption value={10}>10</NativeSelectOption>
                         <NativeSelectOption value={20}>20</NativeSelectOption>
                         <NativeSelectOption value={30}>30</NativeSelectOption>

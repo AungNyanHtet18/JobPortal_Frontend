@@ -105,8 +105,6 @@ export  function formatDateTime(value: string | null): string {
     return `${day} ${month} ${year}`
   }
 
-
-
 function getOrdinal(day: number): string {
    if(day > 3 && day <21) return `${day}th`
    
@@ -120,6 +118,38 @@ function getOrdinal(day: number): string {
      default:
           return `${day}th` 
     }
+}
 
-   
+export function checkDateIsToday(day: string) : boolean {
+   const createdDate = new Date(day)
+   const today = new Date()
+
+   return (
+     createdDate.getFullYear() === today.getFullYear() &&
+     createdDate.getMonth() === today.getMonth() && 
+     createdDate.getDate() === today.getDate()
+   )
+}
+
+export function getTimeAgo(day: string): string {
+  const createdDate = new Date(day);
+  const now = new Date();
+
+  const diffMs = now.getTime() - createdDate.getTime();
+
+  const minutes = Math.floor(diffMs / (1000 * 60));
+
+  if (minutes < 60) {
+    return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  return `${days} day${days !== 1 ? "s" : ""} ago`;
 }

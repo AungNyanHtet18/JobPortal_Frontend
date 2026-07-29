@@ -1,6 +1,15 @@
+import React from "react"
+
+export type SideBarType = {
+     href: string
+     label: string
+     icon: React.ReactNode
+     dropdownMenu?: SideBarType[]
+}
+
 export type NavbarType = {
-    id: number,
-    name: string,
+    id: number
+    name: string
     url: string
 }
 

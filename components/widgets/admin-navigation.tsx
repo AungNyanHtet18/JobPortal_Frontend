@@ -17,9 +17,14 @@ export default function AdminNavigation({admin, setSiderbarOpen} : AdminNavigati
     
     return (
             <nav className="sticky top-0  bg-slate-500  border-b border-zinc-200 px-6 py-4 flex items-center justify-between gap-4">
-                <Button variant="default" size="icon" onClick={setSiderbarOpen} className="bg-transparent rounded-md hover:bg-zinc-400 ">
-                    <Menu className="size-7 text-white" />
-                </Button>
+                <div className="flex gap-2 items-center">
+                    <Button variant="default" size="icon" onClick={setSiderbarOpen} className="bg-transparent rounded-md hover:bg-zinc-400 ">
+                        <Menu className="size-7 text-white" />
+                    </Button>
+                    <h1 className="text-white font-semibold text-2xl">Home</h1>
+                </div>
+   
+
 
                 <div className="flex-1 max-w-md">
                     <div className="relative">

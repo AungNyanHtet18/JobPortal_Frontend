@@ -85,7 +85,7 @@ export default function ApplicantManagementPage() {
 
             <CardContent className="p-0">
                 {loading ? (
-                    <Loading content="Loading applicants..." />
+                    <Loading content="Loading Applicant Data..." />
                 ) : (
                     <>
                         <div className="overflow-x-auto">

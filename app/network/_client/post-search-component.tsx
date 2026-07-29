@@ -14,11 +14,13 @@ import Loading from "@/components/widgets/loading"
 import PostInteractionComponent from "@/components/widgets/post-interaction-component"
 import { searchPost, createPost, updatePost, deletePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
-import {  getAccountPhoto, getPostPhotoForPostList, safeCall } from "@/lib/utils"
+import {  checkDateIsToday, formatDateTime, getAccountPhoto,  getPostPhotoForPostList, getTimeAgo, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PageTitle from "@/components/widgets/page-title"
 import { Label } from "@/components/ui/label"
+import { findByLoginUser } from "@/lib/actions/auth.action"
+import { LoginUser } from "@/lib/type/schema/auth.schema"
 
 export default function PostSearchComponent() {
     const [posts, setPosts] = useState<PostListItem[]>([])
@@ -28,6 +30,7 @@ export default function PostSearchComponent() {
     const [editingPostId, setEditingPostId] = useState<number | null>(null)
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [previewImage, setPreviewImage] = useState<string | null>(null)
+    const [loginEmail, setLoginEmail] = useState<string>('')
 
     const form = useForm<PostForm>({
         resolver: zodResolver(PostSchema),
@@ -43,7 +46,9 @@ export default function PostSearchComponent() {
     async function searchPostList(keyword?: string) {
         setLoading(true)
         await safeCall(async () => {
+            const loginUser: LoginUser = await findByLoginUser()
             const data = await searchPost(keyword)
+            setLoginEmail(loginUser.email)
             setPosts(data || [])
         })
         setLoading(false)
@@ -156,16 +161,21 @@ export default function PostSearchComponent() {
                             </Avatar> 
                             <div className="flex-1">
                                 <p className="text-sm font-semibold text-zinc-900 truncate">
-                                    {post.accountName}
+                                    {post.accountName} 
                                 </p>
                                 <p className="text-xs text-zinc-500">
-                                    Posted recently
+                                      {checkDateIsToday(post.createdTime) ? `${getTimeAgo(post.createdTime)}` : formatDateTime(post.createdTime)}
                                 </p>
                             </div>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-900" onClick={() => openEditDialog(post)}>
-                                <Pencil className="size-4" />
-                                <span className="sr-only">Edit post</span>
-                            </Button>
+                            
+                            {
+                                post.accountEmail === loginEmail && 
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-900" onClick={() => openEditDialog(post)}>
+                                    <Pencil className="size-4" />
+                                    <span className="sr-only">Edit post</span>
+                                </Button>
+                            }
+                               
                         </CardHeader> 
                         
                         <CardContent className="pt-2">

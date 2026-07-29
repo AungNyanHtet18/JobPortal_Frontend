@@ -50,7 +50,7 @@ export default function JobManagementPage() {
          form.handleSubmit(search)()
      }
 
-     async function search(form: AdminApplicantSearch) {
+     async function search(form: AdminJobSearch) {
         setLoading(true)
         await safeCall(async () => {
              const data = await searchJobs(form)
@@ -79,7 +79,7 @@ export default function JobManagementPage() {
 
             <CardContent className="p-0">
                 {loading ? (
-                    <Loading content="Loading applicants..." />
+                    <Loading content="Loading Job Data..." />
                 ) : (
                     <>
                         <div className="overflow-x-auto">
@@ -157,6 +157,4 @@ export default function JobManagementPage() {
         </Card>
         </>
      )
-
-
 }
