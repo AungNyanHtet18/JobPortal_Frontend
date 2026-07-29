@@ -1,6 +1,7 @@
 'use client'
 
 import FormsInput from "@/components/fields/form-input"
+import { AlertDialog } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -8,18 +9,19 @@ import { Form } from "@/components/ui/form"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Loading from "@/components/widgets/loading"
 import PagerWidget from "@/components/widgets/pager-widget"
-import { searchPosts } from "@/lib/actions/admin/management.action"
+import { deletePosts, searchPosts } from "@/lib/actions/admin/management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminPostListItem, AdminPostSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
 import { formatDateTime, safeCall } from "@/lib/utils"
-import { Eye, Search } from "lucide-react"
-import Link from "next/link"
+import { Search, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 
 export default function PostManagementPage() {
      const [result, setResult] = useState<PageResult<AdminPostListItem>>(DEFAULT_PAGE_RESULT)
      const [loading, setLoading] = useState<boolean>(false)
+     const [pendingDeletePostId, setPendingDeletePostId] = useState<number | null>(null)
 
      const form = useForm<AdminPostSearch>({
          defaultValues: {
@@ -51,12 +53,29 @@ export default function PostManagementPage() {
      }
 
      async function search(form: AdminPostSearch) {
+        console.log(pendingDeletePostId);
         setLoading(true)
         await safeCall(async () => {
              const data = await searchPosts(form)
              setResult(data)
         })
         setLoading(false)
+     }
+
+     async function deletePost(postId: number | null) {
+        
+        if(!pendingDeletePostId) {
+            return
+        }
+
+        if(postId != null) {
+            await safeCall(async () => {
+                 const result = await deletePosts(postId)
+                 toast.success(result.id)
+            })
+         }
+         setPendingDeletePostId(null)
+         search(form.getValues())
      }
 
      return (
@@ -91,7 +110,8 @@ export default function PostManagementPage() {
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase'>Content Name</TableHead>
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>React Count</TableHead>
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>Comment Count</TableHead>
-                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-end'>Date Published</TableHead>
+                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>Date Published</TableHead>
+                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-end'>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
 
@@ -105,7 +125,14 @@ export default function PostManagementPage() {
                                             </TableCell>
                                             <TableCell className="text-center">{post.reactCount}</TableCell>
                                             <TableCell className="text-center">{post.commentCount}</TableCell>
-                                            <TableCell className='text-end'>{formatDateTime(post.createdAt)}</TableCell>
+                                            <TableCell className="text-center">{formatDateTime(post.createdAt)}</TableCell>
+                                            <TableCell className="text-center">
+                                                <div className="group  rounded-md hover:bg-zinc-100 cursor-pointer transition-colors">
+                                                    <Button variant="ghost" size="icon" onClick={() => setPendingDeletePostId(post.id)}>
+                                                        <Trash2 className="size-5 text-red-500 group-hover:text-zinc-900 transition-colors" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
 
@@ -123,6 +150,21 @@ export default function PostManagementPage() {
                         <div className="p-4 border-t">
                             <PagerWidget pager={result.pageInfo} onPageChange={onPageChange} onSizeChange={onSizeChange}/>
                         </div>
+
+                        <AlertDialog open={!!pendingDeletePostId}
+                            onOpenChange={(open) => { 
+                                if (!open) { //if open is not true => referencing open={!!confirmJob}
+                                 setPendingDeletePostId(null)
+                                }
+                            }}
+                            title="Confirm To Delete This Post"
+                            description={`You are about to delete post #${pendingDeletePostId}.Once deleted, this post and its related data will be permanently removed.`}
+                            actionText="Delete Post"
+                            onConfirm={() => deletePost(pendingDeletePostId)}>
+                            <p className="text-sm leading-6 text-zinc-600">
+                                Please confirm if you want to permanently remove this post.
+                            </p>
+                        </AlertDialog>
                     </>
                 )}
             </CardContent>

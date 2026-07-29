@@ -1,7 +1,7 @@
 'use server';
 
-import { secureSearch } from "@/lib";
-import { PageResult } from "@/lib/type";
+import { secureRequest, secureSearch } from "@/lib";
+import { ModificationResult, PageResult } from "@/lib/type";
 import { AdminApplicantListItem, AdminApplicantSearch, AdminCompanyListItem, AdminCompanySearch, AdminJobListItem, AdminJobSearch, AdminPostListItem, AdminPostSearch } from "@/lib/type/schema/admin/management.schema";
 
 export async function searchApplicants(form: AdminApplicantSearch): Promise<PageResult<AdminApplicantListItem>> {
@@ -22,6 +22,13 @@ export async function searchJobs(form: AdminJobSearch): Promise<PageResult<Admin
 export async function searchPosts(form: AdminPostSearch): Promise<PageResult<AdminPostListItem>> {
     const response = await secureSearch("admin/post", form)
     return await response.json() as PageResult<AdminPostListItem>
+}
+
+export async function deletePosts(id: number) : Promise<ModificationResult<string>> {
+    const response = await secureRequest(`admin/post/${id}`, {
+        method: "DELETE"
+    })
+    return await response.json() as ModificationResult<string>
 }
 
 
