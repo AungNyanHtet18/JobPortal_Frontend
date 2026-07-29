@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import Link from 'next/link';
-import { formatDateTime, getAccountPhoto, safeCall } from '@/lib/utils';
+import {formatDateForDay, getAccountPhoto, safeCall } from '@/lib/utils';
 import { DEFAULT_PAGE_RESULT, PageResult } from '@/lib/type';
 import PagerWidget from '@/components/widgets/pager-widget';
 import Loading from '@/components/widgets/loading';
@@ -125,16 +125,16 @@ export default function ApplicantManagementPage() {
                                                 </Badge>
                                             </TableCell>
                                             
-                                            <TableCell className='text-center'>{applicant.jobApplicationCount}</TableCell>
+                                            <TableCell className='text-center text-zinc-600'>{applicant.jobApplicationCount}</TableCell>
                                             <TableCell>
                                                 <Badge className={applicant.active ? 'bg-slate-500 text-zinc-100' : 'bg-red-700 text-zinc-100'}>
                                                     {applicant.active ? 'Active' : 'Inactive'}
                                                 </Badge>
                                             </TableCell>
                                             
-                                            <TableCell className="text-center">{formatDateTime(applicant.activatedAt)}</TableCell>
+                                            <TableCell className="text-center text-zinc-600">{formatDateForDay(applicant.activatedAt)}</TableCell>
                                             
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center text-zinc-600">
                                                 <div className="flex justify-center gap-2">
                                                     <Link href={`/admin/users/applicant/${applicant.id}`}>
                                                         <Button variant="ghost" size="icon">

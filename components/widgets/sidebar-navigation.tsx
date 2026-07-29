@@ -17,6 +17,7 @@ export default function SideBarNavigation() {
         { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
         { href: "#", label: "Users", icon: <User size={18}/>,  
             dropdownMenu: [
+                { href: "/admin/users/allaccount", label: "All Account", icon: <User size={18} />},
                 { href: "/admin/users/applicant", label: "Applicants", icon: <Users size={18} />},
                 { href: "/admin/users/company", label: "Companies", icon: <Building2 size={18} /> }
             ]

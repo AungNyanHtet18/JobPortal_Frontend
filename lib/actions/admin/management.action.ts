@@ -2,7 +2,12 @@
 
 import { secureRequest, secureSearch } from "@/lib";
 import { ModificationResult, PageResult } from "@/lib/type";
-import { AdminApplicantListItem, AdminApplicantSearch, AdminCompanyListItem, AdminCompanySearch, AdminJobListItem, AdminJobSearch, AdminPostListItem, AdminPostSearch } from "@/lib/type/schema/admin/management.schema";
+import { AdminAccountListItem, AdminAllAccountSearch, AdminApplicantListItem, AdminApplicantSearch, AdminCompanyListItem, AdminCompanySearch, AdminJobListItem, AdminJobSearch, AdminPostListItem, AdminPostSearch } from "@/lib/type/schema/admin/management.schema";
+
+export async function searchAllAccounts(form: AdminAllAccountSearch ): Promise<PageResult<AdminAccountListItem>> {
+     const response = await secureSearch("admin/account", form)
+     return await response.json() as PageResult<AdminAccountListItem>
+}
 
 export async function searchApplicants(form: AdminApplicantSearch): Promise<PageResult<AdminApplicantListItem>> {
     const response = await secureSearch("admin/applicant", form)

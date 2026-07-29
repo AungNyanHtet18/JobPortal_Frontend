@@ -8,7 +8,7 @@ import { Form } from "@/components/ui/form"
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { JobLevel, JobType, Status } from "@/lib/type/type"
-import {  formatDateTime, getCompanyPhoto, safeCall } from "@/lib/utils"
+import { formatDateForDay, getCompanyPhoto, safeCall } from "@/lib/utils"
 import { Briefcase, Building2, Calendar,  CheckCircle2Icon, Eye, Heart, MapPin, Search, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
@@ -96,20 +96,20 @@ export default function JobSearchComponent() {
       setConfirmJob(null)
     }
 
-    async function search(formValues: JobSearch) {
+    async function search(form: JobSearch) {
         
         setLoading(true) 
       
-        if (formValues.jobLevel === "-1") {
-           delete formValues.jobLevel
+        if(form.jobLevel === "-1") {
+           delete form.jobLevel
          }
 
-         if (formValues.jobType === "-1") {
-           delete formValues.jobType
+         if(form.jobType === "-1") {
+           delete form.jobType
          }
 
          await safeCall(async () => {
-            const result = await jobClient.searchJobs(formValues)
+            const result = await jobClient.searchJobs(form)
             const applicant = await applicantClient.findByApplicant()
             const savedJobs = await jobSavedClient.getSavedJobList()
 
@@ -239,7 +239,7 @@ export default function JobSearchComponent() {
                            <Badge className="mt-1 bg-slate-800 text-white text-xs py-1">
                             <CheckCircle2Icon className="mr-1 size-3" />Open to Apply
                           </Badge>}
-                         <span className="flex items-center gap-1 text-xs text-zinc-500"><Calendar className="size-4"/> {formatDateTime(job.createdAt)}</span>                          
+                         <span className="flex items-center gap-1 text-xs text-zinc-500"><Calendar className="size-4"/> {formatDateForDay(job.createdAt)}</span>                          
                       </div>
                     </CardFooter>
                   </Card>

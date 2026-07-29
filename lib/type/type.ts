@@ -32,7 +32,6 @@ export const Status: OptionItem[] = [
      {key: "false", value: "false"}
 ]
 
-
 export const QualificationType: OptionItem[] =[
     {key: "DOCTORATE", value: "DOCTORATE"},
     {key: "PHD", value: "PHD"},
@@ -62,7 +61,6 @@ export const LanguageLevel : OptionItem[] = [
      {key: "Advanced", value: "Advanced"},
      {key: "Native", value: "Native"}
 ]
-
 
 //Company
 export const IndustryType: OptionItem[] = [
@@ -115,8 +113,7 @@ export const ApplicationStatusType: OptionItem[] = [
    {key: "OFFERED", value: "OFFERED"},
    {key: "HIRED", value: "HIRED"},
    {key: "REJECTED", value: "REJECTED"}
-];
-
+]
 
 export const months: OptionItem[] = [
      ...Array.from({ length: 12 }, (_, i) => ({

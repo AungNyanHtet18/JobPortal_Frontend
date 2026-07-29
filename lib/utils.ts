@@ -29,7 +29,6 @@ export async function safeCall(action: () => Promise<void>) {
    }
 }
 
-
 export function formatFileSize(size: number) {
     if(size < 1024 * 1024) {
         return `${Math.max(1, Math.round(size / 1024))} KB`
@@ -37,7 +36,6 @@ export function formatFileSize(size: number) {
 
     return `${(size / 1024 / 1024).toFixed(1)} MB`
 }
-
 
 export function getInitials(name: string) {
     return name
@@ -87,9 +85,9 @@ export  function formatDate(value: string | null): string {
     }).format(date)  //format date = Jan 2022
   }
 
-export  function formatDateTime(value: string | null): string {
+export  function formatDateForDay(value: string | null): string {
     if (value === null) {
-        return "Not added"
+      return "Not added"
     }
 
     const dateValue = value as string //eg. date value = 2022-01-01 
@@ -103,7 +101,22 @@ export  function formatDateTime(value: string | null): string {
     const year = date.getFullYear()
 
     return `${day} ${month} ${year}`
-  }
+}
+
+export function formatDateTime(value: string | null) {
+   if(value === null) {
+     return "Not added"
+   }
+
+    return new Date(value).toLocaleString("en-GB", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+      })
+}
 
 function getOrdinal(day: number): string {
    if(day > 3 && day <21) return `${day}th`

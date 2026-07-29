@@ -269,7 +269,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     }
 
     if(isLoading) {
-         return <Loading/>
+         return <Loading content="Loading data for applicant edit"/>
     }
 
     return ( 

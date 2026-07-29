@@ -11,7 +11,7 @@ import PagerWidget from "@/components/widgets/pager-widget"
 import { searchJobs } from "@/lib/actions/admin/management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminApplicantSearch, AdminJobListItem, AdminJobSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
-import { formatDateTime, safeCall } from "@/lib/utils"
+import { formatDateForDay, safeCall } from "@/lib/utils"
 import { Eye, Search } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -101,29 +101,29 @@ export default function JobManagementPage() {
                                 <TableBody>
                                     {result.list.map((job) => (
                                         <TableRow key={job.id}>
-                                            <TableCell>{job.id}</TableCell>
-                                            <TableCell>
+                                            <TableCell className="text-zinc-600">{job.id}</TableCell>
+                                            <TableCell className="text-zinc-700">
                                                 <div className="flex items-center gap-3">
                                                     <div>
                                                         <p className="font-medium">{job.jobName}</p>
-                                                        <p className="font-normal text-zinc-500">{job.clientName}</p>
+                                                        <p className="font-normal text-zinc-500">{job.clientName} </p>
                                                     </div>
                                                 </div>
                                             </TableCell>
 
-                                            <TableCell>{job.companyName}</TableCell>
+                                            <TableCell className="text-zinc-600">{job.companyName}</TableCell>
                                            
                                             <TableCell>
                                                 <Badge className={getStatusBadgeColorForJob(job.jobLevel)}>{job.jobLevel}</Badge>
                                             </TableCell>
                                            
                                             <TableCell>
-                                                <Badge > {job.jobType}</Badge>
+                                                <Badge> {job.jobType}</Badge>
                                             </TableCell>
                                            
-                                            <TableCell className='text-center'>{job.minSalaryRange} - {job.maxSalaryRange} MMK</TableCell>
-                                            <TableCell className="text-center">{formatDateTime(job.createdAt)}</TableCell>
-                                            <TableCell className="text-end">{job.deleted ? 'Not Available' : 'Available'}</TableCell>
+                                            <TableCell className='text-center text-zinc-600'>{job.minSalaryRange} - {job.maxSalaryRange} MMK</TableCell>
+                                            <TableCell className="text-center text-zinc-600">{formatDateForDay(job.createdAt)}</TableCell>
+                                            <TableCell className="text-end text-zinc-600">{job.deleted ? 'Not Available' : 'Available'}</TableCell>
                                             
                                             <TableCell className="text-center">
                                                 <div className="group  rounded-md hover:bg-zinc-100 cursor-pointer transition-colors">

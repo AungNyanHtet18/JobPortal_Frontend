@@ -14,7 +14,7 @@ import Loading from "@/components/widgets/loading"
 import PostInteractionComponent from "@/components/widgets/post-interaction-component"
 import { searchPost, createPost, updatePost, deletePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
-import {  checkDateIsToday, formatDateTime, getAccountPhoto,  getPostPhotoForPostList, getTimeAgo, safeCall } from "@/lib/utils"
+import {  checkDateIsToday, formatDateForDay, getAccountPhoto,  getPostPhotoForPostList, getTimeAgo, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PageTitle from "@/components/widgets/page-title"
@@ -164,7 +164,7 @@ export default function PostSearchComponent() {
                                     {post.accountName} 
                                 </p>
                                 <p className="text-xs text-zinc-500">
-                                      {checkDateIsToday(post.createdTime) ? `${getTimeAgo(post.createdTime)}` : formatDateTime(post.createdTime)}
+                                      {checkDateIsToday(post.createdTime) ? `${getTimeAgo(post.createdTime)}` : formatDateForDay(post.createdTime)}
                                 </p>
                             </div>
                             

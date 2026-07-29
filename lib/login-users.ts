@@ -61,7 +61,6 @@ export async function getApplicantId() {
      return cookieStore.get("applicantId")?.value
 }
 
-
 export async function setCompanyId(id: string) {
       const cookieStore = await cookies()
       cookieStore.set("companyId",id, COOKIE_OPTIONS)

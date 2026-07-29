@@ -1,6 +1,12 @@
 import { PageSearch } from "../..";
+import { Role } from "../auth.schema";
 import { ApplicantionStatus } from "../job/job.schema";
 import { Gender } from "./dashboard.schema";
+
+export type AdminAllAccountSearch = {
+     role?: Role | string
+     keyword?: string
+} & PageSearch
 
 export type AdminApplicantSearch = {
     keyword?: string
@@ -9,6 +15,15 @@ export type AdminApplicantSearch = {
 export type AdminCompanySearch = {
     keyword?: string
 } & PageSearch
+
+export type AdminAccountListItem = { 
+    id: number
+    name: string
+    email: string
+    active: string
+    role: Role
+    activatedAt: string
+}
 
 export type AdminApplicantListItem = {
     id: number

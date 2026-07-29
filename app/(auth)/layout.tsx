@@ -5,7 +5,6 @@ export const metadata: Metadata = {
   description: "Sign In and Sign Up Page for All users"
 }
 
-
 export default function AuthLayout({children} : {children: React.ReactNode}) {
     return (
         <div className="flex h-[100vh] w-full">
@@ -18,7 +17,6 @@ export default function AuthLayout({children} : {children: React.ReactNode}) {
                   </p>
              </div>
           </div>
-
           {children}
         </div>
     )

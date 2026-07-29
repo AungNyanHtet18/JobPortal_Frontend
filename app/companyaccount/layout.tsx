@@ -7,7 +7,6 @@ export const metadata: Metadata = {
     description: "Companany Features  of Job Portal Page"
 };
 
-
 export default async function CompanyLayout({children} : {children: React.ReactNode}) {
      
     return (

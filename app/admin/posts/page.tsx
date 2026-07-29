@@ -2,7 +2,6 @@
 
 import FormsInput from "@/components/fields/form-input"
 import { AlertDialog } from "@/components/ui/alert-dialog"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
@@ -12,7 +11,7 @@ import PagerWidget from "@/components/widgets/pager-widget"
 import { deletePosts, searchPosts } from "@/lib/actions/admin/management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminPostListItem, AdminPostSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
-import { formatDateTime, safeCall } from "@/lib/utils"
+import {  formatDateForDay, safeCall } from "@/lib/utils"
 import { Search, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -118,14 +117,14 @@ export default function PostManagementPage() {
                                 <TableBody>
                                     {result.list.map((post) => (
                                         <TableRow key={post.id}>
-                                            <TableCell>{post.id}</TableCell>
-                                            <TableCell>{post.authorName}</TableCell>
-                                            <TableCell>
+                                            <TableCell className="text-zinc-600">{post.id}</TableCell>
+                                            <TableCell className="text-zinc-600">{post.authorName}</TableCell>
+                                            <TableCell className="text-zinc-600">
                                                 {post.content.length> 30 ? `${post.content.slice(0, 30)} ...` : post.content}
                                             </TableCell>
-                                            <TableCell className="text-center">{post.reactCount}</TableCell>
-                                            <TableCell className="text-center">{post.commentCount}</TableCell>
-                                            <TableCell className="text-center">{formatDateTime(post.createdAt)}</TableCell>
+                                            <TableCell className="text-center text-zinc-600">{post.reactCount}</TableCell>
+                                            <TableCell className="text-center text-zinc-600">{post.commentCount}</TableCell>
+                                            <TableCell className="text-center text-zinc-600">{formatDateForDay(post.createdAt)}</TableCell>
                                             <TableCell className="text-center">
                                                 <div className="group  rounded-md hover:bg-zinc-100 cursor-pointer transition-colors">
                                                     <Button variant="ghost" size="icon" onClick={() => setPendingDeletePostId(post.id)}>
