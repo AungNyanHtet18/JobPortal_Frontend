@@ -35,6 +35,3 @@ export async function deletePosts(id: number) : Promise<ModificationResult<strin
     })
     return await response.json() as ModificationResult<string>
 }
-
-
-

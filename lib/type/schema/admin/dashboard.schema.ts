@@ -1,4 +1,4 @@
-import { PageResult, PageSearch } from "../..";
+import { PageSearch } from "../..";
 import { ApplicantionStatus } from "../job/job.schema";
 
 export type DashboardForm = {

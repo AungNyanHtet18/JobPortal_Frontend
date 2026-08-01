@@ -366,7 +366,7 @@ export default function ApplicantCreateComponent() {
                                         <span className="text-sm font-medium">Add Education</span>
                                     </button> 
 
-                                  { educationsFieldArray.fields.map((field, index) => {  
+                                  {educationsFieldArray.fields.map((field, index) => {  
                                     const value = form.getValues(`educations.${index}`)
                                     
                                     return (
@@ -520,7 +520,7 @@ export default function ApplicantCreateComponent() {
                             <FormsInput control={form.control} type="date" path={`experiences.${experienceDialogIndex}.joinedDate`} label="Joined Date" />
                             <FormsDate control={form.control} path={`experiences.${experienceDialogIndex}.leftDate`} label="Left Date" disable={currentExperience}/>
                             <FormsCheckBox control={form.control} path={`experiences.${experienceDialogIndex}.currentlyWorking`}  label="Currently working here" description="Leave the left date empty and show this role as present." 
-                                        className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 md:col-span-2" action={() =>  {form.setValue(`experiences.${experienceDialogIndex}.leftDate`, "")}} />
+                                    className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 md:col-span-2" action={() =>  {form.setValue(`experiences.${experienceDialogIndex}.leftDate`, "")}} />
                             <FormsTextAreaInput control={form.control} path={`experiences.${experienceDialogIndex}.experienceDescription`} label="Description" placeHolder="What did you work on?" rowHeight="min-h-[80px]" className="col-span-2" />
                         </div>)}
                     </DialogComponent>

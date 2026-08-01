@@ -33,19 +33,33 @@ export const JobSchema = z.object({
 
 export type JobForm = z.infer<typeof JobSchema>
 
-export const JobPayload = (form: JobForm): any => {
+export type JobPayloadType = {
+    jobPost: number | null
+    clientName: string
+    location: string
+    positionName: string
+    jobDescriptions: string[]
+    jobRequirements: string[]
+    jobLevel: string
+    jobType: string
+    minSalaryRange: number
+    maxSalaryRange: number
+    deleted?: boolean
+}
+
+export const JobPayload = (form: JobForm): JobPayloadType => {
       return {
-      jobPost: form.jobPost ? Number(form.jobPost) : null,
-      clientName: form.clientName?.trim() || "",
-      location: form.location.trim(),
-      positionName: form.positionName.trim(),
-      jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
-      jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
-      jobLevel: form.jobLevel,
-      jobType: form.jobType,
-      minSalaryRange: Number(form.minSalaryRange),
-      maxSalaryRange: Number(form.maxSalaryRange),
-      deleted: form.deleted
+            jobPost: form.jobPost ? Number(form.jobPost) : null,
+            clientName: form.clientName?.trim() || "",
+            location: form.location.trim(),
+            positionName: form.positionName.trim(),
+            jobDescriptions: form.jobDescriptions.map(item => item.description.trim()),
+            jobRequirements: form.jobRequirements.map(item => item.requirement.trim()),
+            jobLevel: form.jobLevel,
+            jobType: form.jobType,
+            minSalaryRange: Number(form.minSalaryRange),
+            maxSalaryRange: Number(form.maxSalaryRange),
+            deleted: form.deleted
       }
 }
 

@@ -1,5 +1,4 @@
 import z from "zod"
-import { PageSearch } from "../.."
 
 export const ExperienceSchema = z.object({
     companyName: z.string().nonempty("Please fill your previous company name"),
@@ -35,7 +34,6 @@ export const LanguageSchema = z.object({
      languageName: z.string().nonempty("Please fill your language name."),
      languageLevel: z.string().nonempty("Please enter your language level.")
 })
-
 
 export  const ApplicantSchema = z.object({
     applicantName: z.string(),
@@ -124,7 +122,6 @@ export const ApplicantPayload = (form: ApplicantForm) => {
           })),
      }
 }
-
 
 export type ApplicantDetails = {
      id: number | string
