@@ -33,8 +33,8 @@ export default function QuizzesCreateComponent() {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const career: CareerListItem[] = await getCareers()
-                setCareers(career) 
+                const careers: CareerListItem[] = await getCareers()
+                setCareers(careers) 
             })
         }
         load()
@@ -107,7 +107,7 @@ export default function QuizzesCreateComponent() {
         const questionType = form.getValues(`interviewQuizQuestions.${questionIndex}.questionType`)
         const currentOptions = form.getValues(`interviewQuizQuestions.${questionIndex}.interviewQuizOptions`) || []
 
-        if (questionType === "SINGLE_CHOICE" && checked) {
+        if (questionType === "Single Choice" && checked) {
             form.setValue(`interviewQuizQuestions.${questionIndex}.interviewQuizOptions`,
             currentOptions.map((option, index) => ({
                 ...option, 
@@ -292,10 +292,10 @@ export default function QuizzesCreateComponent() {
                             <div className="space-y-6">
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <FormsTextAreaInput control={form.control} path={`interviewQuizQuestions.${questionDialogIndex}.questionTitle`}
-                                        label="Question Title" placeHolder="Write the quiz question" rowHeight="min-h-[120px]" className="md:col-span-2"/>
+                                        label="Question Title" placeHolder="Write the quiz question" rowHeight="min-h-[80px]" className="md:col-span-2"/>
 
                                     <FormSelect control={form.control} path={`interviewQuizQuestions.${questionDialogIndex}.questionType`}
-                                        label="Question Type" placeHolder="Select question type" options={QuestionTypeOptions}/>
+                                        label="Question Type" placeHolder="Choose Question Type" options={QuestionTypeOptions}/>
 
                                     <FormsInput control={form.control} path={`interviewQuizQuestions.${questionDialogIndex}.marks`}
                                         type="number" label="Marks" placeHolder="Enter marks"/>

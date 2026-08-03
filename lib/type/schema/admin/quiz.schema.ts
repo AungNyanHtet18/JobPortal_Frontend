@@ -59,8 +59,8 @@ export const emptyQuizQuestion = {
 }
 
 export const QuestionTypeOptions = [
-    {key: "SingleChoice", value: "Single Choice"},
-    {key: "MultipleChoice", value: "Multiple Choice"}
+    {key: "Single Choice", value: "Single Choice"},
+    {key: "Multiple Choice", value: "Multiple Choice"}
 ]
 
 export const QuizPayload = (form: QuizForm): QuizPayloadType => {
@@ -90,6 +90,7 @@ export type AdminQuizListItem = {
      quizTitle: string
      passingScore: number
      roleName: string
+     questionId: number
      questionTitle: string
      questionType: string
      marks: number,

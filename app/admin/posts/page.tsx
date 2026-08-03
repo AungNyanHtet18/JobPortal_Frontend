@@ -105,10 +105,10 @@ export default function PostManagementPage() {
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase'>Post ID</TableHead>
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase'>Author Name</TableHead>
                                         <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase'>Content Name</TableHead>
-                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>React Count</TableHead>
-                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>Comment Count</TableHead>
-                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-center'>Date Published</TableHead>
-                                        <TableHead className='text-zinc-100 font-[600] tracking-wider uppercase text-end'>Actions</TableHead>
+                                        <TableHead className='text-center text-zinc-100 font-[600] tracking-wider uppercase'>React Count</TableHead>
+                                        <TableHead className='text-center text-zinc-100 font-[600] tracking-wider uppercase'>Comment Count</TableHead>
+                                        <TableHead className='text-center text-zinc-100 font-[600] tracking-wider uppercase'>Date Published</TableHead>
+                                        <TableHead className='text-end text-zinc-100 font-[600] tracking-wider uppercase '>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
 
@@ -135,7 +135,7 @@ export default function PostManagementPage() {
 
                                     {result.list.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="text-center py-5 text-zinc-500">
+                                            <TableCell colSpan={8} className="text-center py-5 text-zinc-500">
                                                 No posts found.
                                             </TableCell>
                                         </TableRow>
@@ -150,8 +150,8 @@ export default function PostManagementPage() {
 
                         <AlertDialog open={!!pendingDeletePostId}
                             onOpenChange={(open) => { 
-                                if (!open) { //if open state is not true => referencing open={!!confirmJob}
-                                 setPendingDeletePostId(null)
+                                if (!open) { //if open state is not true => referencing open={!!pendingDeletePostId}
+                                     setPendingDeletePostId(null)
                                 }
                             }}
                             title="Confirm To Delete This Post"
