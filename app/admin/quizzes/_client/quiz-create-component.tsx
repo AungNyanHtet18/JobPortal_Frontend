@@ -26,19 +26,9 @@ import FormsCheckBox from "@/components/fields/form-checkbox"
 
 export default function QuizzesCreateComponent() {
     const router = useRouter()
-    const [isSaving, setIsSaving] = useState(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [questionDialogIndex, setQuestionDialogIndex] = useState<number | null>(null)
     const [careers, setCareers] = useState<CareerListItem[]>([{roleId: 0, roleName: ""}])
-
-    useEffect(() => {
-        function load() {
-            safeCall(async () => {
-                const careers: CareerListItem[] = await getCareers()
-                setCareers(careers) 
-            })
-        }
-        load()
-    }, [])
 
     const form = useForm<QuizForm>({
         resolver: zodResolver(QuizSchema) as Resolver<QuizForm>,
@@ -49,6 +39,16 @@ export default function QuizzesCreateComponent() {
             interviewQuizQuestions: [],
         }
     })
+
+    useEffect(() => {
+        function load() {
+            safeCall(async () => {
+                const careers: CareerListItem[] = await getCareers()
+                setCareers(careers) 
+            })
+        }
+        load()
+    }, [form])
 
     const quizQuestionFieldArray = useFieldArray({
         control: form.control,
@@ -122,12 +122,10 @@ export default function QuizzesCreateComponent() {
     async function save(quizForm: QuizForm) {
         setIsSaving(true)
 
-        console.log(quizForm);
-
         await safeCall(async () => {
             const result = await Quiz.createQuizzes(QuizPayload(quizForm))
 
-            toast.success("Quiz created", {
+            toast.success("Quiz is created", {
                 description: `Quiz #${result.id} has been added successfully.`,
             })
 
@@ -139,7 +137,7 @@ export default function QuizzesCreateComponent() {
             })
 
             setQuestionDialogIndex(null)
-            router.refresh()
+            router.push(`/admin/quizzes`)
         })
 
         setIsSaving(false)
@@ -147,7 +145,7 @@ export default function QuizzesCreateComponent() {
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle icon="BookOpenCheck" title="Quiz Create" description="Build interview quizzes with clear questions, structured answers, and a passing score." />
+            <PageTitle icon="BookOpenCheck" title="Create Quiz" description="Build interview quizzes with clear questions, structured answers, and a passing score." />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)}>

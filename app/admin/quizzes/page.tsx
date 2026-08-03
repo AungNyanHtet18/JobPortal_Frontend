@@ -14,7 +14,8 @@ import { deleteQuizzes, searchQuizzes } from "@/lib/actions/admin/quiz.managemen
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminQuizListItem, AdminQuizSearch, QuestionTypeOptions } from "@/lib/type/schema/admin/quiz.schema"
 import { safeCall } from "@/lib/utils"
-import { Search, Trash2 } from "lucide-react"
+import { Edit, Search, Trash2 } from "lucide-react"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -138,12 +139,16 @@ export default function QuizzesManagementPage() {
                                             <TableCell className="text-end text-zinc-600">{quiz.marks}</TableCell>
                                             <TableCell className="text-center text-zinc-600">{quiz.questionOptionsCount}</TableCell>
                                             <TableCell className="text-center">
-                                                
-                                                <Button  className="!bg-black hover:bg-zinc-600"  size="icon" onClick={() => setPendingDeleteQuizId(quiz.id)}>
-                                                    <Trash2 className=" size-5 font-bold text-red-600 " />
-                                                </Button>
-                                                    
-                                                
+                                                <div className="flex items-center gap-1">
+                                                     <Button variant="outline" size="icon" className="hover:bg-zinc-100" asChild>
+                                                        <Link href={`/admin/quizzes/edit?quizId=${quiz.id}`}>
+                                                            <Edit className=" size-5 font-bold text-zinc-900 " />
+                                                        </Link>
+                                                    </Button>
+                                                    <Button  className="!bg-black hover:bg-zinc-600"  size="icon" onClick={() => setPendingDeleteQuizId(quiz.id)}>
+                                                        <Trash2 className=" size-5 font-bold text-red-600 " />
+                                                    </Button>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}

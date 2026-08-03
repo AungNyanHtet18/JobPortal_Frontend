@@ -3,8 +3,7 @@
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Form} from "@/components/ui/form"
 import PageTitle from "@/components/widgets/page-title"
 import { JobForm, JobPayload, JobSchema } from "@/lib/type/schema/job/job.schema"
 import { JobLevel, JobType } from "@/lib/type/type"
@@ -24,8 +23,8 @@ import Loading from "@/components/widgets/loading"
 export default function JobEditComponent({jobId} : {jobId: string}) {
 
     const router = useRouter()
-    const [isSaving, setIsSaving] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const form = useForm<JobForm>({
          resolver: zodResolver(JobSchema),
@@ -53,31 +52,6 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
         control: form.control,
         name: "jobRequirements"
     })
-
-    const appendJobDescription = () => {
-        jobDescriptionsFieldArray.append({ description: "" })
-    }
-
-    const removeJobDescription = (index: number) => {
-         if(jobDescriptionsFieldArray.fields.length === 1) {
-            form.setValue("jobDescriptions.0.description", "")
-            return
-         }
-         jobDescriptionsFieldArray.remove(index)
-    }
-
-    const appendJobRequirement = () => {
-        jobRequirementsFieldArray.append({ requirement: "" })
-    }
-
-    const removeJobRequirement =(index: number) => {
-        if(jobRequirementsFieldArray.fields.length === 1) {
-             form.setValue("jobRequirements.0.requirement", "")
-             return 
-        }
-        
-        jobRequirementsFieldArray.remove(index)
-    }
 
     useEffect(() => {
         async function load() {
@@ -108,11 +82,36 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
         load()
     }, [jobId, form])
 
-    async function save(values: JobForm) {
+    const appendJobDescription = () => {
+        jobDescriptionsFieldArray.append({ description: "" })
+    }
+
+    const removeJobDescription = (index: number) => {
+         if(jobDescriptionsFieldArray.fields.length === 1) {
+            form.setValue("jobDescriptions.0.description", "")
+            return
+         }
+         jobDescriptionsFieldArray.remove(index)
+    }
+
+    const appendJobRequirement = () => {
+        jobRequirementsFieldArray.append({ requirement: "" })
+    }
+
+    const removeJobRequirement =(index: number) => {
+        if(jobRequirementsFieldArray.fields.length === 1) {
+             form.setValue("jobRequirements.0.requirement", "")
+             return 
+        }
+        
+        jobRequirementsFieldArray.remove(index)
+    }
+
+    async function save(form: JobForm) {
         setIsSaving(true)
          
         await safeCall(async () => {
-            const result = await Job.updateJob(jobId, JobPayload(values))
+            const result = await Job.updateJob(jobId, JobPayload(form))
             router.replace(`/job/${result.id}`)
         })
 

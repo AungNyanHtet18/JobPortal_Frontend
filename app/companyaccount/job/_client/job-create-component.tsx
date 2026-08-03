@@ -23,7 +23,7 @@ import FormsCheckBox from "@/components/fields/form-checkbox"
 export default function JobCreateComponent() {
     
     const router = useRouter()
-    const [isSaving, setIsSaving] = useState(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     
     const form = useForm<JobForm>({
          resolver: zodResolver(JobSchema),

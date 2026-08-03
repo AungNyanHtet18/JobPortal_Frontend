@@ -28,7 +28,7 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
   const [details, setDetails] = useState<JobDetails>()
   const [applicants, setApplicants] = useState<JobApplicationListItem[]>([])
   const [notifyApplicantDialogIndex, setNotifyApplicantDialogIndex] = useState<number | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const form = useForm<ApplicationStatusForm>({
     resolver: zodResolver(ApplicationStatusSchema),

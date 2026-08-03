@@ -24,8 +24,8 @@ export default function CompanyEditComponent({id} : {id: string}) {
      
     const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
-    const [isSaving, setIsSaving] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage]) //URL.createObjectURL(file) creates a temporary URL that points to the file data in memory.  

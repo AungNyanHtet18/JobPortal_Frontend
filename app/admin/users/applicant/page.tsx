@@ -130,17 +130,18 @@ export default function ApplicantManagementPage() {
                                             
                                             <TableCell className="text-center text-zinc-600">
                                                 <div className="flex justify-center gap-2">
-                                                    <Link href={`/admin/users/applicant/${applicant.id}`}>
-                                                        <Button variant="ghost" size="icon">
+                                                    <Button variant="ghost" size="icon" asChild>
+                                                        <Link href={`/admin/users/applicant/${applicant.id}`}>
                                                             <Eye className="size-4" />
-                                                        </Button>
-                                                    </Link>
-                                                        <Button variant="ghost" size="icon">
-                                                            <Edit className="size-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600">
-                                                            <Trash2 className="size-4" />
-                                                        </Button>
+                                                        </Link>
+                                                    </Button>
+                                                    
+                                                    <Button variant="ghost" size="icon">
+                                                        <Edit className="size-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600">
+                                                        <Trash2 className="size-4" />
+                                                    </Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>

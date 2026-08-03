@@ -30,7 +30,7 @@ export default function JobSearchComponent() {
     const [savedJobs, setSavedJobs] = useState<number[]>([])
     const [appliedJobs, setAppliedJobs] = useState<number[]>([])
     const [confirmJob, setConfirmJob] = useState<JobListItem | null>(null)
-    const [isApplying, setIsApplying] = useState(false)
+    const [isApplying, setIsApplying] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const { list, pageInfo } = result
 

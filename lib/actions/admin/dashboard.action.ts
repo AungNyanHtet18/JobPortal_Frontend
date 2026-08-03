@@ -30,12 +30,12 @@ export async function getApplicationList(form: ApplicationSearch) : Promise<Page
     return await response.json() as PageResult<ApplicationListItem>
 }
 
-export async function getMostAppliedJobs(): Promise<MostAppliedJobListItem[]> {
+export async function getMostAppliedJobs() : Promise<MostAppliedJobListItem[]> {
     const response = await secureSearch("admin/mostAppliedJobs")
     return await response.json() as MostAppliedJobListItem[]
 }
 
-export async function getDashboardStats(): Promise<ModificationResult<DashboardStats>> {
+export async function getDashboardStats() : Promise<ModificationResult<DashboardStats>> {
    const response = await secureSearch('admin/dashboard/stats')
    return await response.json() as ModificationResult<DashboardStats>
 }

@@ -24,7 +24,7 @@ export default function CompanyCreateComponent() {
      
     const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
-    const [isSaving, setIsSaving] = useState(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const profilePreview = useMemo(() => profileImage ? URL.createObjectURL(profileImage) : undefined, [profileImage])
 
     const form = useForm<CompanyForm>({

@@ -34,8 +34,8 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     const [cvFormFile, setCvFormFile] = useState<File | null>(null)
     const [resumeDummy, setResumeDummy] = useState<string | null>(null)
     const [cvFormDummy, setCvFormDummy] = useState<string | null>(null)
-    const [isSaving, setIsSaving] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [uploadedProfileUrl, setUploadedProfileUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState(false)
     const [educationDialogIndex, setEducationDialogIndex] = useState<number | null>(null)
@@ -94,8 +94,8 @@ export default function ApplicantEditComponent({id} : {id: string}) {
     })
 
     const currentExperience = useWatch({  //When checkbox  is checked, usewatch returns true 
-            control: form.control,
-            name: experienceDialogIndex !== null ? `experiences.${experienceDialogIndex}.currentlyWorking` : "experiences.0.currentlyWorking",
+        control: form.control,
+        name: experienceDialogIndex !== null ? `experiences.${experienceDialogIndex}.currentlyWorking` : "experiences.0.currentlyWorking",
     })
 
    // Run when the component unmounts. When profilePreview changes,this cleanup function handles memory management during component updates

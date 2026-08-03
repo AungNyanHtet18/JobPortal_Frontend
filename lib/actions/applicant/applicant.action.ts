@@ -33,7 +33,7 @@ export async function createApplicant(formData: FormData) : Promise<Modification
       return result
 }
 
-export async function updateApplicant(id: string | number, formData: FormData): Promise<ModificationResult<number>> {
+export async function updateApplicant(id: string, formData: FormData) : Promise<ModificationResult<number>> {
      const formValue = formData.get("form")
 
      if(typeof formValue !== "string") {
@@ -60,7 +60,7 @@ export async function updateApplicant(id: string | number, formData: FormData): 
      return result
 }
 
-export async function uploadApplicantResume(resumeFile: File): Promise<ModificationResult<string>> {
+export async function uploadApplicantResume(resumeFile: File) : Promise<ModificationResult<string>> {
 
      if(!(resumeFile instanceof File) || resumeFile.size === 0) {
           throw new Error("Please select a resume file.")
@@ -78,7 +78,7 @@ export async function uploadApplicantResume(resumeFile: File): Promise<Modificat
 }
 
 
-export async function uploadApplicantCvForm(cvFormFile: File): Promise<ModificationResult<string>> {
+export async function uploadApplicantCvForm(cvFormFile: File) : Promise<ModificationResult<string>> {
      
      if(!(cvFormFile instanceof File) || cvFormFile.size === 0) {
           throw new Error("Please select a CV Form file.")
@@ -95,7 +95,7 @@ export async function uploadApplicantCvForm(cvFormFile: File): Promise<Modificat
      return await response.json()
 }
 
-export async function downloadApplicantResume(id: number): Promise<Blob>{
+export async function downloadApplicantResume(id: number) : Promise<Blob>{
       const response = await secureSearch(`applicant/resume/${id}/download`)
 
       if(!response.ok) {
@@ -105,7 +105,7 @@ export async function downloadApplicantResume(id: number): Promise<Blob>{
       return await response.blob()
 }
 
-export async function downloadApplicantCVForm(id: number): Promise<Blob>{
+export async function downloadApplicantCVForm(id: number) : Promise<Blob>{
       
      const response = await secureSearch(`applicant/cvForm/${id}/download`)
 
@@ -116,7 +116,7 @@ export async function downloadApplicantCVForm(id: number): Promise<Blob>{
       return await response.blob()
 }
 
-export async function getApplicantById(id: string | number): Promise<ApplicantDetails | null> {
+export async function getApplicantById(id: string | number) : Promise<ApplicantDetails | null> {
      const response = await secureSearch(`applicant/id/${id}`)
      return await response.json().catch(() => null)
 }
