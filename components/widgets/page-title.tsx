@@ -11,6 +11,7 @@ export default function PageTitle({
     subTitle,
     description,
     editUrl,
+    editName,
     currentRoute,
     nextRoute} :  
     {icon : IconType,
@@ -18,6 +19,7 @@ export default function PageTitle({
      subTitle?: string[],
      description?: string,
      editUrl?: string,
+     editName?: string
      currentRoute?: string,
      nextRoute?: string
     }) {
@@ -25,43 +27,43 @@ export default function PageTitle({
     if(subTitle) {
         return (
         <header className="flex items-center gap-2 mb-2">
-                <div>
-                    <IconComponent icon={icon} className="size-7 text-gray-700"/>
-                </div>
-                <div>   
-                    <div className="text-zinc-600 text-xl font-semibold tracking-wide">{title}</div>
-                    {subTitle.length > 0 && 
-                        <div className="flex gap-2">
-                            {subTitle.map((item,index) =>
-                                <Badge key={index}>{item}</Badge>
-                            )}
-                        </div>                    
-                    }
-
-                    {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
-                </div>
-
-                {editUrl && 
-                    <div className="ml-auto">
-                       <Button asChild>
-                            <Link href={editUrl}>
-                               <Pencil/> Edit
-                            </Link>
-                       </Button>
-                    </div>
+            <div>
+                <IconComponent icon={icon} className="size-6 text-zinc-500"/>
+            </div>
+            <div>   
+                <h1 className="tracking-wider text-xl text-zinc-500 font-[600]">{title}</h1>
+                {subTitle.length > 0 && 
+                    <div className="flex gap-2">
+                        {subTitle.map((item,index) =>
+                            <Badge key={index}>{item}</Badge>
+                        )}
+                    </div>                    
                 }
 
-                {currentRoute && nextRoute &&
-                    <div className="ml-auto flex space-x-1">
-                       <div className="text-slate-500 font-bold">
-                         {currentRoute}
-                       </div> 
-                       <div className="text-zinc-800">/</div>
-                       <div className="text-zinc-500">
-                         {nextRoute}
-                       </div> 
-                    </div>
-                }
+                {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
+            </div>
+
+            {editUrl && 
+            <div className="ml-auto">
+                <Button className='bg-slate-500 text-white hover:bg-slate-600 shadow-md rounded-lg'  asChild>
+                    <Link href={editUrl}>
+                         {editName}
+                    </Link>
+                </Button>
+            </div>
+            }
+
+            {currentRoute && nextRoute &&
+            <div className="ml-auto flex space-x-1">
+                <div className="text-slate-500 font-bold">
+                    {currentRoute}
+                </div> 
+                <div className="text-zinc-800">/</div>
+                <div className="text-zinc-500">
+                    {nextRoute}
+                </div> 
+            </div>
+            }
         </header>
         ) 
     }
@@ -69,35 +71,35 @@ export default function PageTitle({
 
     return (
         <header className="flex items-center gap-2 mb-4">
-                <div>
-                    <IconComponent icon={icon} className="size-7 text-gray-700"/>
-                </div>
-                <div>   
-                    <div className="text-zinc-600 text-xl font-semibold tracking-wide">{title}</div>
-                    {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
-                </div>
+            <div>
+                <IconComponent icon={icon} className="size-6 text-zinc-500"/>
+            </div>
+            <div>   
+                <h1 className="tracking-wider text-xl text-zinc-500 font-[600]">{title}</h1>
+                {description &&  <div className="text-muted-foreground text-1xl">{description}</div>}
+            </div>
 
-                {editUrl && 
-                    <div className="ml-auto">
-                       <Button asChild>
-                            <Link href={editUrl}>
-                               <Pencil/> Edit
-                            </Link>
-                       </Button>
-                    </div>
-                }
+            {editUrl && 
+            <div className="ml-auto">
+                <Button className='bg-slate-500 text-white hover:bg-slate-600 shadow-md rounded-lg'  asChild>
+                    <Link href={editUrl}>
+                        {editName}
+                    </Link>
+                </Button>
+            </div>
+            }
 
-                {currentRoute && nextRoute &&
-                    <div className="ml-auto flex space-x-1">
-                       <div className="text-slate-500 font-bold">
-                         {currentRoute}
-                       </div> 
-                       <div className="text-zinc-8  00">/</div>
-                       <div className="text-zinc-500">
-                         {nextRoute}
-                       </div> 
-                    </div>
-                } 
+            {currentRoute && nextRoute &&
+            <div className="ml-auto flex space-x-1">
+                <div className="text-slate-500 font-bold">
+                    {currentRoute}
+                </div> 
+                <div className="text-zinc-800">/</div>
+                <div className="text-zinc-500">
+                    {nextRoute}
+                </div> 
+            </div>
+            } 
         </header>
     )
 }

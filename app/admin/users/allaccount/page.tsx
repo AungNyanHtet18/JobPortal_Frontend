@@ -9,11 +9,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Loading from "@/components/widgets/loading"
+import PageTitle from "@/components/widgets/page-title"
 import PagerWidget from "@/components/widgets/pager-widget"
 import { searchAllAccounts } from "@/lib/actions/admin/management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminAccountListItem, AdminAllAccountSearch } from "@/lib/type/schema/admin/management.schema"
-import { formatDate, formatDateForDay, formatDateTime, safeCall } from "@/lib/utils"
+import { formatDateTime, safeCall } from "@/lib/utils"
 import { Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -68,9 +69,7 @@ export default function AllAccountPage() {
 
     return (
         <>
-        <div className="flex items-center justify-between">
-            <h1 className='tracking-wider text-xl text-zinc-500 font-[600]'>Account Management</h1>
-        </div>
+        <PageTitle icon="Users" title="All Accounts"  />
 
         <Card className='rounded-none px-1'>
             <CardHeader>

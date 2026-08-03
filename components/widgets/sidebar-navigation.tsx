@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Users, Briefcase, FileText, Settings, BarChart2, LogOutIcon, Lock, Building2, User, ArrowUp, ArrowDown, ChevronRight, ChevronUp, ChevronDown, ClipboardList, ClipboardClock, ClipboardCheckIcon } from "lucide-react"
+import { LayoutDashboard, Users, Briefcase, FileText, Settings, BarChart2, LogOutIcon, Lock, Building2, User, ArrowUp, ArrowDown, ChevronRight, ChevronUp, ChevronDown, ClipboardList, ClipboardClock, ClipboardCheckIcon, FileQuestion, CircleHelp, BookOpenCheck, FileUser } from "lucide-react"
 import { Button } from "../ui/button";
 import { signOutAction } from "@/lib/actions/auth.action";
 import { cn } from "@/lib/utils";
@@ -19,15 +19,15 @@ export default function SideBarNavigation() {
         { href: "/admin/posts", label: "Posts", icon: <FileText size={18} /> },
         { href: "#", label: "Users", icon: <User size={18}/>,  
             dropdownMenu: [
-                { href: "/admin/users/allaccount", label: "All Account", icon: <User size={18} />},
-                { href: "/admin/users/applicant", label: "Applicants", icon: <Users size={18} />},
+                { href: "/admin/users/allaccount", label: "All Accounts", icon: <Users size={18} />},
+                { href: "/admin/users/applicant", label: "Applicants", icon: <FileUser size={18} />},
                 { href: "/admin/users/company", label: "Companies", icon: <Building2 size={18} /> }
             ]
         },
         { href: "#", label: "Quizzes", icon: <ClipboardList size={18} />,
              dropdownMenu: [
-               { href: "/admin/quizzes", label: "All Quizzes", icon: <ClipboardClock size={18} />},
-               { href: "/admin/quizzes/edit", label: "Create Quiz", icon: <ClipboardCheckIcon size={18} />}
+               { href: "/admin/quizzes", label: "All Quizzes", icon: <FileQuestion size={18} />},
+               { href: "/admin/quizzes/edit", label: "Create Quiz", icon: <BookOpenCheck size={18} />}
              ]
         },
         { href: "/admin/settings", label: "Settings", icon: <Settings size={18} /> },

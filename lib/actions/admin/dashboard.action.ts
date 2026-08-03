@@ -1,4 +1,4 @@
-'use server';
+'use server'
 
 import { secureSearch } from "@/lib";
 import { getLoginUser } from "@/lib/login-users";

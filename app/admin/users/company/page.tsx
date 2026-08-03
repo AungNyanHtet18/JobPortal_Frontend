@@ -17,6 +17,7 @@ import { searchCompanies } from '@/lib/actions/admin/management.action';
 import { Form } from '@/components/ui/form';
 import FormsInput from '@/components/fields/form-input';
 import { AdminCompanyListItem, AdminCompanySearch } from '@/lib/type/schema/admin/management.schema';
+import PageTitle from '@/components/widgets/page-title';
 
 export default function CompanyManagementPage() {
     const [result, setResult] = useState<PageResult<AdminCompanyListItem>>(DEFAULT_PAGE_RESULT)
@@ -64,14 +65,7 @@ export default function CompanyManagementPage() {
 
     return (
         <>            
-        <div className="flex items-center justify-between">
-            <h1 className='tracking-wider text-xl text-zinc-500 font-[600]'>Company Management</h1>
-            <Link href="/admin/users/applicant">
-                <Button className='bg-slate-500 text-white hover:bg-slate-600 shadow-md rounded-lg'>
-                    View Applicants
-                </Button>
-            </Link>
-        </div>
+        <PageTitle icon='Building2' title='Company Management' editUrl='/admin/users/applicant' editName='View Applicants' />
 
         <Card className='rounded-none px-1'>
             <CardHeader>

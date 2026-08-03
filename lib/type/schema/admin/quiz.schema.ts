@@ -1,4 +1,5 @@
 import z from "zod";
+import { PageSearch } from "../..";
 
 export const InterviewQuizOptionSchema = z.object({
     optionAnswer: z.string().nonempty("Please fill option answer for quiz."),
@@ -47,7 +48,7 @@ export const emptyQuizOption = {
 
 export const emptyQuizQuestion = {
     questionTitle: "",
-    questionType: "SINGLE_CHOICE",
+    questionType: "Single Choice",
     marks: "",
     interviewQuizOptions: [
         {...emptyQuizOption},
@@ -58,8 +59,8 @@ export const emptyQuizQuestion = {
 }
 
 export const QuestionTypeOptions = [
-    {key: "SINGLE CHOICE", value: "Single Choice"},
-    {key: "MULTIPLE CHOICE", value: "Multiple Choice"}
+    {key: "SingleChoice", value: "Single Choice"},
+    {key: "MultipleChoice", value: "Multiple Choice"}
 ]
 
 export const QuizPayload = (form: QuizForm): QuizPayloadType => {
@@ -77,4 +78,20 @@ export const QuizPayload = (form: QuizForm): QuizPayloadType => {
             }))
         }))
     }
+}
+
+export type AdminQuizSearch = {
+    questionType? : string
+    keyword?: string
+} & PageSearch
+
+export type AdminQuizListItem = {
+     id: number
+     quizTitle: string
+     passingScore: number
+     roleName: string
+     questionTitle: string
+     questionType: string
+     marks: number,
+     questionOptionsCount: number
 }

@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Loading from "@/components/widgets/loading"
+import PageTitle from "@/components/widgets/page-title"
 import PagerWidget from "@/components/widgets/pager-widget"
 import { searchJobs } from "@/lib/actions/admin/management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
-import { AdminApplicantSearch, AdminJobListItem, AdminJobSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
+import { AdminJobListItem, AdminJobSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
 import { formatDateForDay, safeCall } from "@/lib/utils"
 import { Eye, Search } from "lucide-react"
 import Link from "next/link"
@@ -61,9 +62,7 @@ export default function JobManagementPage() {
 
      return (
         <>
-        <div className="flex items-center justify-between">
-            <h1 className='tracking-wider text-xl text-zinc-500 font-[600]'>Job Management</h1>
-        </div>
+        <PageTitle icon="Briefcase" title="Job Management"/>
 
         <Card className='rounded-none px-1'>
             <CardHeader>

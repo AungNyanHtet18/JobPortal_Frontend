@@ -17,6 +17,7 @@ import { searchApplicants } from '@/lib/actions/admin/management.action';
 import { Form } from '@/components/ui/form';
 import FormsInput from '@/components/fields/form-input';
 import { AdminApplicantListItem, AdminApplicantSearch } from '@/lib/type/schema/admin/management.schema';
+import PageTitle from '@/components/widgets/page-title';
 
 export default function ApplicantManagementPage() {
     const [result, setResult] = useState<PageResult<AdminApplicantListItem>>(DEFAULT_PAGE_RESULT)
@@ -62,14 +63,7 @@ export default function ApplicantManagementPage() {
 
     return (
         <>
-        <div className="flex items-center justify-between">
-            <h1 className='tracking-wider text-xl text-zinc-500 font-[600]'>Applicant Management</h1>
-            <Link href="/admin/users/company">
-                <Button className='bg-slate-500 text-white hover:bg-slate-600 shadow-md rounded-lg'>
-                    View Companies
-                </Button>
-            </Link>
-        </div>
+        <PageTitle icon='FileUser' title='Applicant Management' editUrl='/admin/users/company' editName='View Companies'/>
 
         <Card className='rounded-none px-1'>
             <CardHeader>

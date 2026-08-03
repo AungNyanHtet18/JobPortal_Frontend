@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Loading from "@/components/widgets/loading"
+import PageTitle from "@/components/widgets/page-title"
 import PagerWidget from "@/components/widgets/pager-widget"
-import { deletePosts, searchPosts } from "@/lib/actions/admin/management.action"
+import { deletePosts, searchPosts } from "@/lib/actions/admin/post.management.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { AdminPostListItem, AdminPostSearch, getStatusBadgeColorForJob } from "@/lib/type/schema/admin/management.schema"
 import {  formatDateForDay, safeCall } from "@/lib/utils"
@@ -52,7 +53,6 @@ export default function PostManagementPage() {
      }
 
      async function search(form: AdminPostSearch) {
-        console.log(pendingDeletePostId);
         setLoading(true)
         await safeCall(async () => {
              const data = await searchPosts(form)
@@ -79,9 +79,7 @@ export default function PostManagementPage() {
 
      return (
         <>
-        <div className="flex items-center justify-between">
-            <h1 className='tracking-wider text-xl text-zinc-500 font-[600]'>Post Management</h1>
-        </div>
+        <PageTitle icon="FileText" title="Post Management"  />
 
         <Card className='rounded-none px-1'>
             <CardHeader>
@@ -152,7 +150,7 @@ export default function PostManagementPage() {
 
                         <AlertDialog open={!!pendingDeletePostId}
                             onOpenChange={(open) => { 
-                                if (!open) { //if open is not true => referencing open={!!confirmJob}
+                                if (!open) { //if open state is not true => referencing open={!!confirmJob}
                                  setPendingDeletePostId(null)
                                 }
                             }}

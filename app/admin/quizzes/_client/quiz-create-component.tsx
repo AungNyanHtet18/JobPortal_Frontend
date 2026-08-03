@@ -11,7 +11,7 @@ import DialogDetailComponent from "@/components/widgets/dialog-detail-component"
 import DialogComponent from "@/components/widgets/dialog-widget"
 import InputComponent from "@/components/widgets/input-component"
 import PageTitle from "@/components/widgets/page-title"
-import * as Quiz from "@/lib/actions/admin/quiz.action"
+import * as Quiz from "@/lib/actions/admin/quiz.management.action"
 import { safeCall } from "@/lib/utils"
 import { emptyQuizOption, emptyQuizQuestion, QuestionTypeOptions, QuizForm, QuizPayload,QuizSchema} from "@/lib/type/schema/admin/quiz.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -125,7 +125,7 @@ export default function QuizzesCreateComponent() {
         console.log(quizForm);
 
         await safeCall(async () => {
-            const result = await Quiz.createQuiz(QuizPayload(quizForm))
+            const result = await Quiz.createQuizzes(QuizPayload(quizForm))
 
             toast.success("Quiz created", {
                 description: `Quiz #${result.id} has been added successfully.`,
@@ -147,7 +147,7 @@ export default function QuizzesCreateComponent() {
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle icon="ClipboardList" title="Quiz Create" description="Build interview quizzes with clear questions, structured answers, and a passing score." />
+            <PageTitle icon="BookOpenCheck" title="Quiz Create" description="Build interview quizzes with clear questions, structured answers, and a passing score." />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)}>
