@@ -10,7 +10,7 @@ export async function searchQuizzes(form: AdminQuizSearch) : Promise<PageResult<
 }
 
 export async function findQuizById(id: string) : Promise<QuizDetails> {
-    const response = await secureSearch(`admin/quiz/${id}`)
+    const response = await secureSearch(`quiz/${id}`)
     return await response.json() as QuizDetails 
 }
 

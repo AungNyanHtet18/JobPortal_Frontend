@@ -106,6 +106,7 @@ export type QuizDetails = {
 }
 
 export type QuizQuestion = {
+    questionId: number
     questionTitle: string
     questionType: string
     marks: number
@@ -113,6 +114,7 @@ export type QuizQuestion = {
 }
 
 export type QuizOption = {
+     optionId: number
      optionAnswer: string
      isCorrect: boolean
 }
