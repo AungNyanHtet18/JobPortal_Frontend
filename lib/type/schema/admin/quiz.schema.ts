@@ -96,25 +96,3 @@ export type AdminQuizListItem = {
      marks: number,
      questionOptionsCount: number
 }
-
-export type QuizDetails = { 
-    id: number
-    roleId: number
-    quizTitle: string
-    passingScore: number
-    quizQuestions: QuizQuestion[]
-}
-
-export type QuizQuestion = {
-    questionId: number
-    questionTitle: string
-    questionType: string
-    marks: number
-    quizOptions: QuizOption[]
-}
-
-export type QuizOption = {
-     optionId: number
-     optionAnswer: string
-     isCorrect: boolean
-}

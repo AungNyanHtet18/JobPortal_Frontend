@@ -113,7 +113,7 @@ export default function PostSearchComponent() {
     }
 
     if (loading && posts.length === 0) {
-        return <Loading content="Initializing post feed" />
+        return <Loading content="Loading Posts..." />
     }
 
     return (

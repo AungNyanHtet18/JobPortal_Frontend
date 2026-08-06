@@ -10,13 +10,9 @@ export default function JobEditPage() {
     const jobId = searchParam.get('jobId')
     
     if(jobId) {
-         return (
-            <JobEditComponent jobId={jobId} />
-         )
+         return (<JobEditComponent jobId={jobId}/>)
     }
 
-    return (
-        <JobCreateComponent />
-    )
+    return (<JobCreateComponent />)
 
 }

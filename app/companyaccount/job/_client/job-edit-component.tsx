@@ -119,7 +119,7 @@ export default function JobEditComponent({jobId} : {jobId: string}) {
     }
 
     if(isLoading) {
-        return <Loading content="Preparing for your job edit form"/>
+        return <Loading content="Loading Job Details... "/>
     }
    
     return (

@@ -5,9 +5,9 @@ export default async function CompanyApplicantDetailPage({ params }: { params: P
   const {applicantId} = await params
   
   return (
-          <section className="space-y-6">
-             <ApplicantDetailsComponent applicantId={applicantId}/>
-          </section>
+      <section className="space-y-6">
+          <ApplicantDetailsComponent applicantId={applicantId}/>
+      </section>
   )
 
 }

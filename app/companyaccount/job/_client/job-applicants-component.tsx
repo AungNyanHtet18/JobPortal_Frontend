@@ -80,7 +80,7 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
   }
 
   if (loading || !details) {
-      return <Loading content="Loading for Applicant Lists" />
+      return <Loading content="Loading Applicant Lists..." />
   }
 
   return (

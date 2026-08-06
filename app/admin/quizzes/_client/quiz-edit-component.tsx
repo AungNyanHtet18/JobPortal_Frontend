@@ -2,7 +2,7 @@
 
 import { getCareers } from "@/lib/actions/admin/career.action"
 import { CareerListItem } from "@/lib/type/schema/admin/career.schema"
-import { emptyQuizOption, emptyQuizQuestion, QuestionTypeOptions, QuizDetails, QuizForm, QuizPayload, QuizSchema } from "@/lib/type/schema/admin/quiz.schema"
+import { emptyQuizOption, emptyQuizQuestion, QuestionTypeOptions, QuizForm, QuizPayload, QuizSchema } from "@/lib/type/schema/admin/quiz.schema"
 import { safeCall } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
@@ -23,6 +23,8 @@ import DialogComponent from "@/components/widgets/dialog-widget"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
 import FormsCheckBox from "@/components/fields/form-checkbox"
 import { toast } from "sonner"
+import { findQuizById } from "@/lib/actions/quiz/quiz.action"
+import { QuizDetails } from "@/lib/type/schema/quiz/quiz.schema"
 
 export default function QuizzesEditComponent({quizId} : {quizId: string}) {
     
@@ -49,7 +51,7 @@ export default function QuizzesEditComponent({quizId} : {quizId: string}) {
     useEffect(() => {
         function load() {
             safeCall(async () => {
-                const result: QuizDetails = await Quiz.findQuizById(quizId)
+                const result: QuizDetails = await findQuizById(quizId)
                 const careers: CareerListItem[] = await getCareers()
                 form.reset({
                    roleId: result.roleId.toString(),

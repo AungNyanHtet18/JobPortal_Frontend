@@ -40,7 +40,7 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
     const visibleProfileImage = profileImageUrl && !profileImageFailed
 
     if(!details) {
-        return <Loading content="Loading for Job Details" />
+        return <Loading content="Loading Job Details..." />
     }
 
     return (

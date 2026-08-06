@@ -8,11 +8,9 @@ export default function QuizzesEditPage() {
     
     const searchParam = useSearchParams()
     const quizId = searchParam.get('quizId')
-
+    
     if(quizId) {
-        return (
-          <QuizzesEditComponent quizId={quizId} />
-        )
+        return (<QuizzesEditComponent quizId={quizId} />)
     }
 
     return (

@@ -107,12 +107,8 @@ export default function CompanyEditComponent({id} : {id: string}) {
                             <div className="space-y-4">
                                 <div className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50">
                                     {visibleProfileImage && (
-                                        <img
-                                            src={visibleProfileImage}
-                                            alt="Company profile"
-                                            className="size-full object-cover"
-                                            onError={() => setProfileImageFailed(true)}
-                                        />
+                                        <img src={visibleProfileImage} alt="Company profile"
+                                            className="size-full object-cover" onError={() => setProfileImageFailed(true)}/>
                                     )}
 
                                     {!visibleProfileImage && (
@@ -123,11 +119,8 @@ export default function CompanyEditComponent({id} : {id: string}) {
                                     )}
                                 </div>
 
-                                <Input id="edit-company-profile-image"
-                                       type="file"
-                                       accept="image/*"
-                                       className="hidden"
-                                       onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)} />
+                                <Input id="edit-company-profile-image" type="file" accept="image/*"
+                                       className="hidden" onChange={(event) => setProfileImage(event.target.files?.[0] ?? null)} />
 
                                 <div className="flex gap-2">
                                     <Button type="button" variant="outline" className="flex-1 border-zinc-900 bg-white text-zinc-950 hover:bg-zinc-100" asChild>
