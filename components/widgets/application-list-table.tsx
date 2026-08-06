@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ApplicationListItem} from "@/lib/type/schema/admin/dashboard.schema"
-import { ChevronLeft, ChevronRight, TrendingUp, Users } from "lucide-react"
+import { TrendingUp } from "lucide-react"
 import { PageInfo } from "@/lib/type"
 import {getStatusBadgeColorForApplication } from "@/lib/type/schema/admin/management.schema"
+import PagerArrowWidget from "./pager-arrow-bar"
 
 type ApplicationListTableProps = {
     applications: ApplicationListItem[] | undefined
@@ -45,7 +45,6 @@ export function ApplicationListTable({ applications, pageInfo, loading, onPageCh
                         <TrendingUp className="size-5"/>
                          Job Applications
                     </div>
-        
                 </CardTitle>
             </CardHeader>
 
@@ -87,29 +86,7 @@ export function ApplicationListTable({ applications, pageInfo, loading, onPageCh
                     </Table>
                 </div>
 
-                {pageInfo && pageInfo.totalPage > 1 && (
-                    <div className="flex items-center justify-between p-4 border-t">
-                        <div className="text-sm text-zinc-500">
-                            Showing page {pageInfo.page + 1} of {pageInfo.totalPage}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={pageInfo.page === 0}
-                                onClick={() => onPageChange(pageInfo.page - 1)}>
-                                <ChevronLeft className="size-4" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={pageInfo.page + 1 >= pageInfo.totalPage}
-                                onClick={() => onPageChange(pageInfo.page + 1)}>
-                                <ChevronRight className="size-4" />
-                            </Button>
-                        </div>
-                    </div>
-                )}
+                <PagerArrowWidget pager={pageInfo} onPageChange={onPageChange} />
             </CardContent>
         </Card>
     )

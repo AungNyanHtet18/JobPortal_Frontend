@@ -158,15 +158,12 @@ export default function JobSearchComponent() {
                 <Card key={job.jobId} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                     <div className="relative h-40 w-full overflow-hidden">
 
-                      <img
-                          src={job.profilePhoto ? `${getCompanyPhoto(job.profilePhoto)}` : '/images/signin.jpg' }
-                          alt={job.positionName}
-                          className="h-full w-full object-cover transition-all duration-500 hover:scale-110"/>
+                      <img src={job.profilePhoto ? `${getCompanyPhoto(job.profilePhoto)}` : '/images/signin.jpg' }
+                           alt={job.positionName}
+                           className="h-full w-full object-cover transition-all duration-500 hover:scale-110"/>
                       
                       {applicant && 
-                        <button
-                          type="button"
-                          onClick={() => saveJob(job.jobId)}
+                        <button type="button" onClick={() => saveJob(job.jobId)}
                           className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-zinc-900 shadow-md backdrop-blur transition hover:bg-white"
                           aria-label={isSaved ? "Unsave job" : "Save job"}>
                           <Heart className={isSaved ? "size-5 text-rose-800 fill-rose-600" : "size-5"} />

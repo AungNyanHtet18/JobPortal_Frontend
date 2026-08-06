@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { Users, Briefcase, FileText, UserPlus, UsersRound, BriefcaseBusiness, FileCheck2, User2, FileArchive, Files, FolderCheck, ContactRound, Building2, Rocket, UserCog, UserCog2, UserCheck } from 'lucide-react'
+import { FolderCheck, ContactRound, Rocket, UsersRound } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { getDashboardYears, getJobPostProgressTrends, getUserRegistrationTrends, getApplicationList, getMostAppliedJobs, getDashboardStats } from '@/lib/actions/admin/dashboard.action'

@@ -54,8 +54,8 @@ export default function JobManagementPage() {
      async function search(form: AdminJobSearch) {
         setLoading(true)
         await safeCall(async () => {
-             const data = await searchJobs(form)
-             setResult(data)
+            const result = await searchJobs(form)
+            setResult(result)
         })
         setLoading(false)
      }

@@ -29,8 +29,6 @@ export default function ApplicantEditPage() {
            return <ApplicantEditComponent id={id}/>
        }
 
-    
-
     return (
         <ApplicantCreateComponent/>
      )
