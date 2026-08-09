@@ -128,7 +128,6 @@ export async function findByApplicantName() : Promise<ApplicantDetails | null> {
      return await response.json().catch(() => null);
 }
 
-
 export async function findByApplicant() : Promise<string | undefined> {
       return await getApplicantId()
 }

@@ -6,9 +6,10 @@ import { Input } from "../ui/input";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Card, CardContent } from "../ui/card";
 import { useState } from "react";
+import { AdminInfo } from "@/lib/type/schema/auth.schema";
 
 type AdminNavigationProps = {
-     admin: {name: string, email: string}
+     admin: AdminInfo
      setSiderbarOpen: () => void
 }
 
@@ -24,8 +25,6 @@ export default function AdminNavigation({admin, setSiderbarOpen} : AdminNavigati
                     <h1 className="text-white font-semibold text-2xl">Home</h1>
                 </div>
    
-
-
                 <div className="flex-1 max-w-md">
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-zinc-400" />

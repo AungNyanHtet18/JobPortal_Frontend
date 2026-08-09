@@ -46,3 +46,54 @@ export type QuizTitleListItem = {
     roleName: string
     quizQuestionCount: number
 }
+
+export type QuizAnswerPayloadType = {
+    quizId: number
+    quizAnswerLists: {
+        questionId: number
+        answerOptions: {
+            optionId: number
+            isCorrect: boolean
+        }[]
+    }[]
+}
+
+export const QuizAnswerPayload = (form: QuizAssessmentForm): QuizAnswerPayloadType => {
+    return {
+        quizId: Number(form.quizId),
+        quizAnswerLists: form.quizAnswerLists.map(answer => ({
+            questionId: Number(answer.questionId),
+            answerOptions: answer.answerOptions.map(option => ({
+                optionId: Number(option.optionId),
+                isCorrect: option.isCorrect
+            }))
+        }))
+    }
+}
+
+export function quizSubmissionPayload(quiz: QuizDetails,form: QuizAssessmentForm): QuizAnswerPayloadType {
+    const submittedByQuestion = new Map<number, Map<number, boolean>>()
+    form.quizAnswerLists.forEach(answer => {
+        const questionId = Number(answer.questionId)
+        const quizOption = new Map<number, boolean>();
+
+        answer.answerOptions.forEach(option => {
+            quizOption.set(Number(option.optionId), option.isCorrect)
+        })
+        
+        submittedByQuestion.set(questionId, quizOption)
+    })
+
+    const quizAnswerLists = quiz.quizQuestions.map(question => ({
+        questionId: question.questionId,
+        answerOptions: (question.quizOptions).map(option => ({
+            optionId: option.optionId,
+            isCorrect: !!submittedByQuestion.get(question.questionId)?.get(option.optionId)
+        }))
+    }))
+
+    return {
+        quizId: Number(form.quizId),
+        quizAnswerLists,
+    }
+}

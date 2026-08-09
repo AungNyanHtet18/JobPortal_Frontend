@@ -5,16 +5,17 @@ import { useEffect, useState } from "react";
 import AdminNavigation from "@/components/widgets/admin-navigation";
 import { safeCall } from "@/lib/utils";
 import { getAdminData } from "@/lib/actions/admin/dashboard.action";
+import { AdminInfo } from "@/lib/type/schema/auth.schema";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    const [sidebarOpen, setSidebarOpen] = useState(true)
-    const [adminData, setAdminData] = useState<{name: string, email: string}>({name: "", email: ""})
+    const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
+    const [adminInfo, setAdminInfo] = useState<AdminInfo>({name: "", email: ""})
 
     useEffect(() => {
       async function load() {
          await safeCall(async () => {
              const data = await getAdminData()
-             setAdminData({name: data.name, email: data.email})
+             setAdminInfo({name: data.name, email: data.email})
          })
       }
       load()
@@ -33,7 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             )}
             
             <main className={`${sidebarOpen ? 'col-span-6' : 'col-span-7'} flex flex-col h-screen overflow-hidden`}>
-                <AdminNavigation admin={adminData} setSiderbarOpen={toggleSiderbar} />
+                <AdminNavigation admin={adminInfo} setSiderbarOpen={toggleSiderbar} />
                 <div className="flex-1 p-6 overflow-auto bg-zinc-50">
                      {children}
                 </div>

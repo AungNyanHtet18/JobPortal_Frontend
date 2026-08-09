@@ -96,3 +96,7 @@ export type AdminQuizListItem = {
      marks: number,
      questionOptionsCount: number
 }
+
+export type AssessmentState = "loading" | "empty" | "active" | "submitted" | "error"
+export type QuestionType = "SINGLE_CHOICE" | "MULTIPLE_CHOICE"
+export type AnswerMap = Record<number, Record<number, boolean>>

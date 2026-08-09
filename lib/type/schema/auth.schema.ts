@@ -28,3 +28,8 @@ export type AuthResult = LoginUser &  {
      accessToken: string
      refreshToken: string
 }
+
+export type AdminInfo = {
+     name: string
+     email: string
+}
