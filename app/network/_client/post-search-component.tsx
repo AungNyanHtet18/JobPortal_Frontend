@@ -21,6 +21,7 @@ import PageTitle from "@/components/widgets/page-title"
 import { Label } from "@/components/ui/label"
 import { findByLoginUser } from "@/lib/actions/auth.action"
 import { LoginUser } from "@/lib/type/schema/auth.schema"
+import Link from "next/link"
 
 export default function PostSearchComponent() {
     const [posts, setPosts] = useState<PostListItem[]>([])
@@ -153,12 +154,15 @@ export default function PostSearchComponent() {
                 {posts.map((post) => (
                     <Card key={post.id} className="overflow-hidden border-zinc-200 shadow-sm">
                         <CardHeader className="px-3 flex flex-row items-start gap-3">
-                            <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
-                                <AvatarImage src={post.accountPhoto ? getAccountPhoto(post.accountPhoto) : ""} alt={post.accountName} />
-                                <AvatarFallback className="bg-zinc-100 text-zinc-600">
-                                    {post.accountName.substring(0, 2).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar> 
+                            <Link href={`/job/applicant/${post.accountId}`}>
+                                <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
+                                    <AvatarImage src={post.accountPhoto ? getAccountPhoto(post.accountPhoto) : ""} alt={post.accountName} />
+                                    <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                                        {post.accountName.substring(0, 2).toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar> 
+                            </Link>
+              
                             <div className="flex-1">
                                 <p className="text-sm font-semibold text-zinc-900 truncate">
                                     {post.accountName} 

@@ -274,7 +274,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
 
     return ( 
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle icon="User" title="Applicant Create" description="Create a complete candidate profile" />
+            <PageTitle icon="UserRound" title="Edit Applicant Profile" description="Update Your Complete Profile Information" />
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">

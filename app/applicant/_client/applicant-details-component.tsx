@@ -11,6 +11,7 @@ import * as authClient from "@/lib/actions/auth.action"
 import { Calendar, ExternalLink, FileText, Mail, MapPin, Phone } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import { IconType } from "@/lib/type/type"
+import PageTitle from "@/components/widgets/page-title"
 
 export default function ApplicantDetailsComponent({ applicantId }: { applicantId?: string }) {
         const [details, setDetails] = useState<ApplicantDetails>()
@@ -66,6 +67,8 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
         
         return (
             <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
+                <PageTitle icon="Contact" title="Applicant Profile" description="View applicant profile information" />
+
                 <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
                     <aside className="space-y-4">
                         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

@@ -270,9 +270,7 @@ export default function CompanyJobApplicantsComponent({ jobId }: { jobId: string
               </div>  
             </DialogComponent>
          </form>
-      </Form>
-
-        
+      </Form>        
     </section>
 
   )

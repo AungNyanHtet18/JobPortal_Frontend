@@ -10,6 +10,7 @@ export type PostListItem = {
     id: number
     content: string
     postPhoto: string | null
+    accountId: number
     accountName: string
     accountEmail: string
     accountPhoto: string | null
