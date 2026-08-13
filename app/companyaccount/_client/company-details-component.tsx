@@ -7,9 +7,11 @@ import * as companyClient from "@/lib/actions/company/company.action"
 import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { ArrowRightIcon, Globe, MapPinned, Phone, PhoneCall } from "lucide-react"
+import { ArrowRightIcon, Globe, MapPinned, MessageCircle, MessageSquare, Phone, PhoneCall } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import Link from "next/link"
+import PageTitle from "@/components/widgets/page-title"
+import { Button } from "@/components/ui/button"
 
 export default function CompanyDetailsComponent({companyId} : {companyId?: string}) {
     const [details, setDetails] = useState<CompanyDetails>()
@@ -39,14 +41,20 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                     })
                 }else {
 
-                 const result = companyId ? await companyClient.getCompanyById(companyId)  : await companyClient.findByCompanyName()
+                const result = companyId ? await companyClient.getCompanyById(companyId)  : await companyClient.findByCompanyName()
     
-                    if(result) {
+                if(result) {
+                    if(companyId) {
+                        setDetails({...result, uploadedJob: []})
+                        setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
+                        setProfileImageFailed(false)
+                    }else {
                         setDetails(result)
                         setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
                         setProfileImageFailed(false)
                     }
                 }
+            }
             })
         }
     
@@ -59,6 +67,8 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
+            <PageTitle icon="Contact" title="Company Profile" description="View company profile information" />
+
             <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
                 <aside className="space-y-4">
                     <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
@@ -80,10 +90,16 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         </div>
 
                         <div className="mt-5 space-y-2">
-                            <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
+                            <div className="flex">
+                                <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
+                                <Button variant="outline" className="bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ml-auto">
+                                    <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                    <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                </Button>
+                            </div>
                             <p className="text-sm text-zinc-500">{details.industryType}</p>
                             <div className="flex flex-wrap gap-2">
-                                <Badge variant="outline" className="border-zinc-300 bg-white text-zinc-900">
+                                <Badge variant="ghost" className="border-zinc-300 bg-white text-zinc-900">
                                     {details.companyEmail} 
                                 </Badge>
                                 {details.websiteUrl && (
@@ -142,7 +158,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         </PageDetailComponent>
                     </div>
 
-
+                    {companyId ? <></> :
                     <PageDetailComponent title="Uploaded Jobs" icon="Briefcase">
                         {details.uploadedJob.length > 0 ? (
                             <div className="space-y-4">
@@ -181,6 +197,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                             <p className="text-sm text-zinc-500">No uploaded jobs added.</p>
                         )}
                     </PageDetailComponent>
+                    }
                 </div>
             </div>
         </section>

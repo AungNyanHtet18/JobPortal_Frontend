@@ -14,7 +14,7 @@ import Loading from "@/components/widgets/loading"
 import PostInteractionComponent from "@/components/widgets/post-interaction-component"
 import { searchPost, createPost, updatePost, deletePost } from "@/lib/actions/post/post.action"
 import { PostForm, PostListItem, PostSchema } from "@/lib/type/schema/post/post.schema"
-import {  checkDateIsToday, formatDateForDay, getAccountPhoto,  getPostPhotoForPostList, getTimeAgo, safeCall } from "@/lib/utils"
+import {  checkDateIsToday, formatDateForDay, getAccountPhoto,  getCompanyPhoto,  getPostPhotoForPostList, getTimeAgo, safeCall } from "@/lib/utils"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PageTitle from "@/components/widgets/page-title"
@@ -154,9 +154,11 @@ export default function PostSearchComponent() {
                 {posts.map((post) => (
                     <Card key={post.id} className="overflow-hidden border-zinc-200 shadow-sm">
                         <CardHeader className="px-3 flex flex-row items-start gap-3">
-                            <Link href={`/job/applicant/${post.accountId}`}>
+                            <Link href= {post.accountRole === 'Applicant' ? `/job/applicant/${post.accountId}` : `/job/company/${post.accountId}`}>
                                 <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
-                                    <AvatarImage src={post.accountPhoto ? getAccountPhoto(post.accountPhoto) : ""} alt={post.accountName} />
+                                    <AvatarImage src={post.accountPhoto && post.accountRole === 'Applicant' ?  getAccountPhoto(post.accountPhoto) : 
+                                                     post.accountPhoto && post.accountRole === 'CompanyAccount' ? getCompanyPhoto(post.accountPhoto)  : 
+                                                     ''} alt={post.accountName} />
                                     <AvatarFallback className="bg-zinc-100 text-zinc-600">
                                         {post.accountName.substring(0, 2).toUpperCase()}
                                     </AvatarFallback>
@@ -190,8 +192,7 @@ export default function PostSearchComponent() {
                                 <div className=" mt-3 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50">
                                     <img src={getPostPhotoForPostList(post.postPhoto)}  alt="Post attachment" 
                                         className="w-full max-h-[500px] object-contain"
-                                        onError={(e) => (e.currentTarget.style.display = 'none')}
-                                    />
+                                        onError={(e) => (e.currentTarget.style.display = 'none')}/>
                                 </div>
                             )}
                         </CardContent>
@@ -207,24 +208,18 @@ export default function PostSearchComponent() {
                         diaLogTitle={editingPostId ? "Edit Post" : "Create a Post"} 
                         diaLogDescription={editingPostId ? "Update your post content and image." : "Share what's on your mind with your network."}
                         onOpenChange={() => setDialogOpen(false)}
-                        onRemoveChange={() => {
-                         deleteDialog(editingPostId)}}
+                        onRemoveChange={() => {deleteDialog(editingPostId)}}
                         saved={true}>
+
                         <div className="space-y-2 py-4">
-                            <FormsTextAreaInput 
-                                control={form.control} 
-                                path="content" 
+                            <FormsTextAreaInput control={form.control} path="content" 
                                 placeHolder="What do you want to talk about?" 
-                                rowHeight="min-h-[80px] resize-none text-base border-none focus-visible:ring-0 shadow-none p-0"
-                            />
+                                rowHeight="min-h-[80px] resize-none text-base border-none focus-visible:ring-0 shadow-none p-0"/>
                             
                             {previewImage && (
                                 <div className="relative rounded-lg overflow-hidden border border-zinc-200">
-                                    <img src={previewImage} alt="Preview" className="w-full h-60  object-cover" />
-                                    <Button 
-                                        type="button" 
-                                        variant="destructive" 
-                                        size="icon" 
+                                   <img src={previewImage} alt="Preview" className="w-full h-60  object-cover" />
+                                    <Button type="button" variant="destructive" size="icon" 
                                         className="absolute top-2 right-2 h-8 w-8 rounded-full"
                                         onClick={() => {
                                             setSelectedImage(null)
@@ -243,12 +238,7 @@ export default function PostSearchComponent() {
                                              Add Photo
                                         </Label>
                                     </Button>
-                                    <input 
-                                        id="post-image-upload" 
-                                        type="file" 
-                                        accept="image/*" 
-                                        className="hidden" 
-                                        onChange={handleImageChange}/>
+                                    <input id="post-image-upload" type="file"  accept="image/*" className="hidden"  onChange={handleImageChange}/>
                                 </div>
                             </div>
                         </div>

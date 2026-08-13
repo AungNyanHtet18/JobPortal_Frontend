@@ -1,4 +1,5 @@
 import z from "zod";
+import { Role } from "../auth.schema";
 
 export const PostSchema = z.object({
     content: z.string().nonempty("Please enter content for post.")
@@ -13,6 +14,7 @@ export type PostListItem = {
     accountId: number
     accountName: string
     accountEmail: string
+    accountRole: Role
     accountPhoto: string | null
     reactionCount: number
     commentCount: number

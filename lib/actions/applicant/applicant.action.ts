@@ -117,7 +117,7 @@ export async function downloadApplicantCVForm(id: number) : Promise<Blob>{
 }
 
 export async function getApplicantById(id: string | number) : Promise<ApplicantDetails | null> {
-     const response = await secureSearch(`applicant/id/${id}`)
+     const response = await secureSearch(`applicant/applicantId/${id}`)
      return await response.json().catch(() => null)
 }
 

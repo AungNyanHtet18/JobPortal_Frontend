@@ -16,13 +16,11 @@ export default function CompanyEditPage() {
              if(result) {
                  setId(result)
              } 
-            
           })
        }
 
        load()
    }, [])
-
 
    if(id) {
        return <CompanyEditComponent id={id}/>

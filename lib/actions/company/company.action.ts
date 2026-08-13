@@ -63,7 +63,7 @@ export async function updateCompany(id: string | number, formData: FormData): Pr
 }
 
 export async function getCompanyById(id: string | number): Promise<CompanyDetails | null> {
-     const response = await secureSearch(`company/id/${id}`)
+     const response = await secureSearch(`applicant/companyId/${id}`)
      return await response.json().catch(() => null)
 }
 
