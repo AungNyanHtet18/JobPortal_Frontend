@@ -5,7 +5,6 @@ import { getCompanyId, getLoginUser, setCompanyId } from "@/lib/login-users";
 import { ModificationResult } from "@/lib/type";
 import type { CompanyDetails } from "@/lib/type/schema/company/company.schema";
 
-
 export async function createCompany(formData: FormData): Promise<ModificationResult<number>> {
    const formValue = formData.get("form")
 
@@ -62,16 +61,21 @@ export async function updateCompany(id: string | number, formData: FormData): Pr
    return result
 }
 
-export async function getCompanyById(id: string | number): Promise<CompanyDetails | null> {
-     const response = await secureSearch(`applicant/companyId/${id}`)
-     return await response.json().catch(() => null)
+export async function getCompanyById(id: string | number): Promise<CompanyDetails> {
+     const response = await secureSearch(`company/companyId/${id}`)
+     return await response.json()
 }
 
-export async function findByCompanyName() : Promise<CompanyDetails | null> {
+export async function findByCompanyName() : Promise<CompanyDetails> {
    const loginUser = await getLoginUser()
    const response = await secureSearch(`company/${loginUser.email}`)
-   
-   return await response.json().catch(() => null);
+   return await response.json()
+}
+
+export async function findCompanyExists() : Promise<ModificationResult<number>> {
+   const loginUser = await getLoginUser()
+   const response = await secureSearch(`company/companyExists/${loginUser.email}`)
+   return await response.json()
 }
 
 export async function findByCompany() : Promise<string | undefined> {

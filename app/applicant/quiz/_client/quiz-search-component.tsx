@@ -6,7 +6,7 @@ import { getQuizTitles} from "@/lib/actions/quiz/quiz.action"
 import { DEFAULT_PAGE_RESULT, PageResult } from "@/lib/type"
 import { QuizTitleListItem } from "@/lib/type/schema/quiz/quiz.schema"
 import { safeCall } from "@/lib/utils"
-import { ChevronRight, Loader2, SquareArrowOutUpRight } from "lucide-react"
+import { Brain, ChevronRight, Loader2, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 
@@ -22,7 +22,7 @@ export default function QuizSearchComponent() {
     },[])
 
     useEffect(() => {
-        search(0, 16)    
+        search(0, 16)  
     }, [search])
 
     const fetchAllQuizzes = async () => {
@@ -39,12 +39,22 @@ export default function QuizSearchComponent() {
                     <h1 className="tracking-wider text-xl text-zinc-500 font-[600]">Interview Quizzes by Role</h1>
                 </header>
             
+                {result.pageInfo.totalCount > 0 && 
                 <Button className='bg-slate-500 text-white hover:bg-slate-600 shadow-md rounded-lg' onClick={fetchAllQuizzes}>
                     {isLoading ? 'Loading' : 'View All Roles' } 
                     {isLoading ?  <Loader2 className="size-4 animate-spin" /> : <ChevronRight className="size-4"/>} 
                 </Button>
+                }
             </div>
 
+            {result.list.length === 0  && (
+                <div className="text-center py-10 bg-white rounded-xl border border-zinc-100">
+                    <Brain className="size-10 mx-auto text-zinc-300 mb-3" />
+                    <h3 className="text-lg font-medium text-zinc-600">No quizzes available</h3>
+                    <p className="text-sm text-zinc-500 mt-1">There are no interview quizzes available for this role yet.</p>
+                </div>
+            )}
+            
             <div className="grid md:grid-cols-4 gap-4 px-6">
                 {result.list.map((quiz) => 
                 <Link href={`/applicant/quiz/${quiz.quizId}`} key={quiz.quizId}>

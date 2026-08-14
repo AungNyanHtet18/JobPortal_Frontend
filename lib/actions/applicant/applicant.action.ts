@@ -116,16 +116,21 @@ export async function downloadApplicantCVForm(id: number) : Promise<Blob>{
       return await response.blob()
 }
 
-export async function getApplicantById(id: string | number) : Promise<ApplicantDetails | null> {
+export async function getApplicantById(id: string | number) : Promise<ApplicantDetails> {
      const response = await secureSearch(`applicant/applicantId/${id}`)
-     return await response.json().catch(() => null)
+     return await response.json()
 }
 
-export async function findByApplicantName() : Promise<ApplicantDetails | null> {
+export async function findByApplicantName() : Promise<ApplicantDetails> {
      const loginUser = await getLoginUser()
-     const response = await secureSearch(`applicant/${loginUser.email}`)
-          
-     return await response.json().catch(() => null);
+     const response = await secureSearch(`applicant/${loginUser.email}`)   
+     return await response.json()
+}
+
+export async function findApplicantExists() : Promise<ModificationResult<number>> {
+     const loginUser = await getLoginUser()
+     const response = await secureSearch(`applicant/applicantExists/${loginUser.email}`)
+     return await response.json()
 }
 
 export async function findByApplicant() : Promise<string | undefined> {

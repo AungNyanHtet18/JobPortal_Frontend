@@ -127,6 +127,8 @@ export type ApplicantDetails = {
      id: number | string
      name: string
      email: string
+     followerCount: number
+     followingCount: number
      gender: string | undefined
      professionalSummary: string
      contactDetail: string

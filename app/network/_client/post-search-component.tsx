@@ -174,14 +174,11 @@ export default function PostSearchComponent() {
                                 </p>
                             </div>
                             
-                            {
-                                post.accountEmail === loginEmail && 
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-900" onClick={() => openEditDialog(post)}>
-                                    <Pencil className="size-4" />
-                                    <span className="sr-only">Edit post</span>
-                                </Button>
-                            }
-                               
+                            {post.accountEmail === loginEmail && 
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-900" onClick={() => openEditDialog(post)}>
+                                <Pencil className="size-4" />
+                                <span className="sr-only">Edit post</span>
+                            </Button>}
                         </CardHeader> 
                         
                         <CardContent className="pt-2">

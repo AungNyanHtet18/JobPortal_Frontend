@@ -8,15 +8,20 @@ import { ApplicantCareerRoleDetails, ApplicantDetails, ApplicantEducationDetails
 import { formatDate, getFileName, getInitials, safeCall } from "@/lib/utils"
 import * as applicantClient from "@/lib/actions/applicant/applicant.action"
 import * as authClient from "@/lib/actions/auth.action"
-import { Calendar, ExternalLink, FileText, Mail, MapPin, Phone } from "lucide-react"
+import { Calendar, ExternalLink, FileText, Loader2, Mail, MapPin, MessageCircle, Phone, UserRoundPlus, Users, UsersRound } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import { IconType } from "@/lib/type/type"
 import PageTitle from "@/components/widgets/page-title"
+import { Button } from "@/components/ui/button"
+import { checkFollowAccountStatus, followAccount, unfollowAccount } from "@/lib/actions/follow/account.follow.action"
+import { toast } from "sonner"
 
 export default function ApplicantDetailsComponent({ applicantId }: { applicantId?: string }) {
         const [details, setDetails] = useState<ApplicantDetails>()
         const [profileImageUrl, setProfileImageUrl] = useState<string>()
         const [profileImageFailed, setProfileImageFailed] = useState(false)
+        const [isFollow, setIsFollow] = useState<boolean>(false)
+        const [isLoading, setIsLoading] = useState<boolean>(false)
         const resumeFileName = useMemo(() => getFileName(details?.resume ?? null), [details?.resume])
         const cvFormFileName = useMemo(() => getFileName(details?.cvForm ?? null), [details?.cvForm])
 
@@ -31,6 +36,8 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                             id: 'undefined',
                             name: loginUser.name,
                             email: loginUser.email,
+                            followerCount: 0,
+                            followingCount: 0,
                             gender: undefined,
                             professionalSummary: 'undefined',
                             contactDetail: 'undefined',
@@ -48,11 +55,15 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                     } else {
                         const result = applicantId ? await applicantClient.getApplicantById(applicantId) : await applicantClient.findByApplicantName()
                         
-                        if (result !== null) {
-                            setDetails(result)
-                            setProfileImageUrl(await applicantClient.getApplicantProfileImageUrl(result.profileImage))
-                            setProfileImageFailed(false)
+                        if(applicantId) {
+                            const checkFollowStatus = await checkFollowAccountStatus(Number(applicantId))
+                            setIsFollow(checkFollowStatus.id)
                         }
+
+                        setDetails(result)
+                        setProfileImageUrl(await applicantClient.getApplicantProfileImageUrl(result.profileImage))
+                        setProfileImageFailed(false)
+                        
                     }
                 })
             }
@@ -60,6 +71,25 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
             load()
         }, [applicantId])
 
+        const followAction = async (followingId: number) => {
+            setIsLoading(true)
+            await safeCall(async () => {
+                const result =  await followAccount(followingId)
+                toast.success(result.id)
+            })
+            setIsFollow(true)
+            setIsLoading(false)
+        }
+
+         const unFollowAction = async (followingId: number) => {
+            setIsLoading(true)
+            await safeCall(async () => {
+                const result =  await unfollowAccount(followingId)
+                toast.success(result.id)
+            })
+            setIsFollow(false)
+            setIsLoading(false)
+        }       
 
     if (!details) {
         return <Loading content="Loading Applicant Details" />
@@ -92,18 +122,48 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                     {details.name}
                                     
                                     {details.gender && (
-                                        <Badge variant="outline" className="ms-2 text-lg font-medium border-zinc-300 bg-white text-zinc-900">
-                                            {details.gender}
-                                        </Badge>
+                                    <Badge variant="outline" className="ms-2 text-lg font-medium border-zinc-300 bg-white text-zinc-900 cursor-pointer">
+                                        {details.gender}
+                                    </Badge>
                                     )}
                                 </h1>
                                 <div className="flex flex-wrap gap-2">
                                      {details.careerRole &&  details.careerRole.slice(0, 2).map((role) => (
-                                        <Badge key={role.roleName} className="bg-zinc-950 text-white hover:bg-zinc-800">
-                                            {role.roleName}
-                                        </Badge>
+                                    <Badge key={role.roleName} className="bg-zinc-100 text-zinc-950  hover:bg-zinc-200 cursor-pointer">
+                                        {role.roleName}
+                                    </Badge>
                                     ))}
+                                </div>
 
+                                <div className="flex flex items-center gap-2">
+                                    <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer">
+                                        <Users className="size-5"/> {details.followerCount} Follower
+                                    </Badge>
+                                    
+                                    <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer">
+                                        <UsersRound className="size-5"/> {details.followingCount} Following 
+                                    </Badge>
+                                </div>
+
+                                <div className="flex items-center gap-3 w-full">
+                                    {applicantId && isFollow ?  
+                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                        onClick={() => unFollowAction(Number(applicantId))}>
+                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
+                                    </Button> 
+                                    :
+                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                        onClick={() => followAction(Number(applicantId))}>
+                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
+                                    </Button> 
+                                    }
+                                    
+                                    <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ">
+                                        <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                        <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -113,17 +173,22 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                 <Phone className="size-5 text-zinc-900" />
                                 <h2 className="text-base font-semibold">Contact</h2>
                             </div>
+
                             <div className="space-y-4 text-sm">
                                 <div className="flex gap-3">
                                     <Mail className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="break-all text-zinc-800">{details.email}</span>
                                 </div>
+
                                 <Separator />
+
                                 <div className="flex gap-3">
                                     <Phone className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.contactDetail ||  "No contact added"}</span>
                                 </div>
+
                                 <Separator />
+
                                 <div className="flex gap-3">
                                     <MapPin className="mt-0.5 size-4 shrink-0 text-zinc-500" />
                                     <span className="text-zinc-800">{details.address ||  "No address added"}</span>
@@ -224,13 +289,11 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                 {socialLink && socialLink.length > 0 ? (
                     <div className="space-y-3">
                         {socialLink.map((link) => (
-                            <a
-                                key={`${link.platform}-${link.url}`}
+                            <a  key={`${link.platform}-${link.url}`}
                                 href={link.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 transition hover:bg-zinc-100"
-                            >
+                                className="flex gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 transition hover:bg-zinc-100">
                                 <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-white">
                                     <ExternalLink className="size-5" />
                                 </div>

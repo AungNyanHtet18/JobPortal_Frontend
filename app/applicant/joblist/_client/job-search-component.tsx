@@ -84,10 +84,10 @@ export default function JobSearchComponent() {
 
         if(!applicant) {
           toast.error("Applicant cannot apply jobs",{
-                description: "Please fill applicant form details to apply jobs"})
+              description: "Please fill applicant form details to apply jobs"})
         }else{
           const response = await jobApplyClient.applyJob(confirmJob.jobId)
-          toast.success(response.id || "Applied successfully")
+          toast.success(response.id || "You applied this job successfully")
           setAppliedJobs((prev) => [...new Set([...prev, confirmJob.jobId])])
         }
       })

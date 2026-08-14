@@ -22,20 +22,19 @@ export async function signInAction(form: SignInForm) {
      await  setAuthResult(result)
 
      if(result.role === 'Applicant' ) {
-      const applicantResult = await applicant.findByApplicantName()
+      const applicantResult = await applicant.findApplicantExists()
 
-      if(applicantResult) {
+      if(applicantResult.id > 0) {
         await setApplicantId(applicantResult.id.toString())
       }
      }
 
      if(result.role === 'CompanyAccount') {
-       const companyResult = await company.findByCompanyName()
+       const companyResult = await company.findCompanyExists()
        
-       if(companyResult) {
+       if(companyResult.id > 0) {
            await setCompanyId(companyResult.id.toString())
        }
-
      }
 
      redirect(`/${result.role.toLowerCase()}`)
@@ -60,14 +59,12 @@ export async function signUpAction(form: SignUpForm) {
 export async function checkRoleStatus() : Promise<ModificationResult<boolean>> {
        const loginUser = await getLoginUser()
        const response = await secureSearch(`account/status/${loginUser.email}`)
-      
        return await response.json()
 }
 
 export async function findByLoginUser() : Promise<LoginUser> {
       return await getLoginUser()
 }
-
 
 export async function signOutAction() {
       await clearAuthResult()

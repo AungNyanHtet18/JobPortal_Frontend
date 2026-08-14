@@ -7,17 +7,21 @@ import * as companyClient from "@/lib/actions/company/company.action"
 import * as authClient from "@/lib/actions/auth.action"
 import { CompanyDetails } from "@/lib/type/schema/company/company.schema"
 import { getInitials, safeCall } from "@/lib/utils"
-import { ArrowRightIcon, Globe, MapPinned, MessageCircle, MessageSquare, Phone, PhoneCall } from "lucide-react"
+import { ArrowRightIcon, Globe, Loader2, MapPinned, MessageCircle, MessageSquare, Phone, PhoneCall, UserRoundPlus, Users, UsersRound } from "lucide-react"
 import PageDetailComponent from "@/components/widgets/page-detail-component"
 import Link from "next/link"
 import PageTitle from "@/components/widgets/page-title"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { checkFollowAccountStatus, followAccount, unfollowAccount } from "@/lib/actions/follow/account.follow.action"
 
 export default function CompanyDetailsComponent({companyId} : {companyId?: string}) {
     const [details, setDetails] = useState<CompanyDetails>()
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
     const [profileImageFailed, setProfileImageFailed] = useState<boolean>(false)
-    
+    const [isFollow, setIsFollow] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
     useEffect(() => {
         function load() {
             safeCall(async () => {
@@ -30,6 +34,8 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         id: 'undefined',
                         companyName: loginUser.name,
                         companyEmail: loginUser.email,
+                        followerCount: 0,
+                        followingCount: 0,
                         industryType: 'undefined',
                         phone: 'undefined',
                         websiteUrl: 'undefined',
@@ -40,11 +46,11 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         uploadedJob: []
                     })
                 }else {
-
                 const result = companyId ? await companyClient.getCompanyById(companyId)  : await companyClient.findByCompanyName()
-    
-                if(result) {
+                    
                     if(companyId) {
+                        const checkFollowStatus = await checkFollowAccountStatus(Number(companyId))
+                        setIsFollow(checkFollowStatus.id)
                         setDetails({...result, uploadedJob: []})
                         setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
                         setProfileImageFailed(false)
@@ -54,12 +60,31 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         setProfileImageFailed(false)
                     }
                 }
-            }
             })
         }
     
         load()
     }, [])
+
+    const followAction = async (followingId: number) => {
+        setIsLoading(true)
+        await safeCall(async () => {
+            const result =  await followAccount(followingId)
+            toast.success(result.id)
+        })
+        setIsFollow(true)
+        setIsLoading(false)
+    }
+
+    const unFollowAction = async (followingId: number) => {
+        setIsLoading(true)
+        await safeCall(async () => {
+            const result =  await unfollowAccount(followingId)
+            toast.success(result.id)
+        })
+        setIsFollow(false)
+        setIsLoading(false)
+    }  
 
     if(!details) {
         return <Loading content="Loading Company Details" />
@@ -75,38 +100,57 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
                             <div className="flex aspect-[4/5] items-center justify-center bg-zinc-100">
                                 {profileImageFailed ? 
-                                    (
-                                        <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
-                                            {getInitials(details.companyName)}
-                                        </div>
-                                    ) :
-                                    (<img
-                                        src={profileImageUrl}
+                                (
+                                <div className="flex size-24 items-center justify-center rounded-full bg-zinc-950 text-3xl font-semibold text-white">
+                                    {getInitials(details.companyName)}
+                                </div>
+                                ) :
+                                (<img src={profileImageUrl}
                                         alt={`${details.companyName} profile`}
                                         className="size-full object-cover"
                                         onError={() => setProfileImageFailed(true)}/>
-                                    )}
+                                )}
                             </div>
                         </div>
 
                         <div className="mt-5 space-y-2">
-                            <div className="flex">
-                                <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
-                                <Button variant="outline" className="bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ml-auto">
+                            <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">{details.companyName}</h1>
+                            <p className="text-sm text-zinc-500">{details.industryType}</p>
+                            <div className="flex flex-wrap gap-2">
+                                <Badge variant="ghost" className="border-zinc-300 bg-white text-zinc-900 cursor-pointer">
+                                    {details.companyEmail} 
+                                </Badge>               
+                            </div>
+
+                            <div className="flex flex items-center gap-2">
+                                <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer">
+                                    <Users className="size-5"/> {details.followerCount} Follower
+                                </Badge>
+
+                                 <Badge className="bg-zinc-950 text-white hover:bg-zinc-800 cursor-pointer">
+                                    <UsersRound className="size-5"/> {details.followingCount} Following 
+                                </Badge>
+                            </div>
+
+                            <div className="flex items-center gap-3 w-full">
+                                {companyId && isFollow ?  
+                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                        onClick={() => unFollowAction(Number(companyId))}>
+                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
+                                    </Button> 
+                                    :
+                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                        onClick={() => followAction(Number(companyId))}>
+                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
+                                    </Button> 
+                                }
+
+                                <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ">
                                     <MessageCircle className=" size-5 font-bold text-zinc-100" />
                                     <h2 className="text-zinc-100 font-semibold">Chat</h2>
                                 </Button>
-                            </div>
-                            <p className="text-sm text-zinc-500">{details.industryType}</p>
-                            <div className="flex flex-wrap gap-2">
-                                <Badge variant="ghost" className="border-zinc-300 bg-white text-zinc-900">
-                                    {details.companyEmail} 
-                                </Badge>
-                                {details.websiteUrl && (
-                                    <Badge className="bg-zinc-950 text-white hover:bg-zinc-800">
-                                        Company Account
-                                    </Badge>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -175,7 +219,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-sm text-zinc-600">{job.jobLevel}</p>
                                                     <div className="flex flex-wrap gap-1">
-                                                        <Badge variant="outline" className="bg-zinc-900 text-white hover:bg-zinc-800 cursor-pointer">
+                                                        <Badge variant="outline" className="bg-zinc-900 border-none text-white hover:bg-zinc-800 cursor-pointer">
                                                             {job.jobType}
                                                         </Badge>
                                                         <Badge className="border-zinc-300 bg-white text-zinc-900 cursor-pointer ms-2">

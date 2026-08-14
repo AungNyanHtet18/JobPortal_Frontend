@@ -33,11 +33,12 @@ export type UploadedJob = {
       jobLocation : string
 }
 
-
 export type CompanyDetails = {
       id: number | string
       companyName : string 
       companyEmail: string
+      followerCount: number
+      followingCount: number
       industryType: string
       location : string
       phone : string
