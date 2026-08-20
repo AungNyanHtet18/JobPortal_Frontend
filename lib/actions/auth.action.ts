@@ -37,7 +37,7 @@ export async function signInAction(form: SignInForm) {
        }
      }
 
-     redirect(`/${result.role.toLowerCase()}`)
+     redirect(`/${result.role.toLowerCase()}/detail`)
 }
 
 export async function signUpAction(form: SignUpForm) {

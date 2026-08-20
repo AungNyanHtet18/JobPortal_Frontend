@@ -166,3 +166,11 @@ export function getTimeAgo(day: string): string {
 
   return `${days} day${days !== 1 ? "s" : ""} ago`;
 }
+
+export function formatMessageTime(value: string | null) {
+    if(!value) {
+        return "Sending"
+    }
+
+    return formatDateTime(value)
+}

@@ -25,7 +25,10 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
                 const companyId = await Company.findByCompany()
                 const result = await Job.findJobById(jobId)
                 if(result != null) {
-                    setCompanyId(companyId)
+                    if(companyId) {
+                        setCompanyId(companyId)
+                    }
+                    
                     setDetails(result)
                     setProfileImageUrl(await Company.getCompanyProfileImageUrl(result.companyImage))
                     setProfileImageFailed(false)
@@ -45,7 +48,11 @@ export default function JobDetailsComponent({jobId}: {jobId: string}) {
 
     return (
         <section className="mx-auto max-w-7xl space-y-6 px-1 pb-8 text-zinc-950">
-            <PageTitle icon="BriefcaseBusiness" title="Job Detail" description="Review the published job information" />
+            {companyId ? 
+                <PageTitle icon="BriefcaseBusiness" title="Job Detail" description="Review the published job information" editUrl="/companyaccount/detail" editName="View Profile" /> :
+                <PageTitle icon="BriefcaseBusiness" title="Job Detail" description="Review the published job information" /> 
+            }
+            
 
             <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
                 <aside className="space-y-4">

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FileText, ImagePlus, Loader2, PaperclipIcon, Pencil, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
+import { Camera, CircleUserRound, FileText, ImagePlus, Loader2, PaperclipIcon, Pencil, Plus, Save, Trash, Upload, UserRound, X } from "lucide-react"
 import FormsInput from "@/components/fields/form-input"
 import FormSelect from "@/components/fields/form-select"
 import FormsTextAreaInput from "@/components/fields/form-textarea"
@@ -279,7 +279,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
                     <aside className="space-y-4">
-                        <ContentLayout title="Profile" icon={<UserRound className="size-5 text-zinc-900" />}>
+                        <ContentLayout title="Profile Photo" icon={<Camera className="size-5 text-zinc-900" />}>
                             <div className="space-y-3">
                                 <div className="flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50">
                                     {visibleProfileImage && (
@@ -422,7 +422,7 @@ export default function ApplicantEditComponent({id} : {id: string}) {
                     </aside>
 
                     <div className="space-y-6">
-                        <InputComponent className="md:grid-cols-2" title="Personal Information" icon={<UserRound className="size-5 text-zinc-900" />}>
+                        <InputComponent className="md:grid-cols-2" title="Personal Information" icon={<CircleUserRound className="size-5 text-zinc-900" />}>
                             <FormsInput control={form.control} path="applicantName" label="Applicant Name" placeHolder="Enter your applicant name" />
                             <FormSelect control={form.control} path="gender" label="Gender" options={[{key: "Male", value: "Male"}, {key: "Female", value: "Female"}]} />
                             <FormsTextAreaInput control={form.control} path="contactDetail" label="Contact Detail" placeHolder="Enter your contact detail" rowHeight="min-h-[96px]" />

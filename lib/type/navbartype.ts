@@ -17,13 +17,14 @@ export const applicantNavbar: NavbarType[] = [
     {id: 1, name: "Applicant", url: "/applicant"},
     {id: 2, name: "Quiz", url: "/applicant/quiz"},
     {id: 3, name: "Community", url: "/network/postlist"},
-    {id: 4, name: "Edit", url: "/applicant/edit"},
-    {id: 5, name: "Joblist", url: "/applicant/joblist"}]
+    {id: 4, name: "Joblist", url: "/applicant/joblist"},
+    {id: 5, name: "Chat", url: "/chat"},
+    {id: 6, name: "Edit", url: "/applicant/edit"},]
 
 export const companyNavbar: NavbarType[] = [
-    {id: 1, name: "Company", url: "/companyaccount"},
-    {id: 2, name: "Edit", url: "/companyaccount/edit"},
-    {id: 3, name: "Community", url: "/network/postlist"},
+    {id: 1, name: "Community", url: "/network/postlist"},
+    {id: 2, name: "Chat", url: "/chat"},
+    {id: 3, name: "Edit", url: "/companyaccount/edit"},
     {id: 4, name: "Profile", url: "/companyaccount/detail"}
 ]
 

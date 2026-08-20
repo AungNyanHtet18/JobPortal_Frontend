@@ -8,8 +8,7 @@ import { companyAuthNavbar, companyNavbar} from "@/lib/type/navbartype"
 
 export default async function CompanyNavigation() {
 
-   const UserisLogin: boolean = await isLogin()
-   const companyId: string | undefined = await getCompanyId() 
+   const userIsLogin: boolean = await isLogin()
 
     return (
       <nav className="w-full top-0 z-50 border-b px-4 py-4 bg-slate-500 backdrop-blur-md flex justify-between items-center sticky">
@@ -26,6 +25,12 @@ export default async function CompanyNavigation() {
         <div >
           <NavigationMenu >
               <NavigationMenuList>
+                  {companyAuthNavbar.map(a => 
+                    <NavigationMenuItem key={a.id}>
+                      <NavigationMenuLink asChild>
+                        <Link className="text-[14px] font-semibold text-zinc-100" href={a.url}>{a.name}</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>)}
 
                   {companyNavbar.map(a => 
                     <NavigationMenuItem key={a.id}>
@@ -34,16 +39,9 @@ export default async function CompanyNavigation() {
                       </NavigationMenuLink>
                     </NavigationMenuItem>)}
 
-                  {companyAuthNavbar.map(a => 
-                    <NavigationMenuItem key={a.id}>
-                      <NavigationMenuLink asChild>
-                        <Link className="text-[14px] font-semibold text-zinc-100" href={a.url}>{a.name}</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>)}
-
-                  { !UserisLogin && 
+                  {!userIsLogin && 
                   <>
-                     <NavigationMenuItem>
+                    <NavigationMenuItem>
                       <NavigationMenuLink asChild>
                         <Link  className="text-[14px] font-semibold text-zinc-100" href={'/signup'}>signup</Link>
                       </NavigationMenuLink>
@@ -57,14 +55,13 @@ export default async function CompanyNavigation() {
                   </>
                   }
 
-                  { UserisLogin && 
+                  {userIsLogin && 
                     <NavigationMenuItem>
                         <Button onClick={signOutAction} className="flex items-center  gap-2 hover:bg-slate-700">
                             <Lock/> Sign Out
                         </Button>
                     </NavigationMenuItem> 
                   }
-
               </NavigationMenuList>
           </NavigationMenu>
         </div>

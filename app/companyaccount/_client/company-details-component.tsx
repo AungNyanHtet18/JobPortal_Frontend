@@ -30,6 +30,10 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                 
                 if(!status.id) {
                      const loginUser = await authClient.findByLoginUser()
+                     loginUser && companyId &&  
+                     toast.error("Complete your company profile", {
+                        description:"Please provide all required company information before using this feature."})
+                         
                      setDetails({
                         id: 'undefined',
                         companyName: loginUser.name,
@@ -133,24 +137,35 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                             </div>
 
                             <div className="flex items-center gap-3 w-full">
-                                {companyId && isFollow ?  
-                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
-                                        onClick={() => unFollowAction(Number(companyId))}>
-                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
-                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
-                                    </Button> 
-                                    :
-                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
-                                        onClick={() => followAction(Number(companyId))}>
-                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
-                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
-                                    </Button> 
-                                }
+                                {companyId && (
+                                    isFollow ?  
+                                        (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                            onClick={() => unFollowAction(Number(companyId))}>
+                                            {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                            <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
+                                        </Button>)
+                                        :
+                                        (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                            onClick={() => followAction(Number(companyId))}>
+                                            {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                            <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
+                                        </Button>)
+                                )}
 
-                                <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ">
-                                    <MessageCircle className=" size-5 font-bold text-zinc-100" />
-                                    <h2 className="text-zinc-100 font-semibold">Chat</h2>
-                                </Button>
+                                {companyId ?
+                                    <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
+                                        <Link href={`/chat?accountId=${companyId}`}>
+                                            <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                            <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                        </Link>
+                                    </Button> :
+                                    <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
+                                        <Link href={`/chat`}>
+                                            <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                            <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                        </Link>
+                                    </Button>
+                                }
                             </div>
                         </div>
                     </div>

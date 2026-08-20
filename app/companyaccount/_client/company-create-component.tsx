@@ -12,7 +12,7 @@ import * as Company from "@/lib/actions/company/company.action";
 import { CompanyForm, CompanyPayload, CompanySchema } from "@/lib/type/schema/company/company.schema";
 import { formatFileSize, safeCall } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2, Globe, ImagePlus, Loader2, MapPin, Phone, Save, Upload, X } from "lucide-react";
+import { Building, Building2, Camera, Globe, ImagePlus, Loader2, MapPin, Phone, Save, Upload, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import InputComponent from "@/components/widgets/input-component";
@@ -73,7 +73,7 @@ export default function CompanyCreateComponent() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(save)} className="grid gap-6 lg:grid-cols-[340px_1fr]">
                     <aside className="space-y-4">
-                        <ContentLayout title="Profile" icon={<Building2 className="size-5 text-zinc-900" />} >
+                        <ContentLayout title="Profile Photo" icon={<Camera className="size-5 text-zinc-900" />} >
                             <div className="space-y-3">
                                 <div className="flex aspect-[4/5] w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 bg-cover bg-center"
                                      style={profilePreview ? {backgroundImage: `url(${profilePreview})`} : undefined}>
@@ -116,7 +116,7 @@ export default function CompanyCreateComponent() {
                     </aside>  
 
                     <div className="space-y-6">
-                        <InputComponent title="Company Information" icon={<Building2 className="size-5 text-zinc-900" />} >
+                        <InputComponent title="Company Information" icon={<Building className="size-5 text-zinc-900" />} >
                             <FormSelect control={form.control} path="industryType" label="Industry Type" placeHolder="Enter Industry Type" options={IndustryType} />
                             <FormsInput control={form.control} path="companyName" label="Company Name" placeHolder="Enter your company name" />
                             <FormsTextAreaInput control={form.control} path="description" label="Company Aim and Vision" placeHolder="Fill your company aim and goals" rowHeight="min-h-[140px]" />

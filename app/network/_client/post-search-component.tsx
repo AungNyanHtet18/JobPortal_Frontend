@@ -154,17 +154,30 @@ export default function PostSearchComponent() {
                 {posts.map((post) => (
                     <Card key={post.id} className="overflow-hidden border-zinc-200 shadow-sm">
                         <CardHeader className="px-3 flex flex-row items-start gap-3">
-                            <Link href= {post.accountRole === 'Applicant' ? `/job/applicant/${post.accountId}` : `/job/company/${post.accountId}`}>
-                                <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
-                                    <AvatarImage src={post.accountPhoto && post.accountRole === 'Applicant' ?  getAccountPhoto(post.accountPhoto) : 
-                                                     post.accountPhoto && post.accountRole === 'CompanyAccount' ? getCompanyPhoto(post.accountPhoto)  : 
-                                                     ''} alt={post.accountName} />
-                                    <AvatarFallback className="bg-zinc-100 text-zinc-600">
-                                        {post.accountName.substring(0, 2).toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar> 
-                            </Link>
-              
+                            {
+                                post.accountEmail === loginEmail ? 
+                                <Link href= {post.accountRole === 'Applicant' ? `/applicant/detail` : `/companyaccount/detail`}>
+                                    <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
+                                        <AvatarImage src={post.accountPhoto && post.accountRole === 'Applicant' ?  getAccountPhoto(post.accountPhoto) : 
+                                                        post.accountPhoto && post.accountRole === 'CompanyAccount' ? getCompanyPhoto(post.accountPhoto)  : 
+                                                        ''} alt={post.accountName} />
+                                        <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                                            {post.accountName.substring(0, 2).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar> 
+                                </Link> : 
+                                <Link href= {post.accountRole === 'Applicant' ? `/job/applicant/${post.accountId}` : `/job/company/${post.accountId}`}>
+                                    <Avatar className="h-10 w-10 ring-1 ring-zinc-100">
+                                        <AvatarImage src={post.accountPhoto && post.accountRole === 'Applicant' ?  getAccountPhoto(post.accountPhoto) : 
+                                                        post.accountPhoto && post.accountRole === 'CompanyAccount' ? getCompanyPhoto(post.accountPhoto)  : 
+                                                        ''} alt={post.accountName} />
+                                        <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                                            {post.accountName.substring(0, 2).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar> 
+                                </Link> 
+                            }
+                            
                             <div className="flex-1">
                                 <p className="text-sm font-semibold text-zinc-900 truncate">
                                     {post.accountName} 

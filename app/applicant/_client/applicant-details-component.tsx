@@ -15,6 +15,7 @@ import PageTitle from "@/components/widgets/page-title"
 import { Button } from "@/components/ui/button"
 import { checkFollowAccountStatus, followAccount, unfollowAccount } from "@/lib/actions/follow/account.follow.action"
 import { toast } from "sonner"
+import Link from "next/link"
 
 export default function ApplicantDetailsComponent({ applicantId }: { applicantId?: string }) {
         const [details, setDetails] = useState<ApplicantDetails>()
@@ -67,7 +68,6 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                     }
                 })
             }
-
             load()
         }, [applicantId])
 
@@ -146,24 +146,35 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                 </div>
 
                                 <div className="flex items-center gap-3 w-full">
-                                    {applicantId && isFollow ?  
-                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
-                                        onClick={() => unFollowAction(Number(applicantId))}>
-                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
-                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
-                                    </Button> 
-                                    :
-                                    <Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
-                                        onClick={() => followAction(Number(applicantId))}>
-                                        {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
-                                        <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
-                                    </Button> 
+                                    {applicantId && (
+                                        isFollow ?  
+                                            (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                                onClick={() => unFollowAction(Number(applicantId))}>
+                                                {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                                <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'UnFollow'}</h2>
+                                            </Button>)
+                                            :
+                                            (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
+                                                onClick={() => followAction(Number(applicantId))}>
+                                                {isLoading ? <Loader2 className="size-5 animate-spin font-bold text-zinc-900" /> : <UserRoundPlus className=" size-5 font-bold text-zinc-900" /> }
+                                                <h2 className="text-zinc-900 font-semibold">{isLoading ? 'Loading' : 'Follow'}</h2>
+                                            </Button>)
+                                    )}
+
+                                    {applicantId ? 
+                                        <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
+                                            <Link href={`/chat?accountId=${applicantId}`}>
+                                                <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                                <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                            </Link>
+                                        </Button> : 
+                                        <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
+                                            <Link href={`/chat`}>
+                                                <MessageCircle className=" size-5 font-bold text-zinc-100" />
+                                                <h2 className="text-zinc-100 font-semibold">Chat</h2>
+                                            </Link>
+                                        </Button>
                                     }
-                                    
-                                    <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none ">
-                                        <MessageCircle className=" size-5 font-bold text-zinc-100" />
-                                        <h2 className="text-zinc-100 font-semibold">Chat</h2>
-                                    </Button>
                                 </div>
                             </div>
                         </div>

@@ -66,9 +66,7 @@ export async function secureRequest(path: string, options: RequestInit = {}, sea
          response = await fetchWithToken(authResult.accessToken)
     }
 
-    if(!response 
-        || response.status === 403 
-        || response.status === 401
+    if(!response || response.status === 403 || response.status === 401
     ) { // 401  = the request has not been authenticated || 403 = the user is authenticated, but does not have permission to access the requested
          await clearAuthResult()
          redirect('/signin')
