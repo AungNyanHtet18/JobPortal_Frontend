@@ -53,7 +53,7 @@ export async function signUpAction(form: SignUpForm) {
      const result = await response.json() as AuthResult
      await setAuthResult(result)
 
-     redirect(`/${result.role.toLowerCase()}`)
+     redirect(`/${result.role.toLowerCase()}/detail`)
 }
 
 export async function checkRoleStatus() : Promise<ModificationResult<boolean>> {

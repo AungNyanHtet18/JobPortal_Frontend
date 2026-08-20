@@ -31,8 +31,8 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                 if(!status.id) {
                      const loginUser = await authClient.findByLoginUser()
                      loginUser && companyId &&  
-                     toast.error("Complete your company profile", {
-                        description:"Please provide all required company information before using this feature."})
+                     toast.error("Completely fill your profile information", {
+                        description:"Please provide all required information before using this feature."})
                          
                      setDetails({
                         id: 'undefined',

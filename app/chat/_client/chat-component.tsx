@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { findChatAccountById, findChatMessages, getChatConnectionInfo, searchChatRoomAccount, searchFollowerAccount } from "@/lib/actions/chat/chat.action"
-import { AccountFollowListItem, ChatConnectionInfo, ChatMessageItem} from "@/lib/type/schema/chat/chat.schema"
+import { findChatAccountById, findChatMessages, getChatConnectionInfo, searchChatRoomAccount, searchFollowerAccount, unReadMessage } from "@/lib/actions/chat/chat.action"
+import { AccountFollowListItem, ChatConnectionInfo, ChatMessageItem, UnReadMessageSenderRequestList} from "@/lib/type/schema/chat/chat.schema"
 import { cn, formatMessageTime, getAccountPhoto, getCompanyPhoto, getInitials, safeCall } from "@/lib/utils"
 
 function resolveAccountPhoto(accountPhoto: string, accountRole: string): string {
@@ -38,7 +38,7 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
 
     useEffect(() => {
         safeCall(async () => {
-        let contactList: any[] = []
+        let contactList: AccountFollowListItem[] = []
         const followList = await searchFollowerAccount()
         const chatRoomAccountList = await searchChatRoomAccount()
 
@@ -51,6 +51,20 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
             (item, index, self) => index === self.findIndex(t => t.accountId === item.accountId))
 
         const info = await getChatConnectionInfo()
+        
+        if(contactList.length > 0) {
+            contactList.forEach(contact => {contact.unReadMessage=false})
+            const unReadMessageSenderRequest: UnReadMessageSenderRequestList[] = contactList.map(contact => ({senderId: contact.accountId}))
+            const unReadMessageSenderList = await unReadMessage(unReadMessageSenderRequest)
+            if(unReadMessageSenderList.id.length > 0) {
+                unReadMessageSenderList.id.forEach(unRead => {
+                    const account = contactList.find(contact => contact.accountId === unRead.senderId)
+                    if(account) {
+                        account.unReadMessage = true
+                    }
+                })
+            }
+        }
 
         setContacts(contactList)
         setSelectedContact(contactList[0] ?? null)
@@ -184,9 +198,7 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
 
                     <div className="relative">
                         <Search className="absolute left-3 top-3 size-4  text-zinc-400" />
-                        <Input
-                            value={searchKeyword}
-                            onChange={(event) => setSearchKeyword(event.target.value)}
+                        <Input value={searchKeyword} onChange={(event) => setSearchKeyword(event.target.value)}
                             placeholder="Search follow accounts"
                             className="h-10 bg-zinc-50 pl-9 focus-visible:ring-zinc-200" />
                     </div>
@@ -201,6 +213,7 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
                         </div>
                     )}
 
+                    {filteredContacts.length > 0 && (
                     <div className="space-y-2 h-full overflow-y-scroll">
                         {filteredContacts.map(contact => {
                             const selected = selectedContact?.accountId === contact.accountId
@@ -220,15 +233,24 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
                                     </Avatar>
 
                                     <div className="flex-1">
-                                        <p className="truncate text-sm font-semibold">{contact.accountName}</p>
-                                        <p className={cn("truncate text-xs", selected ? "text-zinc-300" : "text-zinc-500")}>
-                                            {contact.accountRole === "CompanyAccount" ? "Company account" : "Applicant account"}
-                                        </p>
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <p className="truncate text-sm font-semibold">{contact.accountName}</p>
+                                                <p className={cn("truncate text-xs", selected ? "text-zinc-300" : "text-zinc-500")}>
+                                                    {contact.accountRole === "CompanyAccount" ? "Company account" : "Applicant account"}
+                                                </p>
+                                            </div>
+                                            {contact.unReadMessage === true && 
+                                                <div>
+                                                    <div className="size-3 border-2 border-zinc-300 rounded-full bg-zinc-900"></div>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </button>
                             )
                         })}
-                    </div> 
+                    </div> )}
                 </div>
             </aside>
 

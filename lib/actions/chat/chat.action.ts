@@ -1,8 +1,9 @@
 'use server'
 
-import { secureSearch } from "@/lib"
+import { POST_CONFIG, secureRequest, secureSearch } from "@/lib"
 import { getAccessToken, getLoginUser } from "@/lib/login-users"
-import { AccountFollowListItem, ChatAccountDetail, ChatConnectionInfo, ChatMessageItem, ChatRoomAccountListItem } from "@/lib/type/schema/chat/chat.schema"
+import { ModificationResult } from "@/lib/type"
+import { AccountFollowListItem, ChatAccountDetail, ChatConnectionInfo, ChatMessageItem, ChatRoomAccountListItem, UnReadMessageSenderListItem, UnReadMessageSenderRequestList } from "@/lib/type/schema/chat/chat.schema"
 
 export async function getChatConnectionInfo(): Promise<ChatConnectionInfo> {
     const loginUser = await getLoginUser()
@@ -34,3 +35,11 @@ export async function findChatAccountById(id: string) : Promise<ChatAccountDetai
     const response = await secureSearch(`chat/account/${id}`)
     return await response.json()
 } 
+
+export async function unReadMessage(unReadMessageSenderRequestList: UnReadMessageSenderRequestList[]) : Promise<ModificationResult<UnReadMessageSenderListItem[]>>  {
+    const response = await secureRequest('chat/unreadMessage', { 
+        ...POST_CONFIG,
+        body: JSON.stringify(unReadMessageSenderRequestList)
+    })
+    return await response.json() as ModificationResult<UnReadMessageSenderListItem[]>
+}

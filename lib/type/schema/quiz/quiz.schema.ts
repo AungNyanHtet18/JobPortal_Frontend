@@ -71,7 +71,7 @@ export const QuizAnswerPayload = (form: QuizAssessmentForm): QuizAnswerPayloadTy
     }
 }
 
-export function quizSubmissionPayload(quiz: QuizDetails,form: QuizAssessmentForm): QuizAnswerPayloadType {
+export function quizSubmissionPayload(quiz: QuizDetails, form: QuizAssessmentForm): QuizAnswerPayloadType {
     const submittedByQuestion = new Map<number, Map<number, boolean>>()
     form.quizAnswerLists.forEach(answer => {
         const questionId = Number(answer.questionId)
@@ -80,7 +80,6 @@ export function quizSubmissionPayload(quiz: QuizDetails,form: QuizAssessmentForm
         answer.answerOptions.forEach(option => {
             quizOption.set(Number(option.optionId), option.isCorrect)
         })
-        
         submittedByQuestion.set(questionId, quizOption)
     })
 
@@ -88,7 +87,7 @@ export function quizSubmissionPayload(quiz: QuizDetails,form: QuizAssessmentForm
         questionId: question.questionId,
         answerOptions: (question.quizOptions).map(option => ({
             optionId: option.optionId,
-            isCorrect: !!submittedByQuestion.get(question.questionId)?.get(option.optionId)
+            isCorrect: !! submittedByQuestion.get(question.questionId)?.get(option.optionId)
         }))
     }))
 

@@ -23,9 +23,19 @@ export type ChatRoomAccountListItem = {
      accountId: number
      accountName: string
      accountPhoto: string | null
-     accountRole: 'Applicant' | 'CompanyAccount' | 'Admin'
+     accountRole: 'Applicant' | 'CompanyAccount' | 'Admin',
+     unReadMessage: boolean
 }
 
 export type AccountFollowListItem = ChatRoomAccountListItem
 
 export type ChatAccountDetail = ChatRoomAccountListItem
+
+export type UnReadMessageSenderRequestList = {
+    senderId: number
+}
+
+export type UnReadMessageSenderListItem = {
+    senderId: number
+}
+
