@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { findChatAccountById, findChatMessages, getChatConnectionInfo, searchChatRoomAccount, searchFollowerAccount, unReadMessage } from "@/lib/actions/chat/chat.action"
-import { AccountFollowListItem, ChatConnectionInfo, ChatMessageItem, UnReadMessageSenderRequestList} from "@/lib/type/schema/chat/chat.schema"
+import { findChatAccountById, findChatMessages, getChatConnectionInfo, readMessage, searchChatRoomAccount, searchFollowerAccount, unReadMessage } from "@/lib/actions/chat/chat.action"
+import { AccountFollowListItem, ChatConnectionInfo, ChatMessageItem, ChatRoomAccountListItem, UnReadMessageSenderRequestList} from "@/lib/type/schema/chat/chat.schema"
 import { cn, formatMessageTime, getAccountPhoto, getCompanyPhoto, getInitials, safeCall } from "@/lib/utils"
 
 function resolveAccountPhoto(accountPhoto: string, accountRole: string): string {
@@ -37,7 +37,91 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
     }, [contacts, searchKeyword])
 
     useEffect(() => {
+        async function load() {
+            if(accountId){
+                await chatMessageAction(accountId)
+            }else {
+                await chatMessageAction()
+            }
+        }
+
+        load()
+        
+    }, [accountId])
+
+    useEffect(() => {
+        if (!connectionInfo) return
+
+        const baseWsUrl = connectionInfo.backendUrl.replace(/^http/, "ws")
+        const wsUrl = `${baseWsUrl}/ws?token=${encodeURIComponent(connectionInfo.accessToken)}`
+
+        const client = new Client({
+        brokerURL: wsUrl,
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+
+        onConnect: () => {
+            setConnected(true)
+
+            // Subscribe to private queue
+            client.subscribe("/user/queue/messages", (messageFrame) => {
+            const message = JSON.parse(messageFrame.body) as ChatMessageItem
+            setSelectedContact(currentSelected => {
+                if (currentSelected &&
+                    (message.senderId === currentSelected.accountId || message.recipientId === currentSelected.accountId)) {
+                     setMessages(prev => (prev.some(item => item.id === message.id) ? prev : [...prev, message]))
+                }
+                return currentSelected
+            })
+             if(selectedContact?.accountId === message.senderId) {
+                readMessage(message.senderId)
+            }
+                chatMessageAction()
+            
+            })
+        },
+
+        onDisconnect: () => {
+            setConnected(false)
+        },
+
+        onStompError: (frame) => {
+            toast.error("Chat connection error", {
+            description: frame.headers["message"] || "Please reconnect and try again."
+            })
+        }
+        })
+
+        client.activate()
+        stompClientRef.current = client
+
+        return () => {
+            client.deactivate()
+            stompClientRef.current = null
+        }
+    }, [connectionInfo])
+
+    // Fetch chat history on contact change
+    useEffect(() => {
+        if (!selectedContact) {
+         setMessages([])
+        return
+        }
+        setHistoryLoading(true)
+
         safeCall(async () => {
+            const history = await findChatMessages(selectedContact.accountId)
+            setMessages(history)
+        }).finally(() => setHistoryLoading(false))
+    }, [selectedContact])
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [messages])
+
+    async function chatMessageAction(accountId?: string) {
+      await  safeCall(async () => {
         let contactList: AccountFollowListItem[] = []
         const followList = await searchFollowerAccount()
         const chatRoomAccountList = await searchChatRoomAccount()
@@ -67,77 +151,20 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
         }
 
         setContacts(contactList)
-        setSelectedContact(contactList[0] ?? null)
+        //setSelectedContact(contactList[0] ?? null)
         setConnectionInfo(info)
         }).finally(() => setLoading(false))
-    }, [accountId])
+    } 
 
-    useEffect(() => {
-        if (!connectionInfo) return
+        async function readChatMessage(contact: ChatRoomAccountListItem) {
+         await  safeCall(async () => {
+           await readMessage(contact.accountId)
+           await chatMessageAction()
+         })
 
-        const baseWsUrl = connectionInfo.backendUrl.replace(/^http/, "ws")
-        const wsUrl = `${baseWsUrl}/ws?token=${encodeURIComponent(connectionInfo.accessToken)}`
-
-        const client = new Client({
-        brokerURL: wsUrl,
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-
-        onConnect: () => {
-            setConnected(true)
-
-            // Subscribe to private queue
-            client.subscribe("/user/queue/messages", (messageFrame) => {
-            const message = JSON.parse(messageFrame.body) as ChatMessageItem
-
-            setSelectedContact(currentSelected => {
-                if (currentSelected &&
-                    (message.senderId === currentSelected.accountId || message.recipientId === currentSelected.accountId)) {
-                     setMessages(prev => (prev.some(item => item.id === message.id) ? prev : [...prev, message]))
-                }
-                return currentSelected
-            })
-            })
-        },
-
-        onDisconnect: () => {
-            setConnected(false)
-        },
-
-        onStompError: (frame) => {
-            toast.error("Chat connection error", {
-            description: frame.headers["message"] || "Please reconnect and try again."
-            })
-        }
-        })
-
-        client.activate()
-        stompClientRef.current = client
-
-        return () => {
-            client.deactivate()
-            stompClientRef.current = null
-        }
-    }, [connectionInfo])
-
-    // Fetch chat history on contact change
-    useEffect(() => {
-        if (!selectedContact) {
-        setMessages([])
-        return
-        }
-        setHistoryLoading(true)
-
-        safeCall(async () => {
-        const history = await findChatMessages(selectedContact.accountId)
-        setMessages(history)
-        }).finally(() => setHistoryLoading(false))
-    }, [selectedContact])
-
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-    }, [messages])
+         setSelectedContact(contact)
+         
+    }
 
     function sendMessage(event?: FormEvent<HTMLFormElement>) {
         event?.preventDefault()
@@ -150,12 +177,12 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
             return
         }
 
-        stompClientRef.current.publish({
-        destination: "/app/chat.send",
-        body: JSON.stringify({
-            recipientId: selectedContact.accountId,
-            content
-        })
+            stompClientRef.current.publish({
+            destination: "/app/chat.send",
+            body: JSON.stringify({
+                recipientId: selectedContact.accountId,
+                content
+            })
         })
 
         setMessageText("")
@@ -219,7 +246,7 @@ export default function ChatComponent({ accountId }: { accountId?: string }) {
                             const selected = selectedContact?.accountId === contact.accountId
                             return (
                                 <button key={contact.accountId} type="button"
-                                    onClick={() => setSelectedContact(contact)}
+                                    onClick={async () => {await readChatMessage(contact)}}
                                     className={cn("flex w-full items-center gap-3 rounded-lg border p-3 text-left transition",
                                         selected
                                             ? "border-zinc-50 bg-slate-500 text-white shadow-sm"

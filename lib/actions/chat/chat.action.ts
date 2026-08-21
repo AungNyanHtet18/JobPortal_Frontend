@@ -43,3 +43,8 @@ export async function unReadMessage(unReadMessageSenderRequestList: UnReadMessag
     })
     return await response.json() as ModificationResult<UnReadMessageSenderListItem[]>
 }
+
+export async function readMessage(senderId: number) : Promise<ModificationResult<number>> {
+    const response = await secureRequest(`chat/readMessage/${senderId}`)
+    return await response.json() as ModificationResult<number>
+}

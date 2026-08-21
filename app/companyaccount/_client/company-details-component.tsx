@@ -17,23 +17,44 @@ import { checkFollowAccountStatus, followAccount, unfollowAccount } from "@/lib/
 
 export default function CompanyDetailsComponent({companyId} : {companyId?: string}) {
     const [details, setDetails] = useState<CompanyDetails>()
+    const [email, setEmail] = useState<string | undefined>(undefined)
     const [profileImageUrl, setProfileImageUrl] = useState<string>()
-    const [profileImageFailed, setProfileImageFailed] = useState<boolean>(false)
+    const [profileImageFailed, setProfileImageFailed] = useState<boolean>(true)
     const [isFollow, setIsFollow] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         function load() {
-            safeCall(async () => {
-                
+            safeCall(async () => { 
                 const status = await authClient.checkRoleStatus()
                 
-                if(!status.id) {
+                let companyIdStatus: boolean = true
+                if(companyId) {
+                    const responseStatus = await authClient.checkRoleStatusById(companyId)
+                    companyIdStatus = responseStatus.id
+                }
+                
+                if((companyIdStatus === false && companyId) || (status.id === false && companyId)){
+                     const company = await authClient.findAccountById(companyId)
+                       setDetails({
+                        id:  company.id,
+                        companyName: company.name,
+                        companyEmail: company.email,
+                        followerCount: 0,
+                        followingCount: 0,
+                        industryType: 'undefined',
+                        phone: 'undefined',
+                        websiteUrl: 'undefined',
+                        location: 'undefined',
+                        description: 'undefined',
+                        profileImage: null,
+                        totalPostedJobs: 0,
+                        uploadedJob: []
+                    })
+                }
+                else if(status.id === false && !companyId) {
                      const loginUser = await authClient.findByLoginUser()
-                     loginUser && companyId &&  
-                     toast.error("Completely fill your profile information", {
-                        description:"Please provide all required information before using this feature."})
-                         
+                     loginUser &&  
                      setDetails({
                         id: 'undefined',
                         companyName: loginUser.name,
@@ -49,6 +70,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         totalPostedJobs: 0,
                         uploadedJob: []
                     })
+                    setEmail(loginUser.email)
                 }else {
                 const result = companyId ? await companyClient.getCompanyById(companyId)  : await companyClient.findByCompanyName()
                     
@@ -57,12 +79,12 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                         setIsFollow(checkFollowStatus.id)
                         setDetails({...result, uploadedJob: []})
                         setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
-                        setProfileImageFailed(false)
                     }else {
                         setDetails(result)
                         setProfileImageUrl(await companyClient.getCompanyProfileImageUrl(result.profileImage))
-                        setProfileImageFailed(false)
                     }
+
+                    result.profileImage ? setProfileImageFailed(false) : setProfileImageFailed(true)
                 }
             })
         }
@@ -137,7 +159,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                             </div>
 
                             <div className="flex items-center gap-3 w-full">
-                                {companyId && (
+                                {companyId && !email && (
                                     isFollow ?  
                                         (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
                                             onClick={() => unFollowAction(Number(companyId))}>
@@ -152,7 +174,7 @@ export default function CompanyDetailsComponent({companyId} : {companyId?: strin
                                         </Button>)
                                 )}
 
-                                {companyId ?
+                                {companyId && !email  ?
                                     <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
                                         <Link href={`/chat?accountId=${companyId}`}>
                                             <MessageCircle className=" size-5 font-bold text-zinc-100" />

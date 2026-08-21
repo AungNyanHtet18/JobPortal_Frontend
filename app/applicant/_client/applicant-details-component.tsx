@@ -19,8 +19,9 @@ import Link from "next/link"
 
 export default function ApplicantDetailsComponent({ applicantId }: { applicantId?: string }) {
         const [details, setDetails] = useState<ApplicantDetails>()
+        const [email, setEmail] = useState<string>("")
         const [profileImageUrl, setProfileImageUrl] = useState<string>()
-        const [profileImageFailed, setProfileImageFailed] = useState(false)
+        const [profileImageFailed, setProfileImageFailed] = useState(true)
         const [isFollow, setIsFollow] = useState<boolean>(false)
         const [isLoading, setIsLoading] = useState<boolean>(false)
         const resumeFileName = useMemo(() => getFileName(details?.resume ?? null), [details?.resume])
@@ -31,7 +32,35 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                 safeCall(async () => {
                     const status = await authClient.checkRoleStatus()
 
-                    if (!status.id) {
+                    let applicantIdStatus: boolean = true
+                    if(applicantId) {
+                        const responseStatus = await authClient.checkRoleStatusById(applicantId)
+                        applicantIdStatus = responseStatus.id
+                    }
+
+                    if((applicantIdStatus === false  && applicantId )|| (status.id === false && applicantId)) {
+                       const applicant = await authClient.findAccountById(applicantId)
+                           setDetails({
+                            id: applicant.id,
+                            name: applicant.name,
+                            email: applicant.email,
+                            followerCount: 0,
+                            followingCount: 0,
+                            gender: undefined,
+                            professionalSummary: 'undefined',
+                            contactDetail: 'undefined',
+                            address: 'undefined',
+                            experience: [],
+                            socialLink: [],
+                            education: [],
+                            careerRole: [],
+                            skill: [],
+                            language: [],
+                            profileImage: null,
+                            resume: null,
+                            cvForm: null
+                        })
+                    }else if (status.id === false && !applicantId) {
                         const loginUser = await authClient.findByLoginUser()
                         setDetails({
                             id: 'undefined',
@@ -53,6 +82,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                             resume: null,
                             cvForm: null
                         })
+                        setEmail(loginUser.email)
                     } else {
                         const result = applicantId ? await applicantClient.getApplicantById(applicantId) : await applicantClient.findByApplicantName()
                         
@@ -63,8 +93,8 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
 
                         setDetails(result)
                         setProfileImageUrl(await applicantClient.getApplicantProfileImageUrl(result.profileImage))
-                        setProfileImageFailed(false)
-                        
+                         
+                        result.profileImage ?  setProfileImageFailed(false) : setProfileImageFailed(true)
                     }
                 })
             }
@@ -146,7 +176,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                 </div>
 
                                 <div className="flex items-center gap-3 w-full">
-                                    {applicantId && (
+                                    {applicantId && !email && (
                                         isFollow ?  
                                             (<Button variant="default" className="flex-1 bg-zinc-100 border-2 border-zinc-900 hover:bg-zinc-400 rounded-md"
                                                 onClick={() => unFollowAction(Number(applicantId))}>
@@ -161,7 +191,7 @@ export default function ApplicantDetailsComponent({ applicantId }: { applicantId
                                             </Button>)
                                     )}
 
-                                    {applicantId ? 
+                                    {applicantId && !email ? 
                                         <Button variant="outline" className="flex-1 bg-zinc-900 hover:bg-zinc-800 rounded-md border-none" asChild>
                                             <Link href={`/chat?accountId=${applicantId}`}>
                                                 <MessageCircle className=" size-5 font-bold text-zinc-100" />

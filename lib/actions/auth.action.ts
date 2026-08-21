@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { POST_CONFIG, publicRequest, secureSearch } from "..";
-import { AuthResult, LoginUser, SignInForm, SignUpForm } from "../type/schema/auth.schema";
+import { AccountDetails, AuthResult, LoginUser, SignInForm, SignUpForm } from "../type/schema/auth.schema";
 import setAuthResult, { clearAuthResult, getLoginUser, setApplicantId, setCompanyId } from "../login-users";
 import * as applicant from "../actions/applicant/applicant.action"  
 import * as company from "../actions/company/company.action"
@@ -69,4 +69,14 @@ export async function findByLoginUser() : Promise<LoginUser> {
 export async function signOutAction() {
       await clearAuthResult()
       redirect('/')
+}
+
+export async function findAccountById(id: string) : Promise<AccountDetails> {
+      const response = await secureSearch(`account/${id}`)
+      return await response.json()
+}
+
+export async function checkRoleStatusById(id: string) : Promise<ModificationResult<boolean>> {
+      const response = await secureSearch(`account/status/accountId/${id}`)
+      return await response.json()
 }

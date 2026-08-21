@@ -33,3 +33,10 @@ export type AdminInfo = {
      name: string
      email: string
 }
+
+export type AccountDetails = {
+     id: number
+     name: string
+     email: string
+     role: Role
+}
